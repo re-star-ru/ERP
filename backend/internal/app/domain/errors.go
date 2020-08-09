@@ -15,4 +15,6 @@ var (
 	ErrBadParamInput = errors.New("given param is not valid")
 	// ErrInvalidAccessToken will throw if the given request-body or params is not valid
 	ErrInvalidAccessToken = errors.New("invalid access token")
+	// ErrInvalidAccessToken will throw if the given request-body or params is not valid
+	ErrUnauthorized = errors.New("invalid email or password")
 )

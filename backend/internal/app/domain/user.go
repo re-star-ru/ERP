@@ -20,7 +20,7 @@ type User struct {
 // UserUsecase represents the user's usecases
 type UserUsecase interface {
 	SignUp(ctx context.Context, u *User) error
-	SignIn(ctx context.Context, username, password string) (string, error)
+	SignIn(ctx context.Context, u *User) (string, error)
 	ParseToken(ctx context.Context, accessToken string) (*User, error)
 }
 
@@ -29,6 +29,7 @@ type UserRepository interface {
 	GetByID(ctx context.Context, id int) (User, error)
 	GetByEmail(ctx context.Context, email string) (User, error)
 	Create(ctx context.Context, user *User) error
+	ValidateUser(ctx context.Context, user *User) (bool, error)
 }
 
 //// Validate ...

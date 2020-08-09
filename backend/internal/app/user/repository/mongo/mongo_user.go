@@ -3,6 +3,7 @@ package userRepositoryMongo
 import (
 	"backend/internal/app/domain"
 	"context"
+	"golang.org/x/crypto/bcrypt"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -11,6 +12,13 @@ import (
 
 type repository struct {
 	DB *mongo.Collection
+}
+
+type user struct {
+	ID                string `json:"id" bson:"_id"`
+	Email             string `json:"email" bson:"email" validate:"required,email"`
+	Name              string `json:"name"`
+	EncryptedPassword string `json:"encrypted_password,omitempty" bson:"encrypted_password"`
 }
 
 func NewRepository(DB *mongo.Database, collection string) domain.UserRepository {
@@ -58,4 +66,26 @@ func (m repository) GetByEmail(ctx context.Context, email string) (domain.User, 
 	}
 
 	return user, nil
+}
+
+func (m repository) ValidateUser(ctx context.Context, user *domain.User) (bool, error) {
+	res := m.DB.FindOne(ctx, bson.M{"email": user.Email})
+	if res.Err() != nil {
+		return false, res.Err()
+	}
+
+	u := user
+	if err := res.Decode(&u); err != nil {
+		return false, err
+	}
+
+	return bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(u.Password)) == nil, nil
+}
+
+func toUser(u user) *domain.User {
+	return &domain.User{
+		ID:    u.ID,
+		Email: u.Email,
+		Name:  u.Name,
+	}
 }

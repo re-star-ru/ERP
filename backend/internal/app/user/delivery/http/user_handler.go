@@ -47,8 +47,26 @@ func (u *UserHandler) SignUp(c echo.Context) (err error) {
 	return c.NoContent(http.StatusOK)
 }
 
-func (u *UserHandler) SignIn(c echo.Context) error {
-	panic("implement me")
+func (u *UserHandler) SignIn(c echo.Context) (err error) {
+	var user domain.User
+	err = c.Bind(&user)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	var ok bool
+	if ok, err = isRequestValid(&user); !ok && err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	ctx := c.Request().Context()
+
+	var token string
+	token, err = u.UserUsecase.SignIn(ctx, &user)
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseError{err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, token)
 }
 
 func isRequestValid(m *domain.User) (bool, error) {

@@ -34,8 +34,12 @@ func (u *usecase) SignUp(c context.Context, m *domain.User) error {
 	return u.userRepo.Create(ctx, m)
 }
 
-func (u *usecase) SignIn(ctx context.Context, username, password string) (string, error) {
-	panic("implement me")
+func (u *usecase) SignIn(ctx context.Context, usr *domain.User) (string, error) {
+	if ok, err := u.userRepo.ValidateUser(ctx, usr); !ok {
+		return "", err
+	}
+	// TODO: подписывать токен для jwt аутентификации
+	return usr.Password, nil
 }
 
 func (u *usecase) ParseToken(ctx context.Context, accessToken string) (*domain.User, error) {
