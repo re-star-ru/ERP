@@ -1,0 +1,39 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "description": "Ремонт Продажа Стартеров Генераторов на любые марки автомобилей в Пятигорске",
+  "productName": "Ремонт Продажа Стартеров Генераторов на любые марки автомобилей в Пятигорске",
+  "author": "fess932 <fess932@gmail.com>",
+  "private": true,
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
+  },
+  "scripts": {
+    "dev": "quasar dev"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.9.3",
+    "axios": "^0.18.1",
+    "core-js": "^3.0.0",
+    "quasar": "^1.12.13",
+    "tesseract.js": "^2.1.1",
+    "vue": "latest",
+    "vue-router": "latest",
+    "vuex": "latest"
+  },
+  "devDependencies": {
+    "@quasar/app": "^2.0.6",
+    "components": "^0.1.0",
+    "quasar-app-extension-ide-helper": "^1.0.0",
+    "workbox-webpack-plugin": "^5.0.0"
+  },
+  "engines": {
+    "node": ">= 10.18.1",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
+  },
+  "browserslist": [
+    "last 5 Chrome versions"
+  ]
+}

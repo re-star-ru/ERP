@@ -1,0 +1,44 @@
+s3path: "https://s3.restar26.site"
+port: 3000
+host: ":3000"
+AdminPasswd: "secretADMIN"
+DBCatalogPath: "storage/catalog.db"
+
+# server config
+server:
+  address: ":3000"
+
+# databse config
+database:
+  host: "mongodb://localhost:27017"
+  name: "restar"
+
+# context config
+context:
+  timeout: 2
+
+# image service config
+imageService:
+  path: "http://localhost:9000"
+  mongoURI: "mongodb://localhost:27017"
+  dbName: "images"
+  watermarkURL: "https://s3.restar26.site/public/watermark/watermark.jpg"
+
+# 1c server http config
+srv1sv8:
+  path: "https://1c.restar26.site/sm1/hs"
+  login: "API"
+  password: "6O7EHDWS0Sk$yZ%i80p5"
+
+# main service mongo db config
+mongo:
+  #  connect and main db name
+  uri: "mongodb://localhost:27017"
+  dbName: "offers"
+
+  #  collections
+  catalogCollection: "catalog"
+  productsCollection: "products"
+  productTypesCollection: "productTypes"
+  ordersCollection: "orders"
+  imageCollection: "images"

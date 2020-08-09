@@ -1,0 +1,5 @@
+*.db
+.idea
+*.exe
+__debug_bin
+/apiserver

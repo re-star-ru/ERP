@@ -1,0 +1,46 @@
+########## /user
+p,manager,/v1/user,(GET)|(PUT)
+p,client,/v1/user,(GET)|(PUT)
+
+p,manager,/v1/user/password,(PUT)
+p,client,/v1/user/password,(PUT)
+
+p,manager,/v1/users,(GET)
+
+########## /offers
+p,manager,/v1/offers,(GET)|(POST)
+p,client,/v1/offers,(GET)
+p,anonymous,/v1/offers,(GET)
+
+########## /offer/{GUID}
+p,manager,/v1/offer/*,(GET)|(POST)
+p,client,/v1/offer/*,(GET)
+p,anonymous,/v1/offer/*,(GET)
+
+########## /images
+p,client,/v1/images,(GET)
+p,anonymous,/v1/images,(GET)
+
+########## /image/{GUID}
+p,manager,/v1/image/*,(GET)|(POST)|(DELETE)
+
+########## /catalog
+p,manager,/v1/catalog*,(GET)|(POST)
+p,anonymous,/v1/catalog/product-types,(GET)
+p,client,/v1/catalog/product-types,(GET)
+
+p,client,/v1/catalog*,(GET)
+p,anonymous,/v1/catalog*,(GET)
+
+
+#p,manager,/v1/catalog/update,(GET)|(POST)
+#p,manager,/v1/catalog/sku-list,(GET)
+#p,manager,/v1/catalog/sku-list/*,(GET)
+#p,manager,/v1/catalog/info,(GET)
+#p,manager,/v1/catalog/product-types,(GET)
+
+
+
+
+
+
