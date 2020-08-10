@@ -85,7 +85,6 @@ func (s *Rest) routes() chi.Router {
 
 	// api v1, def protected, use casbin for auth
 	r.Route("/v1", func(rapi chi.Router) {
-
 		//middlewares of route
 		rapi.Use(middleware.SetHeader("Content-type", "application/json"))
 		rapi.Use(middleware.Timeout(60 * time.Second))

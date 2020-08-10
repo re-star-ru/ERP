@@ -14,9 +14,8 @@ type productHandler struct {
 func NewHandler(e *echo.Group, pu domain.ProductUsecase) {
 	handler := &productHandler{pu}
 
-	e.GET("/products", handler.Get)
-
-	e.POST("/products", handler.Create)
+	e.GET("/", handler.Get)
+	e.POST("/", handler.Create)
 }
 
 type getResponse struct {
