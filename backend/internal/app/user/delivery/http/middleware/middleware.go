@@ -47,7 +47,7 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 
 			return c.NoContent(status)
 		}
-
+		//
 		c.Set(domain.CtxUserKey, user)
 
 		//logrus.Println("auth middleware")
@@ -88,6 +88,8 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func InitMiddleware() *GoMiddleware {
-	return &GoMiddleware{}
+func InitMiddleware(userUC domain.UserUsecase) *GoMiddleware {
+	return &GoMiddleware{
+		usecase: userUC,
+	}
 }

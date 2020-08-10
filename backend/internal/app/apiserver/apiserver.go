@@ -33,21 +33,25 @@ func Start() {
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	e := echo.New()
-	middl := userDeliveryMiddleware.InitMiddleware()
-	// TODO: logger middleware
-	e.Use(middl.CORS)
-
 	userRepo := userRepositoryMongo.NewRepository(db, "user")
 	us := userUsecase.NewUsecase(userRepo,
 		timeoutContext,
 		time.Duration(viper.GetInt("jwt.expire"))*time.Hour,
 		[]byte(viper.GetString("jwt.signingKey")),
 	)
+
+	middl := userDeliveryMiddleware.InitMiddleware(us)
+	// TODO: logger middleware
+	e.Use(middl.CORS)
+
 	userDeliveryHTTP.NewHandler(e, us)
 
+	//e.Use(middl.Authenticator)
+	productGroup := e.Group("/products")
+	productGroup.Use(middl.Authenticator)
 	productRepo := productRepositoryMongo.NewRepository(db, "product")
 	ps := productUsecase.NewUsecase(productRepo, timeoutContext)
-	productDeliveryHTTP.NewHandler(e, ps)
+	productDeliveryHTTP.NewHandler(productGroup, ps)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }
