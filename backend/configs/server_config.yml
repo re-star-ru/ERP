@@ -16,6 +16,9 @@ database:
 # context config
 context:
   timeout: 2
+jwt:
+  expire: 730
+  signingKey: "signingKey"
 
 # image service config
 imageService:

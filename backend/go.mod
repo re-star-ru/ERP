@@ -8,6 +8,7 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/asdine/storm v2.1.2+incompatible
 	github.com/casbin/casbin v1.9.1
+	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/disintegration/imaging v1.6.2
 	github.com/gabriel-vasile/mimetype v1.1.1
 	github.com/go-chi/chi v4.1.2+incompatible

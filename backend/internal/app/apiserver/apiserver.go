@@ -38,7 +38,11 @@ func Start() {
 	e.Use(middl.CORS)
 
 	userRepo := userRepositoryMongo.NewRepository(db, "user")
-	us := userUsecase.NewUsecase(userRepo, timeoutContext)
+	us := userUsecase.NewUsecase(userRepo,
+		timeoutContext,
+		time.Duration(viper.GetInt("jwt.expire"))*time.Hour,
+		[]byte(viper.GetString("jwt.signingKey")),
+	)
 	userDeliveryHTTP.NewHandler(e, us)
 
 	productRepo := productRepositoryMongo.NewRepository(db, "product")

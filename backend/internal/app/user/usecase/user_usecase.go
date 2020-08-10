@@ -3,19 +3,31 @@ package userUsecase
 import (
 	"backend/internal/app/domain"
 	"context"
+	"fmt"
 	"time"
+
+	"github.com/dgrijalva/jwt-go/v4"
 )
 
 type usecase struct {
 	userRepo       domain.UserRepository
 	contextTimeout time.Duration
+	expireDuration time.Duration
+	signingKey     []byte
 }
 
-func NewUsecase(u domain.UserRepository, timeout time.Duration) domain.UserUsecase {
+func NewUsecase(u domain.UserRepository, timeout, expire time.Duration, signingKey []byte) domain.UserUsecase {
 	return &usecase{
 		userRepo:       u,
 		contextTimeout: timeout,
+		expireDuration: expire,
+		signingKey:     signingKey,
 	}
+}
+
+type AuthClaims struct {
+	User *domain.User `json:"user"`
+	jwt.StandardClaims
 }
 
 func (u *usecase) SignUp(c context.Context, m *domain.User) error {
@@ -38,12 +50,36 @@ func (u *usecase) SignIn(ctx context.Context, usr *domain.User) (string, error) 
 	if ok, err := u.userRepo.ValidateUser(ctx, usr); !ok {
 		return "", err
 	}
-	// TODO: подписывать токен для jwt аутентификации
-	return usr.Password, nil
+
+	claims := AuthClaims{
+		usr,
+		jwt.StandardClaims{
+			ExpiresAt: jwt.At(time.Now().Add(u.expireDuration)),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+	return token.SignedString(u.signingKey)
 }
 
 func (u *usecase) ParseToken(ctx context.Context, accessToken string) (*domain.User, error) {
-	panic("implement me")
+	token, err := jwt.ParseWithClaims(accessToken, &AuthClaims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return u.signingKey, nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := token.Claims.(*AuthClaims); ok && token.Valid {
+		return claims.User, nil
+	}
+
+	return nil, domain.ErrInvalidAccessToken
 }
 
 func (u *usecase) GetByEmail(c context.Context, email string) (domain.User, error) {
