@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/dgrijalva/jwt-go/v4"
 )
 
@@ -76,6 +78,7 @@ func (u *usecase) ParseToken(ctx context.Context, accessToken string) (*domain.U
 	}
 
 	if claims, ok := token.Claims.(*AuthClaims); ok && token.Valid {
+		logrus.Println(claims.User)
 		return claims.User, nil
 	}
 

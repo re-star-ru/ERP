@@ -47,7 +47,7 @@ func Start() {
 	userDeliveryHTTP.NewHandler(e, us)
 
 	productGroup := e.Group("/products")
-	//productGroup.Use(middl.Authenticator)
+	productGroup.Use(middl.Authenticator)
 	productRepo := productRepositoryMongo.NewRepository(db, "product")
 	ps := productUsecase.NewUsecase(productRepo, timeoutContext)
 	productDeliveryHTTP.NewHandler(productGroup, ps)
