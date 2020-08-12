@@ -27,8 +27,11 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		authHeader := c.Request().Header.Get("Authorization")
+		// If auth header empty set default anonymous user to context
 		if authHeader == "" {
-			return c.NoContent(http.StatusUnauthorized)
+			logrus.Println("setting empty user in ctx:", domain.User{})
+			c.Set(domain.UserKey, domain.User{})
+			return next(c)
 		}
 
 		headerParts := strings.Split(authHeader, " ")

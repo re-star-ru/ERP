@@ -40,8 +40,8 @@ func Start() {
 	//e.Use(middleware.RequestID())
 	// logger connect
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		CustomTimeFormat: "Jan 02 15:04:05.00000",
-		Format:           "[${time_custom}] [${method}] [${status}]  uri=${uri}, err=${error}, [${latency_human}]\n",
+		CustomTimeFormat: "Jan 02 15:04:05.00",
+		Format:           "[${time_custom}] [${method}  ] [${status}]  URI:${uri}; err: ${error}; [${latency_human}]\n",
 	}))
 	authRepo := authRepositoryMongo.NewRepository(db, "users")
 	us := authUsecase.NewUsecase(authRepo,
