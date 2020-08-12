@@ -36,11 +36,11 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 
 		headerParts := strings.Split(authHeader, " ")
 		if len(headerParts) != 2 {
-			return c.NoContent(http.StatusUnauthorized)
+			return m.error(c, http.StatusUnauthorized, domain.ErrUnauthorized)
 		}
 
 		if headerParts[0] != "Bearer" {
-			return c.NoContent(http.StatusUnauthorized)
+			return m.error(c, http.StatusUnauthorized, domain.ErrUnauthorized)
 		}
 
 		user, err := m.usecase.ParseToken(c.Request().Context(), headerParts[1])
@@ -49,47 +49,13 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 			if err == domain.ErrInvalidAccessToken {
 				status = http.StatusUnauthorized
 			}
-
-			return c.NoContent(status)
+			return m.error(c, status, err)
 		}
 
 		logrus.Println("setting user in ctx:", user)
 		c.Set(domain.UserKey, user)
 
 		return next(c)
-
-		//email, passwordHash, ok := r.BasicAuth()
-
-		// пропускаем анонимных пользователей дальше
-		//if !ok {
-		//	log.Println("пустые данные аутентификации, будет предоставлен анонимный доступ")
-		//	ctx := context.WithValue(r.Context(), "aclGroup", "anonymous")
-		//	ctx = context.WithValue(ctx, "email", "anonymous")
-		//	next.ServeHTTP(w, r.WithContext(ctx))
-		//	return next(c)
-		//}
-		//
-		//u, err := users.GetUserByEmail(email)
-		//if err != nil {
-		//	err := errors.New("не существует такого пользователя, перенаправление на аутентификацию")
-		//	log.Println(err)
-		//	log.Println(email, passwordHash)
-		//	http.Error(w, err.Error(), http.StatusUnauthorized)
-		//	return next(c)
-		//}
-		//
-		//// перенаправляем на авторизацию если хеш не совпадает с тем что в базе
-		//if !u.CheckUsersPasswordHash(passwordHash) {
-		//	err := errors.New("неверные данные аутентификации")
-		//	log.Println(err)
-		//	log.Println(email, passwordHash)
-		//	http.Error(w, err.Error(), http.StatusUnauthorized)
-		//	return next(c)
-		//}
-		//
-		//ctx := context.WithValue(r.Context(), "aclGroup", u.AclGroup)
-		//ctx = context.WithValue(ctx, "email", u.Email)
-		//
 	}
 }
 
@@ -97,4 +63,22 @@ func InitMiddleware(userUC domain.UserUsecase) *GoMiddleware {
 	return &GoMiddleware{
 		usecase: userUC,
 	}
+}
+
+func (m *GoMiddleware) error(c echo.Context, code int, err error) error {
+	return m.respond(c, code, map[string]string{"error": err.Error()})
+}
+
+func (m *GoMiddleware) respond(c echo.Context, code int, data interface{}) error {
+	if data != nil {
+		if err := c.JSON(code, data); err != nil {
+			logrus.Errorln(err)
+			return err
+		}
+	}
+	if err := c.NoContent(code); err != nil {
+		logrus.Errorln(err)
+		return err
+	}
+	return nil
 }

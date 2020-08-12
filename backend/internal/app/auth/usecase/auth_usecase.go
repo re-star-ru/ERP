@@ -71,8 +71,7 @@ func (u *usecase) ParseToken(ctx context.Context, accessToken string) (*domain.U
 		return u.signingKey, nil
 	})
 
-	// TODO: errors invalid token
-	if err != nil && err.Error() == "token contains an invalid number of segments" {
+	if err != nil && err.Error() == "token is malformed: token contains an invalid number of segments" {
 		return nil, domain.ErrInvalidAccessToken
 	}
 
