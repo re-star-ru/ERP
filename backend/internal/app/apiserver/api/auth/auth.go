@@ -7,10 +7,10 @@ import (
 	"log"
 	"net/http"
 
-	. "github.com/casbin/casbin"
+	"github.com/casbin/casbin"
 )
 
-var e = NewEnforcer("configs/acl/acl_model.conf", "configs/acl/acl_policy.csv")
+var e = casbin.NewEnforcer("configs/acl/acl_model.conf", "configs/acl/acl_policy.csv")
 
 type Service struct {
 }
@@ -20,6 +20,7 @@ func (s *Service) LoginHandler() http.Handler {
 }
 
 func (s *Service) RegistrationHandler() http.Handler {
+
 	return http.HandlerFunc(users.Register)
 }
 

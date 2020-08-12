@@ -3,3 +3,4 @@
 *.exe
 __debug_bin
 /apiserver
+/old_server

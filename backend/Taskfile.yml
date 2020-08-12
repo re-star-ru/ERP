@@ -14,3 +14,8 @@ tasks:
   healthcheck:
     cmds:
       - http HEAD httpbin.org/get
+
+  old:
+    cmds:
+      - go build -v ./cmd/old_server
+      - old_server

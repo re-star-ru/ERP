@@ -1,8 +1,9 @@
-package userRepositoryMongo
+package authRepositoryMongo
 
 import (
 	"backend/internal/app/domain"
 	"context"
+
 	"golang.org/x/crypto/bcrypt"
 
 	"go.mongodb.org/mongo-driver/bson"

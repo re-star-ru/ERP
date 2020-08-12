@@ -1,4 +1,4 @@
-package userDeliveryHTTPMiddleware
+package authDeliveryHTTPMiddleware
 
 import (
 	"backend/internal/app/domain"

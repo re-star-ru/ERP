@@ -1,4 +1,4 @@
-package apiserver
+package main
 
 import (
 	"backend/internal/app/apiserver/api"
@@ -25,6 +25,10 @@ type server struct {
 func initApplication() {
 	readConfig()
 	img.Init()
+}
+
+func main() {
+	StartDeprecated()
 }
 
 func StartDeprecated() {
@@ -107,7 +111,7 @@ func newServerApp() *server {
 }
 
 func readConfig() {
-	viper.SetConfigFile("configs/server_config.yaml")
+	viper.SetConfigFile("configs/server_config.yml")
 
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)

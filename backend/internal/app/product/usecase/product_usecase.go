@@ -16,6 +16,10 @@ func NewUsecase(p domain.ProductRepository, timeout time.Duration) domain.Produc
 }
 
 func (p usecase) CreateProduct(ctx context.Context, user *domain.User, product *domain.Product) error {
+	if !user.CheckPermission(domain.ActionProductCreate) {
+		return domain.ErrAccessDenied
+	}
+
 	return p.productRepo.CreateProduct(ctx, user, product)
 }
 

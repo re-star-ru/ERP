@@ -1,4 +1,4 @@
-package userDeliveryHTTP
+package authDeliveryHTTP
 
 import (
 	"backend/internal/app/domain"

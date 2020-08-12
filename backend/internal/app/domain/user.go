@@ -14,6 +14,7 @@ type User struct {
 	Name              string `json:"name"`
 	Password          string `json:"password,omitempty" validate:"required,min=6,max=100"`
 	EncryptedPassword string `json:"encrypted_password,omitempty" bson:"encrypted_password"`
+	//Role              string `json:"-"`
 	//AclGroup          string `json:"aclGroup,omitempty"`
 }
 
@@ -30,6 +31,10 @@ type UserRepository interface {
 	GetByEmail(ctx context.Context, email string) (User, error)
 	Create(ctx context.Context, user *User) error
 	ValidateUser(ctx context.Context, user *User) (bool, error)
+}
+
+func (u *User) CheckPermission(action Action) bool {
+	return true
 }
 
 //// Validate ...

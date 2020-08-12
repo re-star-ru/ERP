@@ -1,13 +1,13 @@
 package apiserver
 
 import (
+	authDeliveryHTTP "backend/internal/app/auth/delivery/http"
+	authDeliveryMiddleware "backend/internal/app/auth/delivery/http/middleware"
+	authRepositoryMongo "backend/internal/app/auth/repository/mongo"
+	authUsecase "backend/internal/app/auth/usecase"
 	productDeliveryHTTP "backend/internal/app/product/delivery/http"
 	productRepositoryMongo "backend/internal/app/product/repository/mongo"
 	productUsecase "backend/internal/app/product/usecase"
-	userDeliveryHTTP "backend/internal/app/user/delivery/http"
-	userDeliveryMiddleware "backend/internal/app/user/delivery/http/middleware"
-	userRepositoryMongo "backend/internal/app/user/repository/mongo"
-	userUsecase "backend/internal/app/user/usecase"
 	"context"
 	"time"
 
@@ -33,22 +33,22 @@ func Start() {
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	e := echo.New()
-	userRepo := userRepositoryMongo.NewRepository(db, "user")
-	us := userUsecase.NewUsecase(userRepo,
+	authRepo := authRepositoryMongo.NewRepository(db, "users")
+	us := authUsecase.NewUsecase(authRepo,
 		timeoutContext,
 		time.Duration(viper.GetInt("jwt.expire"))*time.Hour,
 		[]byte(viper.GetString("jwt.signingKey")),
 	)
 
-	middl := userDeliveryMiddleware.InitMiddleware(us)
+	middl := authDeliveryMiddleware.InitMiddleware(us)
 	// TODO: logger middleware
 	e.Use(middl.CORS)
 
-	userDeliveryHTTP.NewHandler(e, us)
+	authDeliveryHTTP.NewHandler(e, us)
 
 	productGroup := e.Group("/products")
 	productGroup.Use(middl.Authenticator)
-	productRepo := productRepositoryMongo.NewRepository(db, "product")
+	productRepo := productRepositoryMongo.NewRepository(db, "products")
 	ps := productUsecase.NewUsecase(productRepo, timeoutContext)
 	productDeliveryHTTP.NewHandler(productGroup, ps)
 

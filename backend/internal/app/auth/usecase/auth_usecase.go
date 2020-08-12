@@ -1,4 +1,4 @@
-package userUsecase
+package authUsecase
 
 import (
 	"backend/internal/app/domain"

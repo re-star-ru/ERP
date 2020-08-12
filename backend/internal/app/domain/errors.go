@@ -17,4 +17,6 @@ var (
 	ErrInvalidAccessToken = errors.New("invalid access token")
 	// ErrInvalidAccessToken will throw if the given request-body or params is not valid
 	ErrUnauthorized = errors.New("invalid email or password")
+	// ErrAccessDenied will throw if user dont have nedeed rigths
+	ErrAccessDenied = errors.New("not enough access rights")
 )
