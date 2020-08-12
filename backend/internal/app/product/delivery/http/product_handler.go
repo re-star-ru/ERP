@@ -4,6 +4,8 @@ import (
 	"backend/internal/app/domain"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/labstack/echo"
 )
 
@@ -14,8 +16,8 @@ type productHandler struct {
 func NewHandler(e *echo.Group, pu domain.ProductUsecase) {
 	handler := &productHandler{pu}
 
-	e.GET("/", handler.Get)
-	e.POST("/", handler.Create)
+	e.GET("", handler.Get)
+	e.POST("", handler.Create)
 }
 
 type getResponse struct {
@@ -44,15 +46,35 @@ func (p *productHandler) Create(c echo.Context) error {
 	inp := new(createInput)
 
 	if err := c.Bind(inp); err != nil {
-		return c.NoContent(http.StatusBadRequest)
+		return p.error(c, http.StatusBadRequest, err)
 	}
 
-	//user := c.MustGet(auth.CtxUserKey).(*auth.User)
+	user := c.Get(domain.UserKey).(*domain.User)
+	logrus.Println("getting user from ctx:", user)
+
 	pr := toProduct(*inp)
 
-	if err := p.usecase.CreateProduct(c.Request().Context(), &domain.User{}, pr); err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+	if err := p.usecase.CreateProduct(c.Request().Context(), user, pr); err != nil {
+		return p.error(c, http.StatusBadRequest, err)
 	}
 
-	return c.JSON(http.StatusCreated, pr)
+	return p.respond(c, http.StatusCreated, pr)
+}
+
+func (p *productHandler) error(c echo.Context, code int, err error) error {
+	return p.respond(c, code, map[string]string{"error": err.Error()})
+}
+
+func (p *productHandler) respond(c echo.Context, code int, data interface{}) error {
+	if data != nil {
+		if err := c.JSON(code, data); err != nil {
+			logrus.Errorln(err)
+			return err
+		}
+	}
+	if err := c.NoContent(code); err != nil {
+		logrus.Errorln(err)
+		return err
+	}
+	return nil
 }

@@ -11,6 +11,10 @@ import (
 	"context"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
+	"github.com/labstack/echo/middleware"
+
 	"github.com/labstack/echo"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -33,6 +37,12 @@ func Start() {
 	timeoutContext := time.Duration(viper.GetInt("context.timeout")) * time.Second
 
 	e := echo.New()
+	//e.Use(middleware.RequestID())
+	// logger connect
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		CustomTimeFormat: "Jan 02 15:04:05.00000",
+		Format:           "[${time_custom}] [${method}] [${status}]  uri=${uri}, err=${error}, [${latency_human}]\n",
+	}))
 	authRepo := authRepositoryMongo.NewRepository(db, "users")
 	us := authUsecase.NewUsecase(authRepo,
 		timeoutContext,
@@ -68,7 +78,7 @@ func newMongoDB(dbhost, dbname string) (*mongo.Database, error) {
 		return nil, err
 	}
 
-	log.Println("MONGO CONNECTED")
+	logrus.Println("MONGO CONNECTED")
 
 	return client.Database(dbname), nil
 }

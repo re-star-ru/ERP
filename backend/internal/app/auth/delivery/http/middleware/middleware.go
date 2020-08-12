@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/labstack/echo"
 )
 
@@ -47,10 +49,10 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 
 			return c.NoContent(status)
 		}
-		//
-		c.Set(domain.CtxUserKey, user)
 
-		//logrus.Println("auth middleware")
+		logrus.Println("setting user in ctx:", user)
+		c.Set(domain.UserKey, user)
+
 		return next(c)
 
 		//email, passwordHash, ok := r.BasicAuth()

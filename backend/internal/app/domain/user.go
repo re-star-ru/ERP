@@ -6,7 +6,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const CtxUserKey = "user"
+const (
+	UserKey = "UserKey"
+)
 
 type User struct {
 	ID                string `json:"id" bson:"_id" storm:"id,increment"`
@@ -34,6 +36,9 @@ type UserRepository interface {
 }
 
 func (u *User) CheckPermission(action Action) bool {
+	//if u.Email == "example@mail.com" {
+	//	return false
+	//}
 	return true
 }
 

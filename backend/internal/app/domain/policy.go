@@ -13,7 +13,7 @@ const (
 //}
 
 //
-//type RBAC struct {
+//type ABAC struct {
 //}
 //
 //type RBACusecase interface {
