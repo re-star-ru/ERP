@@ -43,17 +43,16 @@ func Start() {
 		CustomTimeFormat: "Jan 02 15:04:05.00",
 		Format:           "[${time_custom}] [${method}  ] [${status}]  URI:${uri}; err: ${error}; [${latency_human}]\n",
 	}))
+
 	authRepo := authRepositoryMongo.NewRepository(db, "users")
 	us := authUsecase.NewUsecase(authRepo,
 		timeoutContext,
 		time.Duration(viper.GetInt("jwt.expire"))*time.Hour,
 		[]byte(viper.GetString("jwt.signingKey")),
 	)
-
 	middl := authDeliveryMiddleware.InitMiddleware(us)
 	// TODO: logger middleware
 	e.Use(middl.CORS)
-
 	authDeliveryHTTP.NewHandler(e, us)
 
 	productGroup := e.Group("/products")

@@ -11,14 +11,18 @@ type cart struct {
 	contextTimeout time.Duration
 }
 
+func (c cart) ShowUsersCart(ctx context.Context, u *domain.User) (*domain.Cart, error) {
+	return c.cartRepo.GetUsersCart(ctx, u)
+}
+
+func (c cart) AddProductToCart(ctx context.Context, u *domain.User, productID string, count int) error {
+	panic("implement me")
+}
+
+func (c cart) RemoveProductFromCart(ctx context.Context, u *domain.User, cartKey string) error {
+	panic("implement me")
+}
+
 func NewUsecase(c domain.CartRepository, time time.Duration) domain.CartUsecase {
 	return &cart{c, time}
-}
-
-func (c cart) AddToCart(ctx context.Context, u *domain.User, productID string, count int) error {
-	panic("implement me")
-}
-
-func (c cart) RemoveFromCart(ctx context.Context, u *domain.User, cartKey string) error {
-	panic("implement me")
 }
