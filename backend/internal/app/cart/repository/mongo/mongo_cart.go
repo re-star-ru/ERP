@@ -16,7 +16,17 @@ type repository struct {
 
 func (r repository) GetUsersCart(ctx context.Context, u *domain.User) (*domain.Cart, error) {
 	c := new(Cart)
-	res := r.db.FindOne(ctx, bson.M{"ownerID": primitive.ObjectIDFromHex(u.ID)})
+	objID, err := primitive.ObjectIDFromHex(u.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	res := r.db.FindOne(ctx, bson.M{"ownerID": objID})
+
+	if res.Err() == mongo.ErrNoDocuments {
+		return nil, domain.ErrNotFound
+	}
+
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
@@ -29,6 +39,7 @@ func (r repository) GetUsersCart(ctx context.Context, u *domain.User) (*domain.C
 }
 
 func (r repository) AddToCart(ctx context.Context, u *domain.User, productID string, count int) error {
+
 	panic("implement me")
 }
 
@@ -55,16 +66,10 @@ func toCart(cart *Cart) *domain.Cart {
 	}
 
 	for key, v := range cart.AddedProducts {
-		dc.AddedProducts[key].Count = v.Count
-		pr := struct {
-			ProductID string
-			Count     int
-		}{
-			ProductID: v.ProductID.Hex(),
-			Count:     v.Count,
-		}
 
-		dc.AddedProducts[key] = pr
+		dc.AddedProducts[key].Count = v.Count
+		dc.AddedProducts[key].ProductID = v.ProductID.Hex()
+
 	}
 
 	return dc

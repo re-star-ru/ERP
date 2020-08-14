@@ -13,10 +13,11 @@ type cartHandler struct {
 	usecase domain.CartUsecase
 }
 
-func NewHandler(e echo.Group, cu domain.CartUsecase) {
+func NewHandler(e *echo.Group, cu domain.CartUsecase) {
 	handler := &cartHandler{cu}
 
 	e.GET("", handler.Get)
+
 }
 
 func (h cartHandler) Get(c echo.Context) error {

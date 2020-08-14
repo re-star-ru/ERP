@@ -5,6 +5,9 @@ import (
 	authDeliveryMiddleware "backend/internal/app/auth/delivery/http/middleware"
 	authRepositoryMongo "backend/internal/app/auth/repository/mongo"
 	authUsecase "backend/internal/app/auth/usecase"
+	cartDeliveryHTTP "backend/internal/app/cart/delivery/http"
+	cartRepositoryMongo "backend/internal/app/cart/repository/mongo"
+	cartUsecase "backend/internal/app/cart/usecase"
 	productDeliveryHTTP "backend/internal/app/product/delivery/http"
 	productRepositoryMongo "backend/internal/app/product/repository/mongo"
 	productUsecase "backend/internal/app/product/usecase"
@@ -60,6 +63,12 @@ func Start() {
 	productRepo := productRepositoryMongo.NewRepository(db, "products")
 	ps := productUsecase.NewUsecase(productRepo, timeoutContext)
 	productDeliveryHTTP.NewHandler(productGroup, ps)
+
+	cartGroup := e.Group("/cart")
+	cartGroup.Use(middl.Authenticator)
+	cartRepo := cartRepositoryMongo.NewRepository(db, "carts")
+	cs := cartUsecase.NewUsecase(cartRepo, timeoutContext)
+	cartDeliveryHTTP.NewHandler(cartGroup, cs)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }
