@@ -2,6 +2,7 @@ package cartDeliveryHTTP
 
 import (
 	"backend/internal/app/domain"
+	"net/http"
 
 	"github.com/sirupsen/logrus"
 
@@ -25,17 +26,17 @@ func (h cartHandler) Get(c echo.Context) error {
 
 	cart, err := h.usecase.ShowUsersCart(c.Request().Context(), user)
 	if err != nil {
-		return err
+		return h.error(c, http.StatusBadRequest, err)
 	}
 
-	return
+	return h.respond(c, http.StatusOK, cart)
 }
 
-func (p *productHandler) error(c echo.Context, code int, err error) error {
-	return p.respond(c, code, map[string]string{"error": err.Error()})
+func (h *cartHandler) error(c echo.Context, code int, err error) error {
+	return h.respond(c, code, map[string]string{"error": err.Error()})
 }
 
-func (p *productHandler) respond(c echo.Context, code int, data interface{}) error {
+func (h *cartHandler) respond(c echo.Context, code int, data interface{}) error {
 	if data != nil {
 		if err := c.JSON(code, data); err != nil {
 			logrus.Errorln(err)
