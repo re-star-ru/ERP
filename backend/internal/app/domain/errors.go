@@ -19,4 +19,6 @@ var (
 	ErrUnauthorized = errors.New("invalid email or password")
 	// ErrAccessDenied will throw if user dont have nedeed rigths
 	ErrAccessDenied = errors.New("not enough access rights")
+	// ErrInvalidCredentials ...
+	ErrInvalidCredentials = errors.New("email or password incorrect")
 )

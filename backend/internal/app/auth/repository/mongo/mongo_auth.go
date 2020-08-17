@@ -71,6 +71,10 @@ func (m repository) GetByEmail(ctx context.Context, email string) (domain.User, 
 
 func (m repository) ValidateUser(ctx context.Context, user *domain.User) (bool, error) {
 	res := m.DB.FindOne(ctx, bson.M{"email": user.Email})
+	if res.Err() == mongo.ErrNoDocuments {
+		return false, domain.ErrInvalidCredentials
+	}
+
 	if res.Err() != nil {
 		return false, res.Err()
 	}

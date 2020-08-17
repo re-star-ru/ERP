@@ -1,0 +1,165 @@
+openapi: 3.0.2
+
+info:
+  title: ERP API
+  description: 'erp api system written on go [CommonMark](http://commonmark.org/help/) or HTML.'
+  version: '1.0'
+  contact:
+    name: asd
+    url: asd
+    email: asd
+  termsOfService: asdasdasd
+  license:
+    name: asdasd
+    url: asdasd
+servers:
+  - url: 'http://localhost:3000'
+    description: Test serter
+  - url: 'https://api.server.test'
+    description: Prod server
+tags:
+  - name: auth
+    description: Everything about auth
+  - name: product
+    description: Everything about products
+  - name: cart
+    description: Everything about products
+paths:
+  /auth/sign-up:
+    post:
+      summary: Sign up with email and password
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            examples: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              examples: {}
+        '409':
+          description: Error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /auth/sign-in:
+    post:
+      summary: Sign in with email and password
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /products:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get all products
+      tags:
+        - product
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    post:
+      summary: Create new product
+      tags:
+        - product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      description: ''
+  /cart:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Get cart state
+      tags:
+        - cart
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Error message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+#    post:
+#      security:
+#        - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Bearer HTTP authentication. Allowed headers-- Authorization: Bearer <api_key>'
+  schemas:
+    User:
+      example:
+        email: example@mail.com
+        password: password
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required:
+        - email
+        - password
+    Product:
+      properties:
+        name:
+          type: string
+      example:
+        name: cs123
+    ErrorMessage:
+      properties:
+        message:
+          type: string
+          description: error message
+      example:
+        message: error message
+
