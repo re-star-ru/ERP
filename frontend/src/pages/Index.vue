@@ -3,12 +3,10 @@
     <q-img style="height: calc(100vh - 50px);" src="bg.jpg">
       <div class="absolute-full flex flex-center">
         <div class="text-center text-white">
-          <h2 class="text-weight-bold">«RE-STAR»</h2>
+          <h2 class="text-weight-bold">«ReStar26»</h2>
           <h4 class="text-weight-bold">стартеры генераторы комплектующие</h4>
-          <h5 class="text-weight-bold">Доставка по КМВ и России</h5>
-          <q-btn size="1.5em" color="accent" to="/catalog"
-            >Поиск по каталогу</q-btn
-          >
+          <h5 class="text-weight-bold">доставка по КМВ и России</h5>
+          <q-btn size="1.5em" color="accent" to="/catalog">Поиск по каталогу</q-btn>
         </div>
       </div>
     </q-img>
@@ -17,7 +15,7 @@
 
 <script>
 export default {
-  name: 'PageIndex'
+  name: 'PageIndex',
 }
 </script>
 

@@ -12,10 +12,7 @@
         />
 
         <q-toolbar-title @click="$router.push('/')">
-          <q-img
-            src="~assets/logo.png"
-            style="height: 50px; max-width: 100px;"
-          />
+          <q-img src="~assets/logo.png" style="height: 50px; max-width: 100px;" />
         </q-toolbar-title>
 
         <q-input
@@ -31,23 +28,13 @@
         >
           <template v-slot:append>
             <q-icon v-if="text === ''" name="ion-search" />
-            <q-icon
-              v-else
-              name="ion-close"
-              class="cursor-pointer"
-              @click="clearProducts"
-            />
+            <q-icon v-else name="ion-close" class="cursor-pointer" @click="clearProducts" />
           </template>
         </q-input>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      content-class="bg-grey-1"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-1">
       <q-list>
         <q-item v-if="this.$store.getters.isLogged" clickable v-ripple>
           <q-item-section avatar>
@@ -55,17 +42,14 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ $store.state.auth.email }}</q-item-label>
-            <q-item-label caption>{{
+            <q-item-label caption>
+              {{
               $store.state.auth.aclGroup
-            }}</q-item-label>
+              }}
+            </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item
-          v-if="!this.$store.getters.isLogged"
-          @click="openLoginDialog"
-          clickable
-          v-ripple
-        >
+        <q-item v-if="!this.$store.getters.isLogged" @click="openLoginDialog" clickable v-ripple>
           <q-item-section avatar>
             <q-icon name="ion-log-out" />
           </q-item-section>
@@ -92,25 +76,14 @@
 
         <q-separator color="primary" />
 
-        <EssentialLink
-          v-for="link in activeLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <EssentialLink v-for="link in activeLinks" :key="link.title" v-bind="link" />
 
         <q-separator v-if="this.$store.getters.isLogged" color="primary" />
-        <q-item
-          v-if="this.$store.getters.isLogged"
-          @click="logout"
-          clickable
-          v-ripple
-        >
+        <q-item v-if="this.$store.getters.isLogged" @click="logout" clickable v-ripple>
           <q-item-section avatar>
             <q-icon name="ion-log-out" />
           </q-item-section>
-          <q-item-section>
-            Выход
-          </q-item-section>
+          <q-item-section>Выход</q-item-section>
         </q-item>
 
         <q-separator color="primary" />
@@ -139,12 +112,8 @@
               />
             </p>
             <p class="text-body2">трасса Ростов-Баку, рынок "Бетта"</p>
-            <q-btn type="a" href="tel:+79887575225" outline
-              >+7988-75-75-225</q-btn
-            >
-            <q-btn type="a" href="tel:+79283222555" outline
-              >+7928-3-222-555</q-btn
-            >
+            <q-btn type="a" href="tel:+79887575225" outline>+7988-75-75-225</q-btn>
+            <q-btn type="a" href="tel:+79283222555" outline>+7928-3-222-555</q-btn>
             <div class="row justify-center q-gutter-xs">
               <q-btn
                 color="primary"
@@ -159,15 +128,15 @@
 
         <q-item>
           <q-item-section>
-            <a
-              href="https://webmaster.yandex.ru/siteinfo/?site=https://restar26.site"
-              ><img
+            <a href="https://webmaster.yandex.ru/siteinfo/?site=https://restar26.site">
+              <img
                 width="88"
                 height="31"
-                alt=""
+                alt
                 border="0"
                 src="https://yandex.ru/cycounter?https://restar26.site&theme=light&lang=ru"
-            /></a>
+              />
+            </a>
           </q-item-section>
         </q-item>
       </q-list>
@@ -184,10 +153,7 @@
       transition-show="scale"
       transition-hide="scale"
     >
-      <q-card
-        style="width: 500px; max-width: 80vw;"
-        class="bg-primary text-white"
-      >
+      <q-card style="width: 500px; max-width: 80vw;" class="bg-primary text-white">
         <q-card-section>
           <div class="text-h6">Вход</div>
         </q-card-section>
@@ -224,10 +190,7 @@
       transition-show="scale"
       transition-hide="scale"
     >
-      <q-card
-        style="width: 500px; max-width: 80vw;"
-        class="bg-primary text-white"
-      >
+      <q-card style="width: 500px; max-width: 80vw;" class="bg-primary text-white">
         <q-card-section>
           <div class="text-h6">Регистрация</div>
         </q-card-section>
@@ -256,15 +219,7 @@
               class="text-primary"
               label="Я принимаю лицензионное"
             />
-            <q-btn
-              flat
-              unelevated
-              dense
-              type="a"
-              href="/license"
-              target="_blank"
-              >Соглашение</q-btn
-            >
+            <q-btn flat unelevated dense type="a" href="/license" target="_blank">Соглашение</q-btn>
           </div>
         </q-card-section>
 
@@ -285,7 +240,7 @@ export default {
   name: 'MainLayout',
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
 
   data() {
@@ -303,34 +258,34 @@ export default {
           title: 'Главная',
           caption: 'restar',
           icon: 'ion-home',
-          link: '/'
+          link: '/',
         },
         {
           title: 'Каталог',
           caption: 'catalog',
           icon: 'ion-folder',
-          link: '/catalog'
+          link: '/catalog',
         },
         {
           title: 'Предложения',
           caption: 'offers',
           icon: 'ion-flame',
-          link: '/offers'
+          link: '/offers',
         },
         {
           title: 'Остатки',
           caption: 'amount',
           icon: 'ion-search',
-          link: '/amount'
+          link: '/amount',
         },
         {
           title: 'test',
           caption: 'test',
           icon: 'ion-test',
           link: '/test',
-          onlyManager: true
-        }
-      ]
+          onlyManager: true,
+        },
+      ],
     }
   },
   methods: {
@@ -340,7 +295,7 @@ export default {
       } catch (e) {
         this.$q.notify({
           message: 'Ошибка',
-          color: 'red'
+          color: 'red',
         })
         console.log(e)
       }
@@ -368,23 +323,24 @@ export default {
       console.log('checklogin')
       let credentials = {
         email: this.email,
-        password: this.password
+        password: this.password,
       }
 
       try {
         await this.$store.dispatch('login', { credentials })
         this.$q.notify({
           message: ' Вы вошли',
-          color: 'accent'
+          color: 'accent',
         })
         this.closeLoginDialog()
       } catch (e) {
         this.$q.notify({
           message: e.message,
-          color: 'red'
+          color: 'red',
         })
       }
     },
+
     logout() {
       console.log(this.$store.getters.isLogged)
       this.$store.dispatch('logout')
@@ -392,24 +348,24 @@ export default {
     async registration() {
       let credentials = {
         email: this.email,
-        password: this.password
+        password: this.password,
       }
 
       try {
         await this.$store.dispatch('registration', { credentials })
         this.$q.notify({
           message: ' Вы зарегистрировались и вошли',
-          color: 'accent'
+          color: 'accent',
         })
         this.closeRegistrationDialog()
       } catch (e) {
         this.$q.notify({
           message: e.response.data,
-          color: 'red'
+          color: 'red',
         })
         console.dir(e)
       }
-    }
+    },
   },
   computed: {
     activeLinks() {
@@ -419,8 +375,8 @@ export default {
       ) {
         return this.essentialLinks
       }
-      return this.essentialLinks.filter(link => link.onlyManager !== true)
-    }
-  }
+      return this.essentialLinks.filter((link) => link.onlyManager !== true)
+    },
+  },
 }
 </script>

@@ -1,6 +1,6 @@
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
-
+// TODO: Check prefetch feature
 module.exports = function(ctx) {
   return {
     // app boot file (/src/boot)
@@ -36,7 +36,7 @@ module.exports = function(ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Loading', 'Dialog'],
+      plugins: ['Notify', 'Loading', 'Dialog', 'LocalStorage'],
       config: {
         loading: {
           spinner: 'QSpinnerInfinity',
@@ -67,7 +67,7 @@ module.exports = function(ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 8090,
+      port: 8080,
       open: true // opens browser window automatically
     },
 

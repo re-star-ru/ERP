@@ -46,6 +46,7 @@ func Start() {
 		CustomTimeFormat: "Jan 02 15:04:05.00",
 		Format:           "[${time_custom}] [${method}] [${status}]  URI:${uri}; err: ${error}; [${latency_human}]\n",
 	}))
+	e.Use(middleware.CORS())
 
 	authRepo := authRepositoryMongo.NewRepository(db, "users")
 	us := authUsecase.NewUsecase(authRepo,
@@ -58,8 +59,6 @@ func Start() {
 	authGroup := e.Group("/auth")
 	authGroup.Use(middl.Authenticator)
 
-	// TODO: logger middleware
-	e.Use(middl.CORS)
 	authDeliveryHTTP.NewHandler(authGroup, us)
 
 	productGroup := e.Group("/products")
