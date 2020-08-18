@@ -16,7 +16,10 @@ type cartHandler struct {
 func NewHandler(e *echo.Group, cu domain.CartUsecase) {
 	handler := &cartHandler{cu}
 
-	e.GET("", handler.Get)
+	{
+		e.GET("", handler.Get)
+		e.POST("", handler.Add)
+	}
 
 }
 
@@ -31,6 +34,23 @@ func (h cartHandler) Get(c echo.Context) error {
 	}
 
 	return h.respond(c, http.StatusOK, cart)
+}
+
+type inputAddProduct struct {
+	ID    string `json:"id"`
+	Count int    `json:"count"`
+}
+
+func (h cartHandler) Add(c echo.Context) error {
+	user := c.Get(domain.UserKey).(*domain.User)
+	logrus.Println("getting user from ctx:", user)
+
+	inputAdd := &inputAddProduct{}
+	if err := c.Bind(inputAdd); err != nil {
+		return err
+	}
+
+	return h.usecase.AddProductToCart(c.Request().Context(), user, inputAdd.ID, inputAdd.Count)
 }
 
 func (h *cartHandler) error(c echo.Context, code int, err error) error {

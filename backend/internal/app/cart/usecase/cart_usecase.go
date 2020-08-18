@@ -16,7 +16,7 @@ func (c cart) ShowUsersCart(ctx context.Context, u *domain.User) (*domain.Cart, 
 }
 
 func (c cart) AddProductToCart(ctx context.Context, u *domain.User, productID string, count int) error {
-	panic("implement me")
+	return c.cartRepo.AddToCart(ctx, u, productID, count)
 }
 
 func (c cart) RemoveProductFromCart(ctx context.Context, u *domain.User, cartKey string) error {

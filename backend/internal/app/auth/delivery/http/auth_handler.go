@@ -18,12 +18,13 @@ type UserHandler struct {
 	UserUsecase domain.UserUsecase
 }
 
-func NewHandler(e *echo.Echo, us domain.UserUsecase) {
+func NewHandler(authEndpoints *echo.Group, us domain.UserUsecase) {
 	handler := &UserHandler{us}
-	authEndpoints := e.Group("auth")
 	{
 		authEndpoints.POST("/sign-up", handler.SignUp)
 		authEndpoints.POST("/sign-in", handler.SignIn)
+		authEndpoints.GET("/whoami", handler.whoami)
+
 	}
 }
 
@@ -67,6 +68,12 @@ func (u *UserHandler) SignIn(c echo.Context) (err error) {
 	}
 
 	return c.JSON(http.StatusOK, token)
+}
+
+func (u *UserHandler) whoami(c echo.Context) (err error) {
+	user := c.Get(domain.UserKey).(*domain.User)
+
+	return c.JSON(http.StatusOK, user)
 }
 
 func isRequestValid(m *domain.User) (bool, error) {

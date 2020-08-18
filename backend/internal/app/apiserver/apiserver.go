@@ -44,7 +44,7 @@ func Start() {
 	// logger connect
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		CustomTimeFormat: "Jan 02 15:04:05.00",
-		Format:           "[${time_custom}] [${method}  ] [${status}]  URI:${uri}; err: ${error}; [${latency_human}]\n",
+		Format:           "[${time_custom}] [${method}] [${status}]  URI:${uri}; err: ${error}; [${latency_human}]\n",
 	}))
 
 	authRepo := authRepositoryMongo.NewRepository(db, "users")
@@ -54,9 +54,13 @@ func Start() {
 		[]byte(viper.GetString("jwt.signingKey")),
 	)
 	middl := authDeliveryMiddleware.InitMiddleware(us)
+
+	authGroup := e.Group("/auth")
+	authGroup.Use(middl.Authenticator)
+
 	// TODO: logger middleware
 	e.Use(middl.CORS)
-	authDeliveryHTTP.NewHandler(e, us)
+	authDeliveryHTTP.NewHandler(authGroup, us)
 
 	productGroup := e.Group("/products")
 	productGroup.Use(middl.Authenticator)
