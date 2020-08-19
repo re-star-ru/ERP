@@ -261,6 +261,12 @@ export default {
           link: '/',
         },
         {
+          title: 'Продукты',
+          caption: 'products',
+          icon: 'ion-home',
+          link: '/products',
+        },
+        {
           title: 'Каталог',
           caption: 'catalog',
           icon: 'ion-folder',

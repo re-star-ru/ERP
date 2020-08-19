@@ -56,22 +56,18 @@ func Start() {
 	)
 	middl := authDeliveryMiddleware.InitMiddleware(us)
 
-	authGroup := e.Group("/auth")
-	authGroup.Use(middl.Authenticator)
-
+	authGroup := e.Group("/auth", middl.Authenticator)
 	authDeliveryHTTP.NewHandler(authGroup, us)
 
-	productGroup := e.Group("/products")
-	productGroup.Use(middl.Authenticator)
-	productRepo := productRepositoryMongo.NewRepository(db, "products")
-	ps := productUsecase.NewUsecase(productRepo, timeoutContext)
-	productDeliveryHTTP.NewHandler(productGroup, ps)
-
-	cartGroup := e.Group("/cart")
-	cartGroup.Use(middl.Authenticator)
+	cartGroup := e.Group("/cart", middl.Authenticator)
 	cartRepo := cartRepositoryMongo.NewRepository(db, "carts")
 	cs := cartUsecase.NewUsecase(cartRepo, timeoutContext)
 	cartDeliveryHTTP.NewHandler(cartGroup, cs)
+
+	productGroup := e.Group("/products", middl.Authenticator)
+	productRepo := productRepositoryMongo.NewRepository(db, "products")
+	ps := productUsecase.NewUsecase(productRepo, timeoutContext)
+	productDeliveryHTTP.NewHandler(productGroup, ps)
 
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

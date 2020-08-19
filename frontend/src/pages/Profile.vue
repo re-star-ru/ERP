@@ -11,12 +11,12 @@
     </q-field>
 
     <div>
-      <h4>Корзина</h4>
+      <h4>Корзина пользователя {{ cart.userID }}</h4>
     </div>
 
     <div>
-      <q-card>
-        <q-card-section>{{ cart }}</q-card-section>
+      <q-card v-for="(v, i) in cart.addedProducts" :key="i">
+        <q-card-section>{{ v }}</q-card-section>
       </q-card>
     </div>
   </q-page>
