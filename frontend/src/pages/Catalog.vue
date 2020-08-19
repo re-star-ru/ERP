@@ -1,6 +1,6 @@
 <template>
   <q-page class="row content-start q-pa-sm">
-    <div class="col-12 ">
+    <div class="col-12">
       <q-input
         style="font-size: 1.8em;"
         standout="bg-primary black"
@@ -15,23 +15,17 @@
           <q-icon v-if="searchString === ''" name="ion-search" />
         </template>
         <template v-slot:after>
-          <q-btn
-            class="full-height"
-            color="primary"
-            push
-            label="Искать"
-            @click="getCatalog"
-          ></q-btn>
+          <q-btn class="full-height" color="primary" push label="Искать" @click="getCatalog"></q-btn>
         </template>
       </q-input>
     </div>
 
     <div class="col-12 row">
-      <ProductTypesMenu
+      <!-- <ProductTypesMenu
         v-on:childEvent="changeProductType"
         class="q-pa-xs col-xs-12 col-sm-4 col-md-2"
-      />
-      <div class="q-pa-xs col-xs-12 col-sm-8 col-md-10 row justify-center ">
+      />-->
+      <div class="q-pa-xs col-xs-12 col-sm-8 col-md-10 row justify-center">
         <SkuCard v-for="(v, i) in catalogData" :key="i" :sku-data="v" />
       </div>
     </div>
@@ -45,25 +39,27 @@
         :max-pages="6"
         :boundary-numbers="true"
         :to-fn="toPage"
-      >
-      </q-pagination>
+      ></q-pagination>
     </div>
   </q-page>
 </template>
 
 <script>
-import ProductTypesMenu from 'components/ProductTypesMenu'
+// import ProductTypesMenu from 'components/ProductTypesMenu'
 import SkuCard from 'components/SkuCard'
 
 export default {
-  components: { ProductTypesMenu, SkuCard },
+  components: {
+    // ProductTypesMenu,
+    SkuCard,
+  },
   data() {
     return {
       perPage: 48,
       maxGroupsCount: 0,
       catalogData: [],
       productTypes: [],
-      searchString: ''
+      searchString: '',
     }
   },
   methods: {
@@ -74,8 +70,8 @@ export default {
         const resp = await this.$axios.get('/catalog', {
           params: {
             ...this.$route.query,
-            q: this.searchString
-          }
+            q: this.searchString,
+          },
         })
 
         this.catalogData = resp.data.groups
@@ -88,7 +84,7 @@ export default {
         this.$q.notify({
           type: 'warning',
           message: `Ничего не найдено`,
-          timeout: 200
+          timeout: 200,
         })
         this.catalogData = []
         this.maxGroupsCount = 0
@@ -101,7 +97,7 @@ export default {
     changeProductType(val) {
       console.log('change product type', val)
       this.getCatalog({ ...this.query, t: val.guid })
-    }
+    },
   },
   computed: {
     maxPages() {
@@ -113,16 +109,16 @@ export default {
         return 1
       }
       return p
-    }
+    },
   },
   watch: {
     $route(to) {
       console.log(to)
       this.getCatalog()
-    }
+    },
   },
   mounted() {
     this.getCatalog()
-  }
+  },
 }
 </script>
