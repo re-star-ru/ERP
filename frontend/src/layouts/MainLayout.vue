@@ -36,7 +36,7 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-1">
       <q-list>
-        <q-item v-if="this.$store.getters.isLogged" clickable v-ripple>
+        <q-item v-if="this.$store.getters.isLogged" clickable v-ripple to="/profile">
           <q-item-section avatar>
             <q-icon name="ion-person" />
           </q-item-section>

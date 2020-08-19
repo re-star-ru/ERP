@@ -80,6 +80,7 @@ func (u *usecase) ParseToken(ctx context.Context, accessToken string) (*domain.U
 	}
 
 	if claims, ok := token.Claims.(*AuthClaims); ok && token.Valid {
+		claims.User.Sanitize()
 		return claims.User, nil
 	}
 

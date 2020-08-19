@@ -6,6 +6,11 @@ const routes = [
       { path: '', component: () => import('pages/Index.vue') },
       { path: '/offers', redirect: '/offers/1' },
       {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('pages/Profile')
+      },
+      {
         path: '/offers/:page',
         name: 'page',
         component: () => import('pages/Offers')

@@ -25,7 +25,6 @@ func (m *GoMiddleware) CORS(next echo.HandlerFunc) echo.HandlerFunc {
 // нет учетных данных
 func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-
 		authHeader := c.Request().Header.Get("Authorization")
 		// If auth header empty set default anonymous user to context
 		if authHeader == "" {

@@ -19,7 +19,7 @@ type repository struct {
 func (r repository) GetUsersCart(ctx context.Context, u *domain.User) (*domain.Cart, error) {
 	cart, err := r.getCartByUser(ctx, u)
 
-	return toCart(cart), err
+	return toCart(cart, u), err
 }
 
 func (r repository) getCartByUser(ctx context.Context, u *domain.User) (*Cart, error) {
@@ -100,9 +100,9 @@ func NewRepository(DB *mongo.Database, collection string) domain.CartRepository 
 	return &repository{DB.Collection(collection)}
 }
 
-func toCart(cart *Cart) *domain.Cart {
+func toCart(cart *Cart, user *domain.User) *domain.Cart {
 	dc := domain.NewCart()
-	dc.OwnerID = cart.OwnerID.Hex()
+	dc.OwnerID = user.ID
 
 	for key, v := range cart.AddedProducts {
 		dc.AddedProducts[key] = &struct {
