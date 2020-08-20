@@ -3,6 +3,8 @@ package productRepositoryMongo
 import (
 	"backend/internal/app/domain"
 	"context"
+	"log"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -13,7 +15,23 @@ import (
 
 type Product struct {
 	ID   primitive.ObjectID `bson:"_id,omitempty"`
-	Name string             `bson:"string"`
+	Name string             `bson:"name"`
+
+	GUID         string `json:"guid" bson:"guid"`
+	SKU          string `json:"sku" bson:"sku"`
+	Description  string `json:"description" bson:"description"`
+	Manufacturer string `json:"manufacturer"  bson:"manufacturer"`
+	//TypeGUID     string `json:"typeGUID" bson:""`
+	//TypeName     string `json:"typeName"`
+
+	//Characteristics []Characteristic `json:"characteristics"`
+
+	//Properties []Property `json:"properties"`
+
+	Creator domain.User `json:"creator" bson:"creator"`
+
+	CreatedAt    time.Time `json:"createdAt"`
+	LastModified time.Time `json:"lastModified"`
 }
 
 type repository struct {
@@ -41,7 +59,12 @@ func (r repository) GetProducts(ctx context.Context) ([]*domain.Product, error) 
 	if err != nil {
 		return nil, err
 	}
-	defer cur.Close(ctx)
+
+	defer func() {
+		if err := cur.Close(ctx); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	for cur.Next(ctx) {
 		product := new(Product)

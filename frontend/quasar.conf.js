@@ -36,11 +36,16 @@ module.exports = function(ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Loading', 'Dialog', 'LocalStorage'],
+      plugins: ['Notify', 'Loading', 'Dialog', 'LocalStorage', 'LoadingBar'],
       config: {
         loading: {
           spinner: 'QSpinnerInfinity',
           delay: 40
+        },
+        loadingBar: {
+          color: 'purple',
+          size: '10px',
+          position: 'bottom'
         }
       }
     },

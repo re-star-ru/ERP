@@ -1,15 +1,24 @@
 <template>
-  <q-page padding>
-    <q-card v-for="(v, i) in products" :key="i">
-      {{v}}
+  <q-page padding class="row">
+    <q-card
+      flat
+      bordered
+      square
+      class="q-pa-sm col-12 col-md-6 col-lg-4"
+      v-for="(v, i) in products"
+      :key="i"
+    >
       <q-card-section>
+        <q-img src="https://s3.restar26.site/public/485f9ba5-f205-4eea-80e9-353a9760d4e1.jpg" />
+
+        <q-card-section></q-card-section>
         <div>id: {{v.id}}</div>
         <div>Наименование {{v.name}}</div>
         <div>Создатель: {{v.creator}}</div>
       </q-card-section>
 
       <q-card-actions>
-        <q-btn icon-right="ion-cart" @click="addToCart(v.id)">в корзину</q-btn>
+        <q-btn outline icon-right="ion-cart" @click="addToCart(v.id)">в корзину</q-btn>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -44,3 +53,4 @@ export default {
   },
 }
 </script>
+

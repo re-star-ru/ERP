@@ -10,27 +10,29 @@
       </template>
     </q-field>
 
-    <div>
-      <h4>Корзина пользователя {{ cart.userID }}</h4>
-    </div>
+    <q-btn unelevated color="primary">Сменить пароль</q-btn>
 
     <div>
-      <q-card v-for="(v, i) in cart.addedProducts" :key="i">
-        <q-card-section>{{ v }}</q-card-section>
-      </q-card>
+      <h4>Корзина пользователя {{ info.id }}</h4>
     </div>
+
+    <CartTable />
   </q-page>
 </template>
 
 <script>
+import CartTable from 'components/CartTable'
+
 export default {
+  components: {
+    CartTable,
+  },
   // name: 'PageName',
   data: () => {
     return {
       info: {
         email: '',
       },
-      cart: '',
     }
   },
   methods: {
@@ -40,16 +42,9 @@ export default {
       this.info = res.data
       console.log(res)
     },
-    async getUserCart() {
-      console.log('getting users cart')
-      const res = await this.$axios.get('cart')
-      this.cart = res.data
-      console.log(res)
-    },
   },
   created() {
     this.getUserInfo()
-    this.getUserCart()
   },
 }
 </script>

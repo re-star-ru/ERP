@@ -1,6 +1,9 @@
 package domain
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 // Product это продукт
 type Product struct {
@@ -18,6 +21,9 @@ type Product struct {
 	Properties []Property `json:"properties"`
 
 	Creator User `json:"creator"`
+
+	CreatedAt    time.Time `json:"createdAt"`
+	LastModified time.Time `json:"lastModified"`
 }
 
 type ProductUsecase interface {

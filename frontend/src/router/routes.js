@@ -16,6 +16,16 @@ const routes = [
         component: () => import('pages/Products')
       },
       {
+        path: '/cart',
+        name: 'cart',
+        component: () => import('pages/Cart')
+      },
+      {
+        path: '/catalog-manager',
+        name: 'catalog-manager',
+        component: () => import('pages/CatalogManager')
+      },
+      {
         path: '/offers/:page',
         name: 'page',
         component: () => import('pages/Offers')

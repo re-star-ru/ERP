@@ -3,6 +3,7 @@ package productDeliveryHTTP
 import (
 	"backend/internal/app/domain"
 	"net/http"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -34,16 +35,21 @@ func (p *productHandler) Get(c echo.Context) error {
 
 type createInput struct {
 	Name string `json:"name"`
+	SKU  string `json:"sku"`
 }
 
-func toProduct(c createInput) *domain.Product {
+func toProduct(c createInput, u *domain.User) *domain.Product {
 	return &domain.Product{
-		Name: c.Name,
+		Name:         c.Name,
+		SKU:          c.SKU,
+		Creator:      *u,
+		CreatedAt:    time.Now(),
+		LastModified: time.Now(),
 	}
 }
 
 func (p *productHandler) Create(c echo.Context) error {
-	inp := new(createInput)
+	inp := &createInput{}
 
 	if err := c.Bind(inp); err != nil {
 		return p.error(c, http.StatusBadRequest, err)
@@ -52,7 +58,7 @@ func (p *productHandler) Create(c echo.Context) error {
 	user := c.Get(domain.UserKey).(*domain.User)
 	logrus.Println("getting user from ctx:", user)
 
-	pr := toProduct(*inp)
+	pr := toProduct(*inp, user)
 
 	if err := p.usecase.CreateProduct(c.Request().Context(), user, pr); err != nil {
 		return p.error(c, http.StatusBadRequest, err)

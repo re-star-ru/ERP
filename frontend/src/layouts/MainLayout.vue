@@ -11,8 +11,12 @@
           aria-label="Menu"
         />
 
-        <q-toolbar-title @click="$router.push('/')">
-          <q-img src="~assets/logo.png" style="height: 50px; max-width: 100px;" />
+        <q-toolbar-title>
+          <q-img
+            @click="$router.push('/')"
+            src="~assets/logo.png"
+            style="height: 50px; max-width: 100px;"
+          />
         </q-toolbar-title>
 
         <q-input
@@ -31,6 +35,14 @@
             <q-icon v-else name="ion-close" class="cursor-pointer" @click="clearProducts" />
           </template>
         </q-input>
+
+        <q-btn
+          unelevated
+          icon-right="ion-cart"
+          v-if="$route.path === '/products'"
+          to="cart"
+          color="accent"
+        >Корзина</q-btn>
       </q-toolbar>
     </q-header>
 
@@ -265,6 +277,18 @@ export default {
           caption: 'products',
           icon: 'ion-home',
           link: '/products',
+        },
+        {
+          title: 'Корзина',
+          caption: 'cart',
+          icon: 'ion-cart',
+          link: '/cart',
+        },
+        {
+          title: 'Менеджер каталога',
+          caption: 'catalog-manager',
+          icon: 'ion-folder',
+          link: '/catalog-manager',
         },
         {
           title: 'Каталог',
