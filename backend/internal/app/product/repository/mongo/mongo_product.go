@@ -30,8 +30,8 @@ type Product struct {
 
 	Creator domain.User `json:"creator" bson:"creator"`
 
-	CreatedAt    time.Time `json:"createdAt"`
-	LastModified time.Time `json:"lastModified"`
+	CreatedAt    time.Time `json:"createdAt" bson:"createdAt"`
+	LastModified time.Time `json:"lastModified" `
 }
 
 type repository struct {
