@@ -71,8 +71,14 @@ export default {
 
     async getProductInfo() {
       console.log('get product with id:', this.id)
-      const res = this.$axios.get(`products/${this.id}`)
-      this.product = res.data
+
+      try {
+        const res = this.$axios.get(`products/${this.id}`)
+        console.log(res)
+        // this.product = res.data
+      } catch (e) {
+        console.log(e)
+      }
     },
   },
   created() {

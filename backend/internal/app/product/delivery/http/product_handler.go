@@ -25,12 +25,30 @@ type getResponse struct {
 	Products []*domain.Product `json:"products"`
 }
 
+type getProduct struct {
+	domain.Product
+}
+
 func (p *productHandler) Get(c echo.Context) error {
 	ps, err := p.usecase.GetProducts(c.Request().Context())
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 	return c.JSON(http.StatusOK, &getResponse{ps})
+}
+
+type inputGetByID struct {
+	ID string `json:"id"`
+}
+
+func (p *productHandler) GetOneByID(c echo.Context) error {
+
+	pd, err := p.usecase.GetOne(c.Request().Context())
+	if err != nil {
+		return p.error(c, http.StatusBadRequest, err)
+	}
+
+	return c.JSON(http.StatusOK, &getProduct{pd})
 }
 
 type createInput struct {
