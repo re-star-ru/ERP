@@ -9,16 +9,24 @@
       :key="i"
     >
       <q-card-section>
-        <q-img src="https://s3.restar26.site/public/485f9ba5-f205-4eea-80e9-353a9760d4e1.jpg" />
-
-        <q-card-section></q-card-section>
-        <div>id: {{v.id}}</div>
-        <div>Наименование {{v.name}}</div>
-        <div>Создатель: {{v.creator}}</div>
+        <q-img
+          src="https://s3.restar26.site/public/485f9ba5-f205-4eea-80e9-353a9760d4e1.jpg"
+        />
+        <div>id: {{ v.id }}</div>
+        <div>Наименование {{ v.name }}</div>
+        <div>Создатель: {{ v.creator }}</div>
       </q-card-section>
 
-      <q-card-actions>
-        <q-btn outline icon-right="ion-cart" @click="addToCart(v.id)">в корзину</q-btn>
+      <q-card-actions class="justify-between">
+        <q-btn outline icon-right="ion-cart" @click="addToCart(v.id)"
+          >в корзину</q-btn
+        >
+        <q-btn
+          outline
+          icon-right="ion-construct"
+          :to="`catalog-manager/${v.id}`"
+          >Редактировать</q-btn
+        >
       </q-card-actions>
     </q-card>
   </q-page>
@@ -33,7 +41,7 @@ export default {
   },
   methods: {
     async getAllProducts() {
-      console.log('get all prducts')
+      console.log('get all products')
       const res = await this.$axios.get('products')
       this.products = res.data.products
     },
@@ -46,6 +54,9 @@ export default {
       })
       console.log(res.status)
     },
+    // edit(id) {
+    //   this.()
+    // },
   },
 
   created() {
@@ -53,4 +64,3 @@ export default {
   },
 }
 </script>
-

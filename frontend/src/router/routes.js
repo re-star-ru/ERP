@@ -8,44 +8,52 @@ const routes = [
       {
         path: '/profile',
         name: 'profile',
-        component: () => import('pages/Profile')
+        component: () => import('pages/Profile'),
       },
+
       {
         path: '/products',
         name: 'products',
-        component: () => import('pages/Products')
+        component: () => import('pages/Products'),
       },
       {
         path: '/cart',
         name: 'cart',
-        component: () => import('pages/Cart')
+        component: () => import('pages/Cart'),
       },
       {
         path: '/catalog-manager',
         name: 'catalog-manager',
-        component: () => import('pages/CatalogManager')
+        component: () => import('pages/CatalogManager'),
       },
+      {
+        path: '/catalog-manager/:id',
+        name: 'catalog-manager',
+        component: () => import('pages/CatalogManager'),
+        props: true,
+      },
+
       {
         path: '/offers/:page',
         name: 'page',
-        component: () => import('pages/Offers')
+        component: () => import('pages/Offers'),
       },
       { path: '/amount', component: () => import('pages/Amount') },
       {
         name: 'catalog',
         path: '/catalog',
-        component: () => import('pages/Catalog')
+        component: () => import('pages/Catalog'),
       },
       { path: '/test', component: () => import('pages/Test') },
-      { path: '/license', component: () => import('pages/License') }
-    ]
-  }
+      { path: '/license', component: () => import('pages/License') },
+    ],
+  },
 ]
 
 // Always leave this as last one
 routes.push({
   path: '*',
-  component: () => import('pages/Error404.vue')
+  component: () => import('pages/Error404.vue'),
 })
 
 export default routes
