@@ -1,7 +1,7 @@
 package cartRepositoryMongo
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"context"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -16,13 +16,13 @@ type repository struct {
 	db *mongo.Collection
 }
 
-func (r repository) GetUsersCart(ctx context.Context, u *domain.User) (*domain.Cart, error) {
+func (r repository) GetUsersCart(ctx context.Context, u *models.User) (*models.Cart, error) {
 	cart, err := r.getCartByUser(ctx, u)
 
 	return toCart(cart, u), err
 }
 
-func (r repository) getCartByUser(ctx context.Context, u *domain.User) (*Cart, error) {
+func (r repository) getCartByUser(ctx context.Context, u *models.User) (*Cart, error) {
 	c := &Cart{}
 	c.AddedProducts = AddedProducts{}
 
@@ -47,7 +47,7 @@ func (r repository) getCartByUser(ctx context.Context, u *domain.User) (*Cart, e
 	return c, err
 }
 
-func (r repository) AddToCart(ctx context.Context, u *domain.User, productID string, count int) error {
+func (r repository) AddToCart(ctx context.Context, u *models.User, productID string, count int) error {
 	cart, err := r.getCartByUser(ctx, u)
 	if err != nil {
 		return err
@@ -81,7 +81,7 @@ func (r repository) AddToCart(ctx context.Context, u *domain.User, productID str
 	return nil
 }
 
-func (r repository) RemoveFromCart(ctx context.Context, u *domain.User, cartKey string) error {
+func (r repository) RemoveFromCart(ctx context.Context, u *models.User, cartKey string) error {
 	panic("implement me")
 }
 
@@ -96,12 +96,12 @@ type AddedProducts map[string]*struct {
 	Count     int                `json:"count" bson:"count"`
 }
 
-func NewRepository(DB *mongo.Database, collection string) domain.CartRepository {
+func NewRepository(DB *mongo.Database, collection string) models.CartRepository {
 	return &repository{DB.Collection(collection)}
 }
 
-func toCart(cart *Cart, user *domain.User) *domain.Cart {
-	dc := domain.NewCart()
+func toCart(cart *Cart, user *models.User) *models.Cart {
+	dc := models.NewCart()
 	dc.OwnerID = user.ID
 
 	for key, v := range cart.AddedProducts {

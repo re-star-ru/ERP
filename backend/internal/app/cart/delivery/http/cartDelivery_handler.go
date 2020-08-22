@@ -1,7 +1,7 @@
 package cartDeliveryHTTP
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -10,10 +10,10 @@ import (
 )
 
 type cartHandler struct {
-	usecase domain.CartUsecase
+	usecase models.CartUsecase
 }
 
-func NewHandler(e *echo.Group, cu domain.CartUsecase) {
+func NewHandler(e *echo.Group, cu models.CartUsecase) {
 	handler := &cartHandler{cu}
 
 	{
@@ -24,7 +24,7 @@ func NewHandler(e *echo.Group, cu domain.CartUsecase) {
 }
 
 func (h cartHandler) Get(c echo.Context) error {
-	user := c.Get(domain.UserKey).(*domain.User)
+	user := c.Get(models.UserKey).(*models.User)
 
 	logrus.Println("getting user from ctx:", user)
 
@@ -42,7 +42,7 @@ type inputAddProduct struct {
 }
 
 func (h cartHandler) Add(c echo.Context) error {
-	user := c.Get(domain.UserKey).(*domain.User)
+	user := c.Get(models.UserKey).(*models.User)
 	logrus.Println("getting user from ctx:", user)
 
 	inputAdd := &inputAddProduct{}

@@ -1,7 +1,7 @@
 package productRepositoryMongo
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"context"
 	"log"
 	"time"
@@ -28,7 +28,7 @@ type Product struct {
 
 	//Properties []Property `json:"properties"`
 
-	Creator domain.User `json:"creator" bson:"creator"`
+	Creator models.User `json:"creator" bson:"creator"`
 
 	CreatedAt    time.Time `json:"createdAt" bson:"createdAt"`
 	LastModified time.Time `json:"lastModified" `
@@ -38,11 +38,15 @@ type repository struct {
 	db *mongo.Collection
 }
 
-func NewRepository(DB *mongo.Database, collection string) domain.ProductRepository {
+func (r repository) GetByID(ctx context.Context, id string) (models.Product, error) {
+	panic("implement me")
+}
+
+func NewRepository(DB *mongo.Database, collection string) models.ProductRepository {
 	return &repository{DB.Collection(collection)}
 }
 
-func (r repository) CreateProduct(ctx context.Context, u *domain.User, p *domain.Product) error {
+func (r repository) CreateProduct(ctx context.Context, u *models.User, p *models.Product) error {
 	m := toModel(p)
 	res, err := r.db.InsertOne(ctx, m)
 	if err != nil {
@@ -53,7 +57,7 @@ func (r repository) CreateProduct(ctx context.Context, u *domain.User, p *domain
 	return nil
 }
 
-func (r repository) GetProducts(ctx context.Context) ([]*domain.Product, error) {
+func (r repository) GetProducts(ctx context.Context) ([]*models.Product, error) {
 	out := make([]*Product, 0)
 	cur, err := r.db.Find(ctx, bson.M{})
 	if err != nil {
@@ -82,7 +86,7 @@ func (r repository) GetProducts(ctx context.Context) ([]*domain.Product, error) 
 	return toProducts(out), nil
 }
 
-func toModel(p *domain.Product) *Product {
+func toModel(p *models.Product) *Product {
 	// todo: настроить конвертацию id
 	//uid, _ := primitive.ObjectIDFromHex(b.)
 	return &Product{
@@ -90,15 +94,15 @@ func toModel(p *domain.Product) *Product {
 	}
 }
 
-func toProduct(b *Product) *domain.Product {
-	return &domain.Product{
+func toProduct(b *Product) *models.Product {
+	return &models.Product{
 		ID:   b.ID.Hex(),
 		Name: b.Name,
 	}
 }
 
-func toProducts(bs []*Product) []*domain.Product {
-	out := make([]*domain.Product, len(bs))
+func toProducts(bs []*Product) []*models.Product {
+	out := make([]*models.Product, len(bs))
 
 	for i, b := range bs {
 		out[i] = toProduct(b)

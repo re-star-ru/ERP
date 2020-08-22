@@ -1,7 +1,7 @@
 package authDeliveryHTTP
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -15,10 +15,10 @@ type ResponseError struct {
 }
 
 type UserHandler struct {
-	UserUsecase domain.UserUsecase
+	UserUsecase models.UserUsecase
 }
 
-func NewHandler(authEndpoints *echo.Group, us domain.UserUsecase) {
+func NewHandler(authEndpoints *echo.Group, us models.UserUsecase) {
 	handler := &UserHandler{us}
 	{
 		authEndpoints.POST("/sign-up", handler.SignUp)
@@ -29,7 +29,7 @@ func NewHandler(authEndpoints *echo.Group, us domain.UserUsecase) {
 }
 
 func (u *UserHandler) SignUp(c echo.Context) (err error) {
-	var user domain.User
+	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
@@ -49,7 +49,7 @@ func (u *UserHandler) SignUp(c echo.Context) (err error) {
 }
 
 func (u *UserHandler) SignIn(c echo.Context) (err error) {
-	var user domain.User
+	var user models.User
 	err = c.Bind(&user)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
@@ -71,12 +71,12 @@ func (u *UserHandler) SignIn(c echo.Context) (err error) {
 }
 
 func (u *UserHandler) whoami(c echo.Context) (err error) {
-	user := c.Get(domain.UserKey).(*domain.User)
+	user := c.Get(models.UserKey).(*models.User)
 
 	return c.JSON(http.StatusOK, user)
 }
 
-func isRequestValid(m *domain.User) (bool, error) {
+func isRequestValid(m *models.User) (bool, error) {
 	validate := validator.New()
 	err := validate.Struct(m)
 	if err != nil {
@@ -92,13 +92,13 @@ func getStatusCode(err error) int {
 
 	logrus.Error(err)
 	switch err {
-	case domain.ErrInternalServerError:
+	case models.ErrInternalServerError:
 		return http.StatusInternalServerError
-	case domain.ErrNotFound:
+	case models.ErrNotFound:
 		return http.StatusNotFound
-	case domain.ErrConflict:
+	case models.ErrConflict:
 		return http.StatusConflict
-	case domain.ErrUserAlreadyExists:
+	case models.ErrUserAlreadyExists:
 		return http.StatusConflict
 	default:
 		return http.StatusInternalServerError

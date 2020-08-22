@@ -1,7 +1,7 @@
 package authRepositoryMongo
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"context"
 
 	"golang.org/x/crypto/bcrypt"
@@ -22,11 +22,11 @@ type user struct {
 	EncryptedPassword string `json:"encrypted_password,omitempty" bson:"encrypted_password"`
 }
 
-func NewRepository(DB *mongo.Database, collection string) domain.UserRepository {
+func NewRepository(DB *mongo.Database, collection string) models.UserRepository {
 	return &repository{DB.Collection(collection)}
 }
 
-func (m repository) Create(ctx context.Context, user *domain.User) error {
+func (m repository) Create(ctx context.Context, user *models.User) error {
 	if err := user.BeforeCreate(); err != nil {
 		return err
 	}
@@ -43,18 +43,18 @@ func (m repository) Create(ctx context.Context, user *domain.User) error {
 	return nil
 }
 
-func (m repository) GetByID(ctx context.Context, id int) (domain.User, error) {
+func (m repository) GetByID(ctx context.Context, id int) (models.User, error) {
 	panic("implement me")
 }
 
-func (m repository) GetByEmail(ctx context.Context, email string) (domain.User, error) {
-	user := domain.User{}
+func (m repository) GetByEmail(ctx context.Context, email string) (models.User, error) {
+	user := models.User{}
 
 	res := m.DB.FindOne(ctx, bson.M{"email": email})
 
 	// Если не найдено возвращаем пустого пользователя
 	if res.Err() == mongo.ErrNoDocuments {
-		return user, domain.ErrNotFound
+		return user, models.ErrNotFound
 	}
 
 	// если
@@ -63,16 +63,16 @@ func (m repository) GetByEmail(ctx context.Context, email string) (domain.User, 
 	}
 
 	if err := res.Decode(&user); err != nil {
-		return domain.User{}, err
+		return models.User{}, err
 	}
 
 	return user, nil
 }
 
-func (m repository) ValidateUser(ctx context.Context, user *domain.User) (bool, error) {
+func (m repository) ValidateUser(ctx context.Context, user *models.User) (bool, error) {
 	res := m.DB.FindOne(ctx, bson.M{"email": user.Email})
 	if res.Err() == mongo.ErrNoDocuments {
-		return false, domain.ErrInvalidCredentials
+		return false, models.ErrInvalidCredentials
 	}
 
 	if res.Err() != nil {
@@ -87,8 +87,8 @@ func (m repository) ValidateUser(ctx context.Context, user *domain.User) (bool, 
 	return bcrypt.CompareHashAndPassword([]byte(u.EncryptedPassword), []byte(u.Password)) == nil, nil
 }
 
-func toUser(u user) *domain.User {
-	return &domain.User{
+func toUser(u user) *models.User {
+	return &models.User{
 		ID:    u.ID,
 		Email: u.Email,
 		Name:  u.Name,

@@ -1,7 +1,7 @@
 package authDeliveryHTTPMiddleware
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"net/http"
 	"strings"
 
@@ -11,7 +11,7 @@ import (
 )
 
 type GoMiddleware struct {
-	usecase domain.UserUsecase
+	usecase models.UserUsecase
 }
 
 func (m *GoMiddleware) CORS(next echo.HandlerFunc) echo.HandlerFunc {
@@ -28,37 +28,37 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 		authHeader := c.Request().Header.Get("Authorization")
 		// If auth header empty set default anonymous user to context
 		if authHeader == "" {
-			logrus.Println("setting empty user in ctx:", domain.User{})
-			c.Set(domain.UserKey, domain.User{})
+			logrus.Println("setting empty user in ctx:", models.User{})
+			c.Set(models.UserKey, models.User{})
 			return next(c)
 		}
 
 		headerParts := strings.Split(authHeader, " ")
 		if len(headerParts) != 2 {
-			return m.error(c, http.StatusUnauthorized, domain.ErrUnauthorized)
+			return m.error(c, http.StatusUnauthorized, models.ErrUnauthorized)
 		}
 
 		if headerParts[0] != "Bearer" {
-			return m.error(c, http.StatusUnauthorized, domain.ErrUnauthorized)
+			return m.error(c, http.StatusUnauthorized, models.ErrUnauthorized)
 		}
 
 		user, err := m.usecase.ParseToken(c.Request().Context(), headerParts[1])
 		if err != nil {
 			status := http.StatusInternalServerError
-			if err == domain.ErrInvalidAccessToken {
+			if err == models.ErrInvalidAccessToken {
 				status = http.StatusUnauthorized
 			}
 			return m.error(c, status, err)
 		}
 
 		logrus.Println("setting user in ctx:", user)
-		c.Set(domain.UserKey, user)
+		c.Set(models.UserKey, user)
 
 		return next(c)
 	}
 }
 
-func InitMiddleware(userUC domain.UserUsecase) *GoMiddleware {
+func InitMiddleware(userUC models.UserUsecase) *GoMiddleware {
 	return &GoMiddleware{
 		usecase: userUC,
 	}

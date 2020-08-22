@@ -1,7 +1,7 @@
 package productDeliveryHTTP
 
 import (
-	"backend/internal/app/domain"
+	"backend/internal/app/models"
 	"net/http"
 	"time"
 
@@ -11,10 +11,10 @@ import (
 )
 
 type productHandler struct {
-	usecase domain.ProductUsecase
+	usecase models.ProductUsecase
 }
 
-func NewHandler(e *echo.Group, pu domain.ProductUsecase) {
+func NewHandler(e *echo.Group, pu models.ProductUsecase) {
 	handler := &productHandler{pu}
 
 	e.GET("", handler.Get)
@@ -22,11 +22,11 @@ func NewHandler(e *echo.Group, pu domain.ProductUsecase) {
 }
 
 type getResponse struct {
-	Products []*domain.Product `json:"products"`
+	Products []*models.Product `json:"products"`
 }
 
 type getProduct struct {
-	domain.Product
+	models.Product
 }
 
 func (p *productHandler) Get(c echo.Context) error {
@@ -43,7 +43,7 @@ type inputGetByID struct {
 
 func (p *productHandler) GetOneByID(c echo.Context) error {
 
-	pd, err := p.usecase.GetOne(c.Request().Context())
+	pd, err := p.usecase.GetOne(c.Request().Context(), "TODO:TODO")
 	if err != nil {
 		return p.error(c, http.StatusBadRequest, err)
 	}
@@ -56,8 +56,8 @@ type createInput struct {
 	SKU  string `json:"sku"`
 }
 
-func toProduct(c createInput, u *domain.User) *domain.Product {
-	return &domain.Product{
+func toProduct(c createInput, u *models.User) *models.Product {
+	return &models.Product{
 		Name:         c.Name,
 		SKU:          c.SKU,
 		Creator:      *u,
@@ -73,7 +73,7 @@ func (p *productHandler) Create(c echo.Context) error {
 		return p.error(c, http.StatusBadRequest, err)
 	}
 
-	user := c.Get(domain.UserKey).(*domain.User)
+	user := c.Get(models.UserKey).(*models.User)
 	logrus.Println("getting user from ctx:", user)
 
 	pr := toProduct(*inp, user)
