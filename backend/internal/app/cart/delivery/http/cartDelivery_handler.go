@@ -1,6 +1,7 @@
 package cartDeliveryHTTP
 
 import (
+	"backend/internal/app/cart"
 	"backend/internal/app/models"
 	"net/http"
 
@@ -10,10 +11,10 @@ import (
 )
 
 type cartHandler struct {
-	usecase models.CartUsecase
+	usecase cart.Usecase
 }
 
-func NewHandler(e *echo.Group, cu models.CartUsecase) {
+func NewHandler(e *echo.Group, cu cart.Usecase) {
 	handler := &cartHandler{cu}
 
 	{

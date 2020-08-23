@@ -25,19 +25,6 @@ type Product struct {
 	LastModified time.Time `json:"lastModified"`
 }
 
-//type ProductUsecase interface {
-//	CreateProduct(ctx context.Context, user *User, product *Product) error
-//	GetProducts(ctx context.Context) ([]*Product, error)
-//	AddImage(ctx context.Context, user *User, productID string) error
-//	GetOne(ctx context.Context, id string) (Product, error)
-//}
-//
-//type ProductRepository interface {
-//	GetByID(ctx context.Context, id string) (Product, error)
-//	GetProducts(ctx context.Context) ([]*Product, error)
-//	CreateProduct(ctx context.Context, user *User, product *Product) error
-//}
-
 //// Group это структура с артикулами
 //type Group struct {
 //	ID  int    `storm:"increment"`

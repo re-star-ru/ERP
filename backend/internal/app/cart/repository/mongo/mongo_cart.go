@@ -1,6 +1,7 @@
 package cartRepositoryMongo
 
 import (
+	"backend/internal/app/cart"
 	"backend/internal/app/models"
 	"context"
 
@@ -96,7 +97,7 @@ type AddedProducts map[string]*struct {
 	Count     int                `json:"count" bson:"count"`
 }
 
-func NewRepository(DB *mongo.Database, collection string) models.CartRepository {
+func NewRepository(DB *mongo.Database, collection string) cart.Repository {
 	return &repository{DB.Collection(collection)}
 }
 

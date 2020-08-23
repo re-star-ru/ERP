@@ -18,21 +18,6 @@ type User struct {
 	//AclGroup          string `json:"aclGroup,omitempty"`
 }
 
-//// UserUsecase represents the user's usecases
-//type UserUsecase interface {
-//	SignUp(ctx context.Context, u *User) error
-//	SignIn(ctx context.Context, u *User) (string, error)
-//	ParseToken(ctx context.Context, accessToken string) (*User, error)
-//}
-//
-//// UserRepository represents the user's repository contract
-//type UserRepository interface {
-//	GetByID(ctx context.Context, id int) (User, error)
-//	GetByEmail(ctx context.Context, email string) (User, error)
-//	Create(ctx context.Context, user *User) error
-//	ValidateUser(ctx context.Context, user *User) (bool, error)
-//}
-
 func (u *User) CheckPermission(action Action) bool {
 	//if u.Email == "example@mail.com" {
 	//	return false
