@@ -2,6 +2,7 @@ package productRepositoryMongo
 
 import (
 	"backend/internal/app/models"
+	"backend/internal/app/product"
 	"context"
 	"log"
 	"time"
@@ -42,7 +43,7 @@ func (r repository) GetByID(ctx context.Context, id string) (models.Product, err
 	panic("implement me")
 }
 
-func NewRepository(DB *mongo.Database, collection string) models.ProductRepository {
+func NewRepository(DB *mongo.Database, collection string) product.Repository {
 	return &repository{DB.Collection(collection)}
 }
 
@@ -71,13 +72,13 @@ func (r repository) GetProducts(ctx context.Context) ([]*models.Product, error) 
 	}()
 
 	for cur.Next(ctx) {
-		product := new(Product)
-		err := cur.Decode(product)
+		pd := &Product{}
+		err := cur.Decode(pd)
 		if err != nil {
 			return nil, err
 		}
 
-		out = append(out, product)
+		out = append(out, pd)
 	}
 	if err := cur.Err(); err != nil {
 		return nil, err

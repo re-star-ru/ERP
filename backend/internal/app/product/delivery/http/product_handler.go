@@ -2,19 +2,20 @@ package productDeliveryHTTP
 
 import (
 	"backend/internal/app/models"
+	"backend/internal/app/product"
 	"net/http"
 	"time"
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type productHandler struct {
-	usecase models.ProductUsecase
+	usecase product.Usecase
 }
 
-func NewHandler(e *echo.Group, pu models.ProductUsecase) {
+func NewHandler(e *echo.Group, pu product.Usecase) {
 	handler := &productHandler{pu}
 
 	e.GET("", handler.Get)

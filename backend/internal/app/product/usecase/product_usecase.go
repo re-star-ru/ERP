@@ -2,12 +2,13 @@ package productUsecase
 
 import (
 	"backend/internal/app/models"
+	"backend/internal/app/product"
 	"context"
 	"time"
 )
 
 type usecase struct {
-	productRepo    models.ProductRepository
+	productRepo    product.Repository
 	contextTimeout time.Duration
 }
 
@@ -31,7 +32,7 @@ func (p usecase) GetOne(ctx context.Context, id string) (models.Product, error) 
 	return models.Product{}, nil
 }
 
-func NewUsecase(p models.ProductRepository, timeout time.Duration) models.ProductUsecase {
+func NewUsecase(p product.Repository, timeout time.Duration) product.Usecase {
 	return &usecase{
 		p,
 		timeout,

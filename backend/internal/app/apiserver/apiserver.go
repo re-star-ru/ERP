@@ -16,9 +16,9 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4/middleware"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 
