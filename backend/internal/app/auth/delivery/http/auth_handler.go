@@ -1,6 +1,7 @@
 package authDeliveryHTTP
 
 import (
+	"backend/internal/app/auth"
 	"backend/internal/app/models"
 	"net/http"
 
@@ -15,10 +16,10 @@ type ResponseError struct {
 }
 
 type UserHandler struct {
-	UserUsecase models.UserUsecase
+	UserUsecase auth.Usecase
 }
 
-func NewHandler(authEndpoints *echo.Group, us models.UserUsecase) {
+func NewHandler(authEndpoints *echo.Group, us auth.Usecase) {
 	handler := &UserHandler{us}
 	{
 		authEndpoints.POST("/sign-up", handler.SignUp)

@@ -1,6 +1,7 @@
 package authDeliveryHTTPMiddleware
 
 import (
+	"backend/internal/app/auth"
 	"backend/internal/app/models"
 	"net/http"
 	"strings"
@@ -11,7 +12,7 @@ import (
 )
 
 type GoMiddleware struct {
-	usecase models.UserUsecase
+	usecase auth.Usecase
 }
 
 func (m *GoMiddleware) CORS(next echo.HandlerFunc) echo.HandlerFunc {
@@ -58,7 +59,7 @@ func (m *GoMiddleware) Authenticator(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func InitMiddleware(userUC models.UserUsecase) *GoMiddleware {
+func InitMiddleware(userUC auth.Usecase) *GoMiddleware {
 	return &GoMiddleware{
 		usecase: userUC,
 	}

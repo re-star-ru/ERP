@@ -1,6 +1,7 @@
 package authUsecase
 
 import (
+	"backend/internal/app/auth"
 	"backend/internal/app/models"
 	"context"
 	"fmt"
@@ -10,13 +11,13 @@ import (
 )
 
 type usecase struct {
-	userRepo       models.UserRepository
+	userRepo       auth.Repository
 	contextTimeout time.Duration
 	expireDuration time.Duration
 	signingKey     []byte
 }
 
-func NewUsecase(u models.UserRepository, timeout, expire time.Duration, signingKey []byte) models.UserUsecase {
+func NewUsecase(u auth.Repository, timeout, expire time.Duration, signingKey []byte) auth.Usecase {
 	return &usecase{
 		userRepo:       u,
 		contextTimeout: timeout,

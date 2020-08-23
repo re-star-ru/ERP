@@ -1,6 +1,7 @@
 package authRepositoryMongo
 
 import (
+	"backend/internal/app/auth"
 	"backend/internal/app/models"
 	"context"
 
@@ -22,7 +23,7 @@ type user struct {
 	EncryptedPassword string `json:"encrypted_password,omitempty" bson:"encrypted_password"`
 }
 
-func NewRepository(DB *mongo.Database, collection string) models.UserRepository {
+func NewRepository(DB *mongo.Database, collection string) auth.Repository {
 	return &repository{DB.Collection(collection)}
 }
 
