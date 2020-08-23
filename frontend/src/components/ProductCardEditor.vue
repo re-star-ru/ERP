@@ -1,9 +1,9 @@
 <template>
   <div>
-    {{ product }}
-    <q-btn outline @click="newProduct = !newProduct"
-      >Добавить новый товар</q-btn
-    >
+    <div>
+      {{ product }}
+    </div>
+
     <q-form
       v-if="newProduct || id"
       @submit="onSubmit"
@@ -45,8 +45,8 @@ export default {
 
   methods: {
     onReset() {
-      this.newProduct.name = ''
-      this.newProduct.sku = ''
+      this.product.name = ''
+      this.product.sku = ''
     },
 
     async onSubmit() {
@@ -73,9 +73,8 @@ export default {
       console.log('get product with id:', this.id)
 
       try {
-        const res = this.$axios.get(`products/${this.id}`)
-        console.log(res)
-        // this.product = res.data
+        const res = await this.$axios.get(`products/${this.id}`)
+        this.product = res.data
       } catch (e) {
         console.log(e)
       }

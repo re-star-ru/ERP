@@ -6,27 +6,24 @@ export const state = () => {
     accessToken: LocalStorage.getItem('accessToken') || '',
     email: LocalStorage.getItem('email') || '',
     aclGroup: LocalStorage.getItem('aclGroup') || '',
-    user: {}
+    user: {},
   }
 }
 
 export const getters = {
-  isLogged: state => !!state.accessToken,
-  aclGroup: state => state.aclGroup
+  isLogged: (state) => !!state.accessToken,
+  aclGroup: (state) => state.aclGroup,
 }
 
 export const actions = {
   async login({ commit }, { credentials }) {
     try {
-      const res = await axios.post(`auth/sign-in`, {
-        email: credentials.email,
-        password: credentials.password
-      })
+      const res = await axios.post(`auth/sign-in`, credentials)
       console.log(res.data)
 
       commit('saveLocalAuth', {
         email: credentials.email,
-        accessToken: res.data
+        accessToken: res.data,
       })
     } catch (e) {
       if (e.code === 5) {
@@ -43,13 +40,10 @@ export const actions = {
 
   async registration({ commit }, { credentials }) {
     try {
-      const res = await axios.post(`auth/sign-up`, {
-        email: credentials.email,
-        password: credentials.password
-      })
+      const res = await axios.post(`auth/sign-up`, credentials)
       commit('saveLocalAuth', {
         email: credentials.email,
-        accessToken: res.data
+        accessToken: res.data,
       })
     } catch (e) {
       throw e
@@ -57,7 +51,7 @@ export const actions = {
   },
   logout({ commit }) {
     commit('clearLocalAuth')
-  }
+  },
 }
 
 export const mutations = {
@@ -86,5 +80,5 @@ export const mutations = {
     axios.defaults.headers.common[
       'Authorization'
     ] = `Bearer ${data.accessToken}`
-  }
+  },
 }

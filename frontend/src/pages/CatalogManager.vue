@@ -2,22 +2,17 @@
   <q-page padding>
     <div class="q-pa-md q-gutter-sm">
       <q-btn outline>Загрузить товары из 1с</q-btn>
+      <q-btn outline>Добавить новый товар</q-btn>
     </div>
-    {{ id }}
 
-    <ProductCardEditor :id="id" />
+    <router-view></router-view>
   </q-page>
 </template>
 
 <script>
-import ProductCardEditor from 'components/ProductCardEditor'
 export default {
-  props: ['id'],
   data() {
     return {}
-  },
-  components: {
-    ProductCardEditor,
   },
 }
 </script>
