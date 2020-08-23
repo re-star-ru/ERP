@@ -89,21 +89,24 @@ export default {
     },
 
     async onSubmit() {
-      const res = await this.$axios.put('/products', this.product)
-      if (res.status === 201) {
+      const res = await this.$axios.put(
+        `products/${this.product.id}`,
+        this.product
+      )
+      console.log(res)
+      if (res.status >= 200 || res.status < 300) {
         this.$q.notify({
           color: 'green-4',
           textColor: 'white',
           icon: 'ion-cloud-done',
-          message: 'Товар добавлен',
+          message: 'Товар успешно обновлен',
         })
-        this.onReset()
         return
       }
       this.$q.notify({
         color: 'red-4',
         textColor: 'white',
-        icon: 'ion-error',
+        icon: 'ion-bug',
         message: 'Товар не добавлен',
       })
     },

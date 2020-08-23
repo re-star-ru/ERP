@@ -9,4 +9,5 @@ type Repository interface {
 	GetByID(ctx context.Context, id string) (models.Product, error)
 	GetProducts(ctx context.Context) ([]models.Product, error)
 	CreateProduct(ctx context.Context, user *models.User, product models.Product) error
+	UpdateProduct(ctx context.Context, user *models.User, product models.Product) error
 }

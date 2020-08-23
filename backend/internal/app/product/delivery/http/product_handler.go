@@ -76,8 +76,7 @@ func (p *productHandler) Create(c echo.Context) error {
 		return p.error(c, http.StatusBadRequest, err)
 	}
 
-	user := c.Get(models.UserKey).(*models.User)
-	logrus.Println("getting user from ctx:", user)
+	user := p.getUserFromCtx(c)
 
 	pr := toProduct(inp)
 
@@ -104,4 +103,10 @@ func (p *productHandler) respond(c echo.Context, code int, data interface{}) err
 		return err
 	}
 	return nil
+}
+
+func (p *productHandler) getUserFromCtx(c echo.Context) *models.User {
+	user := c.Get(models.UserKey).(*models.User)
+	logrus.Println("getting user from ctx:", user)
+	return user
 }

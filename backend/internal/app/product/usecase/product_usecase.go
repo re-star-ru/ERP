@@ -43,6 +43,14 @@ func (p usecase) CreateProduct(ctx context.Context, user *models.User, product m
 	return p.productRepo.CreateProduct(ctx, user, newProduct)
 }
 
+func (p usecase) UpdateProduct(ctx context.Context, user *models.User, product models.Product) error {
+
+	// todo: prep product to update
+	product.LastModified = time.Now()
+	return p.productRepo.UpdateProduct(ctx, user, product)
+
+}
+
 func (p usecase) GetProducts(ctx context.Context) ([]models.Product, error) {
 	return p.productRepo.GetProducts(ctx)
 }

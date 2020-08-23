@@ -1,6 +1,7 @@
 package productDeliveryHTTP
 
 import (
+	"backend/internal/app/models"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -8,9 +9,15 @@ import (
 
 // TODO: update one product
 func (p *productHandler) update(c echo.Context) error {
-	ps, err := p.usecase.GetProducts(c.Request().Context())
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, err)
+	upd := models.Product{}
+
+	if err := c.Bind(&upd); err != nil {
+		return p.error(c, http.StatusBadRequest, err)
 	}
-	return c.JSON(http.StatusOK, &getResponse{ps})
+	user := p.getUserFromCtx(c)
+
+	if err := p.usecase.UpdateProduct(c.Request().Context(), user, upd); err != nil {
+		return p.error(c, http.StatusBadRequest, err)
+	}
+	return p.respond(c, http.StatusNoContent, nil)
 }
