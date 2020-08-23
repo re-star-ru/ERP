@@ -18,21 +18,13 @@ type User struct {
 	//AclGroup          string `json:"aclGroup,omitempty"`
 }
 
+// TODO: Реализовать проверку разрешений
 func (u *User) CheckPermission(action Action) bool {
 	//if u.Email == "example@mail.com" {
 	//	return false
 	//}
 	return true
 }
-
-//// Validate ...
-//func (u *User) Validate() error {
-//	return validation.ValidateStruct(
-//		u,
-//		validation.Field(&u.Email, validation.Required, is.Email),
-//		validation.Field(&u.Password, validation.By(requiredIf(u.EncryptedPassword == "")), validation.Length(6, 100)),
-//	)
-//}
 
 // BeforeCreate ...
 func (u *User) BeforeCreate() error {
@@ -52,16 +44,6 @@ func (u *User) BeforeCreate() error {
 func (u *User) Sanitize() {
 	u.Password = ""
 }
-
-//func requiredIf(cond bool) validation.RuleFunc {
-//	return func(value interface{}) error {
-//		if cond {
-//			return validation.Validate(value, validation.Required)
-//		}
-//
-//		return nil
-//	}
-//}
 
 // ComparePassword ...
 func (u *User) ComparePassword(password string) bool {
