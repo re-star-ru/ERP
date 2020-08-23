@@ -40,7 +40,19 @@ type repository struct {
 }
 
 func (r repository) GetByID(ctx context.Context, id string) (models.Product, error) {
-	panic("implement me")
+	p := &Product{}
+	oid, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return models.Product{}, err
+	}
+	result := r.db.FindOne(ctx, bson.M{"_id": oid})
+	if result.Err() != nil {
+		return models.Product{}, result.Err()
+	}
+	if err := result.Decode(p); err != nil {
+		return models.Product{}, err
+	}
+	return toProduct(p), nil
 }
 
 func NewRepository(DB *mongo.Database, collection string) product.Repository {
@@ -58,7 +70,7 @@ func (r repository) CreateProduct(ctx context.Context, u *models.User, p *models
 	return nil
 }
 
-func (r repository) GetProducts(ctx context.Context) ([]*models.Product, error) {
+func (r repository) GetProducts(ctx context.Context) ([]models.Product, error) {
 	out := make([]*Product, 0)
 	cur, err := r.db.Find(ctx, bson.M{})
 	if err != nil {
@@ -95,15 +107,15 @@ func toModel(p *models.Product) *Product {
 	}
 }
 
-func toProduct(b *Product) *models.Product {
-	return &models.Product{
+func toProduct(b *Product) models.Product {
+	return models.Product{
 		ID:   b.ID.Hex(),
 		Name: b.Name,
 	}
 }
 
-func toProducts(bs []*Product) []*models.Product {
-	out := make([]*models.Product, len(bs))
+func toProducts(bs []*Product) []models.Product {
+	out := make([]models.Product, len(bs))
 
 	for i, b := range bs {
 		out[i] = toProduct(b)

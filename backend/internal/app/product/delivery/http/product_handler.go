@@ -20,10 +20,11 @@ func NewHandler(e *echo.Group, pu product.Usecase) {
 
 	e.GET("", handler.Get)
 	e.POST("", handler.Create)
+	e.GET("/:id", handler.GetOneByID)
 }
 
 type getResponse struct {
-	Products []*models.Product `json:"products"`
+	Products []models.Product `json:"products"`
 }
 
 type getProduct struct {
@@ -43,8 +44,12 @@ type inputGetByID struct {
 }
 
 func (p *productHandler) GetOneByID(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return p.error(c, http.StatusUnprocessableEntity, models.ErrBadParamInput)
+	}
 
-	pd, err := p.usecase.GetOne(c.Request().Context(), "TODO:TODO")
+	pd, err := p.usecase.GetOne(c.Request().Context(), id)
 	if err != nil {
 		return p.error(c, http.StatusBadRequest, err)
 	}

@@ -25,14 +25,15 @@ const routes = [
         path: '/catalog-manager',
         name: 'catalog-manager',
         component: () => import('pages/CatalogManager'),
+        children: [
+          {
+            path: ':id',
+            component: () => import('components/ProductCardEditor'),
+            name: 'editproductbyid',
+            props: true,
+          },
+        ],
       },
-      {
-        path: '/catalog-manager/:id',
-        name: 'catalog-manager',
-        component: () => import('pages/CatalogManager'),
-        props: true,
-      },
-
       {
         path: '/offers/:page',
         name: 'page',

@@ -13,6 +13,7 @@ type usecase struct {
 }
 
 func (p usecase) AddImage(ctx context.Context, user *models.User, productID string) error {
+
 	panic("implement me")
 }
 
@@ -24,12 +25,13 @@ func (p usecase) CreateProduct(ctx context.Context, user *models.User, product *
 	return p.productRepo.CreateProduct(ctx, user, product)
 }
 
-func (p usecase) GetProducts(ctx context.Context) ([]*models.Product, error) {
+func (p usecase) GetProducts(ctx context.Context) ([]models.Product, error) {
 	return p.productRepo.GetProducts(ctx)
 }
 
 func (p usecase) GetOne(ctx context.Context, id string) (models.Product, error) {
-	return models.Product{}, nil
+
+	return p.productRepo.GetByID(ctx, id)
 }
 
 func NewUsecase(p product.Repository, timeout time.Duration) product.Usecase {
