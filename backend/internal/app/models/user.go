@@ -9,8 +9,8 @@ const (
 )
 
 type User struct {
-	ID                string `json:"id" bson:"_id" storm:"id,increment"`
-	Email             string `json:"email" bson:"email" storm:"unique" validate:"required,email"`
+	ID                string `json:"id" bson:"_id"`
+	Email             string `json:"email" bson:"email" validate:"required,email"`
 	Name              string `json:"name"`
 	Password          string `json:"password,omitempty" validate:"required,min=6,max=100"`
 	EncryptedPassword string `json:"encrypted_password,omitempty" bson:"encrypted_password"`
@@ -43,6 +43,7 @@ func (u *User) BeforeCreate() error {
 // Sanitize ...
 func (u *User) Sanitize() {
 	u.Password = ""
+	u.EncryptedPassword = ""
 }
 
 // ComparePassword ...

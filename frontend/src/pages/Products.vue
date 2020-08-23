@@ -15,6 +15,7 @@
         <div>id: {{ v.id }}</div>
         <div>Наименование {{ v.name }}</div>
         <div>Создатель: {{ v.creator }}</div>
+        <pre>{{ v }}</pre>
       </q-card-section>
 
       <q-card-actions class="justify-between">

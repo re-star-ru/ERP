@@ -8,8 +8,8 @@ import (
 type Product struct {
 	ID           string `json:"id"`
 	Name         string `json:"name"`
-	GUID         string `json:"guid" storm:"id"`
-	SKU          string `json:"sku" storm:"index"`
+	GUID         string `json:"guid"`
+	SKU          string `json:"sku"`
 	Description  string `json:"description"`
 	Manufacturer string `json:"manufacturer"`
 	TypeGUID     string `json:"typeGUID"`

@@ -18,11 +18,29 @@ func (p usecase) AddImage(ctx context.Context, user *models.User, productID stri
 }
 
 //CreateProduct implemets ActionProductCreate
-func (p usecase) CreateProduct(ctx context.Context, user *models.User, product *models.Product) error {
+func (p usecase) CreateProduct(ctx context.Context, user *models.User, product models.Product) error {
 	if !user.CheckPermission(models.ActionProductCreate) {
 		return models.ErrAccessDenied
 	}
-	return p.productRepo.CreateProduct(ctx, user, product)
+
+	user.Sanitize()
+	newProduct := models.Product{
+		ID:              product.ID,
+		Name:            product.Name,
+		GUID:            product.GUID,
+		SKU:             product.SKU,
+		Description:     product.Description,
+		Manufacturer:    product.Manufacturer,
+		TypeGUID:        product.TypeGUID,
+		TypeName:        product.TypeName,
+		Characteristics: product.Characteristics,
+		Properties:      product.Properties,
+		Creator:         *user,
+		CreatedAt:       time.Now(),
+		LastModified:    time.Now(),
+	}
+
+	return p.productRepo.CreateProduct(ctx, user, newProduct)
 }
 
 func (p usecase) GetProducts(ctx context.Context) ([]models.Product, error) {

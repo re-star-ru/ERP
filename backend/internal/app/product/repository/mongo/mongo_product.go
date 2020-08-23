@@ -32,7 +32,7 @@ type Product struct {
 	Creator models.User `json:"creator" bson:"creator"`
 
 	CreatedAt    time.Time `json:"createdAt" bson:"createdAt"`
-	LastModified time.Time `json:"lastModified" `
+	LastModified time.Time `json:"lastModified" bson:"lastModified"`
 }
 
 type repository struct {
@@ -52,14 +52,14 @@ func (r repository) GetByID(ctx context.Context, id string) (models.Product, err
 	if err := result.Decode(p); err != nil {
 		return models.Product{}, err
 	}
-	return toProduct(p), nil
+	return toProduct(*p), nil
 }
 
 func NewRepository(DB *mongo.Database, collection string) product.Repository {
 	return &repository{DB.Collection(collection)}
 }
 
-func (r repository) CreateProduct(ctx context.Context, u *models.User, p *models.Product) error {
+func (r repository) CreateProduct(ctx context.Context, u *models.User, p models.Product) error {
 	m := toModel(p)
 	res, err := r.db.InsertOne(ctx, m)
 	if err != nil {
@@ -71,7 +71,7 @@ func (r repository) CreateProduct(ctx context.Context, u *models.User, p *models
 }
 
 func (r repository) GetProducts(ctx context.Context) ([]models.Product, error) {
-	out := make([]*Product, 0)
+	out := make([]Product, 0)
 	cur, err := r.db.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (r repository) GetProducts(ctx context.Context) ([]models.Product, error) {
 			return nil, err
 		}
 
-		out = append(out, pd)
+		out = append(out, *pd)
 	}
 	if err := cur.Err(); err != nil {
 		return nil, err
@@ -99,22 +99,41 @@ func (r repository) GetProducts(ctx context.Context) ([]models.Product, error) {
 	return toProducts(out), nil
 }
 
-func toModel(p *models.Product) *Product {
+func toModel(p models.Product) Product {
 	// todo: настроить конвертацию id
-	//uid, _ := primitive.ObjectIDFromHex(b.)
-	return &Product{
-		Name: p.Name,
+	uid, _ := primitive.ObjectIDFromHex(p.ID)
+	return Product{
+		ID:           uid,
+		Name:         p.Name,
+		GUID:         p.GUID,
+		SKU:          p.SKU,
+		Description:  p.Description,
+		Manufacturer: p.Manufacturer,
+		Creator:      p.Creator,
+		CreatedAt:    p.CreatedAt,
+		LastModified: p.LastModified,
 	}
 }
 
-func toProduct(b *Product) models.Product {
+func toProduct(b Product) models.Product {
 	return models.Product{
-		ID:   b.ID.Hex(),
-		Name: b.Name,
+		ID:           b.ID.Hex(),
+		Name:         b.Name,
+		GUID:         b.GUID,
+		SKU:          b.SKU,
+		Description:  b.Description,
+		Manufacturer: b.Manufacturer,
+		//TypeGUID:        b./,
+		//TypeName:        "",
+		//Characteristics: nil,
+		//Properties:      nil,
+		Creator:      b.Creator,
+		CreatedAt:    b.CreatedAt,
+		LastModified: b.LastModified,
 	}
 }
 
-func toProducts(bs []*Product) []models.Product {
+func toProducts(bs []Product) []models.Product {
 	out := make([]models.Product, len(bs))
 
 	for i, b := range bs {

@@ -4,7 +4,6 @@ import (
 	"backend/internal/app/models"
 	"backend/internal/app/product"
 	"net/http"
-	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -20,6 +19,7 @@ func NewHandler(e *echo.Group, pu product.Usecase) {
 
 	e.GET("", handler.Get)
 	e.POST("", handler.Create)
+	e.PUT("/:id", handler.update)
 	e.GET("/:id", handler.GetOneByID)
 }
 
@@ -62,33 +62,30 @@ type createInput struct {
 	SKU  string `json:"sku"`
 }
 
-func toProduct(c createInput, u *models.User) *models.Product {
-	return &models.Product{
-		Name:         c.Name,
-		SKU:          c.SKU,
-		Creator:      *u,
-		CreatedAt:    time.Now(),
-		LastModified: time.Now(),
+func toProduct(c createInput) models.Product {
+	return models.Product{
+		Name: c.Name,
+		SKU:  c.SKU,
 	}
 }
 
 func (p *productHandler) Create(c echo.Context) error {
-	inp := &createInput{}
+	inp := createInput{}
 
-	if err := c.Bind(inp); err != nil {
+	if err := c.Bind(&inp); err != nil {
 		return p.error(c, http.StatusBadRequest, err)
 	}
 
 	user := c.Get(models.UserKey).(*models.User)
 	logrus.Println("getting user from ctx:", user)
 
-	pr := toProduct(*inp, user)
+	pr := toProduct(inp)
 
 	if err := p.usecase.CreateProduct(c.Request().Context(), user, pr); err != nil {
 		return p.error(c, http.StatusBadRequest, err)
 	}
 
-	return p.respond(c, http.StatusCreated, pr)
+	return p.respond(c, http.StatusCreated, "ok")
 }
 
 func (p *productHandler) error(c echo.Context, code int, err error) error {
