@@ -32,7 +32,12 @@
         >
           <template v-slot:append>
             <q-icon v-if="text === ''" name="ion-search" />
-            <q-icon v-else name="ion-close" class="cursor-pointer" @click="clearProducts" />
+            <q-icon
+              v-else
+              name="ion-close"
+              class="cursor-pointer"
+              @click="clearProducts"
+            />
           </template>
         </q-input>
 
@@ -42,26 +47,40 @@
           v-if="$route.path === '/products'"
           to="cart"
           color="accent"
-        >Корзина</q-btn>
+          >Корзина</q-btn
+        >
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-1">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      content-class="bg-grey-1"
+    >
       <q-list>
-        <q-item v-if="this.$store.getters.isLogged" clickable v-ripple to="/profile">
+        <q-item
+          v-if="this.$store.getters.isLogged"
+          clickable
+          v-ripple
+          to="/profile"
+        >
           <q-item-section avatar>
             <q-icon name="ion-person" />
           </q-item-section>
           <q-item-section>
             <q-item-label>{{ $store.state.auth.email }}</q-item-label>
             <q-item-label caption>
-              {{
-              $store.state.auth.aclGroup
-              }}
+              {{ $store.state.auth.aclGroup }}
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item v-if="!this.$store.getters.isLogged" @click="openLoginDialog" clickable v-ripple>
+        <q-item
+          v-if="!this.$store.getters.isLogged"
+          @click="openLoginDialog"
+          clickable
+          v-ripple
+        >
           <q-item-section avatar>
             <q-icon name="ion-log-out" />
           </q-item-section>
@@ -88,10 +107,19 @@
 
         <q-separator color="primary" />
 
-        <EssentialLink v-for="link in activeLinks" :key="link.title" v-bind="link" />
+        <EssentialLink
+          v-for="link in activeLinks"
+          :key="link.title"
+          v-bind="link"
+        />
 
         <q-separator v-if="this.$store.getters.isLogged" color="primary" />
-        <q-item v-if="this.$store.getters.isLogged" @click="logout" clickable v-ripple>
+        <q-item
+          v-if="this.$store.getters.isLogged"
+          @click="logout"
+          clickable
+          v-ripple
+        >
           <q-item-section avatar>
             <q-icon name="ion-log-out" />
           </q-item-section>
@@ -124,8 +152,12 @@
               />
             </p>
             <p class="text-body2">трасса Ростов-Баку, рынок "Бетта"</p>
-            <q-btn type="a" href="tel:+79887575225" outline>+7988-75-75-225</q-btn>
-            <q-btn type="a" href="tel:+79283222555" outline>+7928-3-222-555</q-btn>
+            <q-btn type="a" href="tel:+79887575225" outline
+              >+7988-75-75-225</q-btn
+            >
+            <q-btn type="a" href="tel:+79283222555" outline
+              >+7928-3-222-555</q-btn
+            >
             <div class="row justify-center q-gutter-xs">
               <q-btn
                 color="primary"
@@ -140,7 +172,9 @@
 
         <q-item>
           <q-item-section>
-            <a href="https://webmaster.yandex.ru/siteinfo/?site=https://restar26.site">
+            <a
+              href="https://webmaster.yandex.ru/siteinfo/?site=https://restar26.site"
+            >
               <img
                 width="88"
                 height="31"
@@ -165,7 +199,10 @@
       transition-show="scale"
       transition-hide="scale"
     >
-      <q-card style="width: 500px; max-width: 80vw;" class="bg-primary text-white">
+      <q-card
+        style="width: 500px; max-width: 80vw;"
+        class="bg-primary text-white"
+      >
         <q-card-section>
           <div class="text-h6">Вход</div>
         </q-card-section>
@@ -176,7 +213,7 @@
             label="Email"
             hint="Введите ваш email"
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Неправильный email']"
+            :rules="[(val) => (val && val.length > 0) || 'Неправильный email']"
           />
           <q-input
             type="password"
@@ -185,7 +222,7 @@
             label="Пароль"
             hint="Введите пароль"
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Неправильный пароль']"
+            :rules="[(val) => (val && val.length > 0) || 'Неправильный пароль']"
           />
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-primary">
@@ -202,7 +239,10 @@
       transition-show="scale"
       transition-hide="scale"
     >
-      <q-card style="width: 500px; max-width: 80vw;" class="bg-primary text-white">
+      <q-card
+        style="width: 500px; max-width: 80vw;"
+        class="bg-primary text-white"
+      >
         <q-card-section>
           <div class="text-h6">Регистрация</div>
         </q-card-section>
@@ -213,7 +253,7 @@
             label="Email"
             hint="Введите ваш email"
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Неправильный email']"
+            :rules="[(val) => (val && val.length > 0) || 'Неправильный email']"
           />
           <q-input
             type="password"
@@ -222,7 +262,7 @@
             label="Пароль"
             hint="Введите пароль"
             lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Неправильный пароль']"
+            :rules="[(val) => (val && val.length > 0) || 'Неправильный пароль']"
           />
 
           <div>
@@ -231,7 +271,15 @@
               class="text-primary"
               label="Я принимаю лицензионное"
             />
-            <q-btn flat unelevated dense type="a" href="/license" target="_blank">Соглашение</q-btn>
+            <q-btn
+              flat
+              unelevated
+              dense
+              type="a"
+              href="/license"
+              target="_blank"
+              >Соглашение</q-btn
+            >
           </div>
         </q-card-section>
 

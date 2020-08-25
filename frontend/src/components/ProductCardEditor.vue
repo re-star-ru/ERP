@@ -113,7 +113,6 @@ export default {
 
     async getProductInfo() {
       console.log('get product with id:', this.id)
-
       try {
         const res = await this.$axios.get(`products/${this.id}`)
         this.product = res.data
