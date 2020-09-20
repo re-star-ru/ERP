@@ -29,5 +29,6 @@ func (r repository) UpdateProduct(ctx context.Context, user *models.User, produc
 }
 
 func NewRepository(collection string) product.Repository {
-	return &repository{DB.Collection(collection)}
+	return &repository{}
+	//return &repository{DB.Collection(collection)}
 }
