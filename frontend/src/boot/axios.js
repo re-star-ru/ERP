@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Axios from 'axios'
 import { LocalStorage } from 'quasar'
 
-let baseURL = 'https://api.restar26.site/v1'
+let baseURL = 'https://api.re-star.ru/v1'
 if (process.env.DEV) {
   baseURL = 'http://localhost:3000'
 }

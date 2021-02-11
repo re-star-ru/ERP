@@ -13,17 +13,17 @@
     "dev": "quasar dev"
   },
   "dependencies": {
-    "@quasar/extras": "^1.9.4",
+    "@quasar/extras": "^1.9.16",
     "axios": "^0.18.1",
     "core-js": "^3.0.0",
-    "quasar": "^1.13.1",
+    "quasar": "^1.15.3",
     "tesseract.js": "^2.1.1",
     "vue": "latest",
     "vue-router": "latest",
     "vuex": "latest"
   },
   "devDependencies": {
-    "@quasar/app": "^2.0.7",
+    "@quasar/app": "^2.1.14",
     "components": "^0.1.0",
     "quasar-app-extension-ide-helper": "^1.0.0",
     "workbox-webpack-plugin": "^5.0.0"

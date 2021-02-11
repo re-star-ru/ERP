@@ -24,7 +24,7 @@ export const actions = {
     try {
       commit('toggleLoading')
       const res = await axios.get('/search/' + text, {
-        baseURL: 'https://1c.restar26.site/sm1/hs/',
+        baseURL: 'https://1c.re-star.ru/sm1/hs/',
         auth: {
           username: 'API',
           password: '6O7EHDWS0Sk$yZ%i80p5'
