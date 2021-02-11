@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.9.16",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "core-js": "^3.0.0",
     "quasar": "^1.15.3",
     "tesseract.js": "^2.1.1",
