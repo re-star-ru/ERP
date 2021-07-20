@@ -17,7 +17,8 @@ jobs:
       - name: build and deploy master image to ghcr.io
         env:
           GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          USERNAME: ${{github.actor}}
+#          USERNAME: ${{github.actor}}
+          USERNAME: re-star-ru
           GITHUB_REF: ${{github.ref}}
           GITHUB_SHA: ${{github.sha}}
         run: |
