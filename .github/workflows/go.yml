@@ -2,7 +2,7 @@ name: Go
 on:
   push:
     paths:
-      - 'backend/'
+      - 'backend/**'
 jobs:
 
   build:

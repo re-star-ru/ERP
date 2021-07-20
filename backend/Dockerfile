@@ -5,4 +5,5 @@ COPY . /files
 WORKDIR /files
 RUN go build ./cmd/apiserver
 
+
 ENTRYPOINT ["/files/apiserver"]
