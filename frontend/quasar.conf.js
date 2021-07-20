@@ -1,4 +1,3 @@
-// Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
 // TODO: Check prefetch feature
 module.exports = function(ctx) {

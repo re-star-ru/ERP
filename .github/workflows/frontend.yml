@@ -21,6 +21,7 @@ jobs:
           GITHUB_REF: ${{github.ref}}
           GITHUB_SHA: ${{github.sha}}
         run: |
+          cd frontend
           ref="$(echo ${GITHUB_REF} | cut -d'/' -f3)"
           echo GITHUB_REF - $ref
           echo ${GITHUB_PACKAGE_TOKEN} | docker login ghcr.io -u ${USERNAME} --password-stdin
@@ -30,3 +31,10 @@ jobs:
             -t ghcr.io/${USERNAME}/erp:${ref} \
             -t ghcr.io/${USERNAME}/erp:${GITHUB_SHA} \
             -t ghcr.io/${USERNAME}/erp:latest .
+
+      - name: Deploy with Nomad
+        env:
+          NOMAD_ADDR: http://feziv.com:4646
+        uses: docker://hashicorp/levant:latest
+        with:
+          args: levant deploy -var "tag=${{github.sha}}" frontend.hcl
