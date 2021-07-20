@@ -1,5 +1,6 @@
 # Restar26 (frontend)
 
+
 A Quasar Framework app
 
 ## Install the dependencies
