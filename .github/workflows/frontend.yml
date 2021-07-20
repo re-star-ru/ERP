@@ -38,4 +38,4 @@ jobs:
           NOMAD_ADDR: http://feziv.com:4646
         uses: docker://hashicorp/levant:latest
         with:
-          args: levant deploy -var "tag=${{github.sha}}" frontend.hcl
+          args: levant deploy -var "tag=${{github.sha}}" frontend/frontend.hcl
