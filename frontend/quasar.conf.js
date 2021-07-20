@@ -43,6 +43,7 @@ module.exports = function(ctx) {
           delay: 40
         },
         loadingBar: {
+          skipHijack: true,
           color: 'purple',
           size: '10px',
           position: 'bottom'
@@ -72,7 +73,7 @@ module.exports = function(ctx) {
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
-      port: 8080,
+      port: 3080,
       open: true // opens browser window automatically
     },
 
@@ -81,9 +82,9 @@ module.exports = function(ctx) {
     animations: [],
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
-    ssr: {
-      pwa: false
-    },
+    // ssr: {
+    //   pwa: false
+    // },
 
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
@@ -136,9 +137,9 @@ module.exports = function(ctx) {
     // },
 
     // Full list of options: https://quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
-    capacitor: {
-      hideSplashscreen: true
-    }
+    // capacitor: {
+    //   hideSplashscreen: true
+    // }
 
     // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     // electron: {

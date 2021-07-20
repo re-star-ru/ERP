@@ -1,7 +1,0 @@
-{
-  "appId": "org.capacitor.quasar.app",
-  "appName": "Ремонт Продажа Стартеров Генераторов на любые марки автомобилей в Пятигорске",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www"
-}
