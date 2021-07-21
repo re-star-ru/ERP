@@ -21,7 +21,6 @@ jobs:
 
           USERNAME: ${{github.actor}}
           REPO: ${{github.repository}}
-#          USERNAME: re-star-ru
           GITHUB_REF: ${{github.ref}}
           GITHUB_SHA: ${{github.sha}}
         run: |
@@ -42,4 +41,4 @@ jobs:
           NOMAD_ADDR: http://feziv.com:4646
         uses: docker://hashicorp/levant:latest
         with:
-          args: levant deploy -var "tag=${{github.sha}}" frontend/frontend.hcl
+          args: levant deploy -var "tag=${{github.sha}}" -var "repo=${{github.repository}}" frontend/frontend.hcl

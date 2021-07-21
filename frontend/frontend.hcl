@@ -31,7 +31,7 @@ job "re-star-ru" {
 			}
 
 			config {
-				image = "ghcr.io/fess932/erp:[[.tag]]"
+				image = "ghcr.io/[[.repo]]:[[.tag]]"
 				network_mode = "host"
 			}
 		}
