@@ -36,6 +36,7 @@ jobs:
             -t ghcr.io/${REPO}:${GITHUB_SHA} \
             -t ghcr.io/${REPO}:latest .
 
+
       - name: Deploy with Nomad
         env:
           NOMAD_ADDR: http://feziv.com:4646
