@@ -1,5 +1,5 @@
 job "re-star-ru" {
-	datacenters = ["dc1"]
+	datacenters = ["restar"]
 	type = "service"
 
 	group "default" {
@@ -15,8 +15,7 @@ job "re-star-ru" {
 				port = "restar"
 				tags = [
 					"reproxy.enabled=1",
-					"reproxy.server=restar.feziv.com",
-					"timestamp=[[timeNow]]"
+					"reproxy.server=*",
 				]
 			}
 			// serve static files for feziv.com
