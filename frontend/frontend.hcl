@@ -15,7 +15,7 @@ job "re-star-ru" {
 				port = "restar"
 				tags = [
 					"reproxy.enabled=1",
-					"reproxy.server=restar1.feziv.com",
+					"reproxy.server=n8n.feziv.com",
 					"timestamp=[[timeNow]]"
 				]
 			}
