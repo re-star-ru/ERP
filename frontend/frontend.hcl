@@ -15,7 +15,7 @@ job "re-star-ru" {
 				port = "restar"
 				tags = [
 					"reproxy.enabled=1",
-					"reproxy.server=*",
+					"reproxy.server=www.re-star.ru,re-star.ru",
 				]
 			}
 			// serve static files for feziv.com
