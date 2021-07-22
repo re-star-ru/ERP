@@ -18,7 +18,7 @@ job "re-star-ru" {
 					"reproxy.server=www.re-star.ru,re-star.ru",
 				]
 			}
-			// serve static files for feziv.com
+
 			resources {
 				memory = 64
 		  }
