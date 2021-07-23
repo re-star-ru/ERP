@@ -172,16 +172,8 @@
 
         <q-item>
           <q-item-section>
-            <a
-              href="https://webmaster.yandex.ru/siteinfo/?site=https://restar26.site"
-            >
-              <img
-                width="88"
-                height="31"
-                alt
-                border="0"
-                src="https://yandex.ru/cycounter?https://restar26.site&theme=light&lang=ru"
-              />
+            <a href="https://webmaster.yandex.ru/siteinfo/?site=https://re-star.ru">
+              <img width="88" height="31" alt="" border="0" src="https://yandex.ru/cycounter?https://re-star.ru&theme=light&lang=ru"/>
             </a>
           </q-item-section>
         </q-item>
