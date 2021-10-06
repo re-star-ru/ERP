@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dgrijalva/jwt-go/v4"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type usecase struct {
@@ -28,7 +28,7 @@ func NewUsecase(u auth.Repository, timeout, expire time.Duration, signingKey []b
 
 type AuthClaims struct {
 	User *models.User `json:"user"`
-	jwt.StandardClaims
+	jwt.RegisteredClaims
 }
 
 func (u *usecase) SignUp(c context.Context, m *models.User) error {
@@ -54,8 +54,8 @@ func (u *usecase) SignIn(ctx context.Context, usr *models.User) (string, error) 
 
 	claims := AuthClaims{
 		usr,
-		jwt.StandardClaims{
-			ExpiresAt: jwt.At(time.Now().Add(u.expireDuration)),
+		jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(u.expireDuration)),
 		},
 	}
 

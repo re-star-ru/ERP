@@ -7,7 +7,6 @@ require (
 	github.com/Sereal/Sereal v0.0.0-20200430150152-3c99d16fbeb1 // indirect
 	github.com/asdine/storm v2.1.2+incompatible
 	github.com/casbin/casbin v1.9.1
-	github.com/dgrijalva/jwt-go/v4 v4.0.0-preview1
 	github.com/disintegration/imaging v1.6.2
 	github.com/gabriel-vasile/mimetype v1.1.1
 	github.com/go-chi/chi v4.1.2+incompatible
@@ -15,6 +14,7 @@ require (
 	github.com/go-chi/docgen v1.0.5
 	github.com/go-playground/validator/v10 v10.3.0
 	github.com/gofrs/uuid v3.3.0+incompatible
+	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/golang/protobuf v1.3.3 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/labstack/echo/v4 v4.1.16
