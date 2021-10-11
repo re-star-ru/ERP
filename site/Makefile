@@ -1,3 +1,4 @@
+include .env
 .DEFAULT_GOAL := dev
 
 dev:
