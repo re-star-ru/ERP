@@ -22,3 +22,26 @@
     });
   });
 </script>
+
+<!-- <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=&v=weekly&channel=2"
+  async
+></script>
+
+<script>
+  // Initialize and add the map
+  function initMap() {
+    // The location of Restar
+    const restar = { lat: 44.02234487559395, lng: 43.12768422513493 };
+    // The map, centered at Restar
+    const map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 15,
+      center: restar,
+    });
+    // The marker, positioned at Resar
+    const marker = new google.maps.Marker({
+      position: restar,
+      map: map,
+    });
+  }
+</script> -->
