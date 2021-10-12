@@ -1,7 +1,7 @@
 {{ define "main" }}
-  <main class="container text-center mx-auto px-4 py-20">
+  <main class="container text-center h-screen mx-auto pt-40">
     <div class="py-4">
-      <h1 class="text-5xl font-bold ">Ре-Стар</h1>
+      <h1 class="text-5xl font-bold font-mono">Ре-Стар</h1>
       <h2 class="text-xl">сервисный центр</h2>
     </div>
 
@@ -9,8 +9,10 @@
       <h2 class="text-base font-bold uppercase">
         ремонт стартеров генераторов
       </h2>
-      <h2 class="text-base font-bold uppercase">проточка тормозных дисков</h2>
-      <div class="text-gray-500">работаем в Пятигорске с 2006г</div>
+      <h2 class="text-base font-bold uppercase mb-4">
+        проточка тормозных дисков
+      </h2>
+      <div class="text-gray-500">работаем в Пятигорске с 2004</div>
     </div>
 
     <div class="py-4">
@@ -21,58 +23,82 @@
         text-gray-100
         p-3
         shadow-xl
-        rounded-xl
+        rounded-lg
         hover:bg-opacity-60
         transition
         uppercase
+        focus:outline-none
       "
       >
         Связаться с нами
       </button>
     </div>
+
+    <div class="py-4">
+      <button
+        id="toMap"
+        class="
+        bg-gray-600
+        text-gray-100
+        p-3
+        shadow-xl
+        rounded-lg
+        hover:bg-opacity-60
+        transition
+        uppercase
+        focus:outline-none
+      "
+      >
+        Карта
+      </button>
+    </div>
   </main>
+
+  <!-- отзывы клиентов -->
+  <section class="container mx-auto bg-gray-600 h-96">
+    <div>Отзыв отзыв</div>
+  </section>
 
   <!-- галерея -->
   <section class="grid grid-cols-1 md:grid-cols-3 ">
-    <div class="max-h-96">
+    <div>
       <img class="object-contain w-full" src="/generators/1.jpeg" />
     </div>
 
-    <div class="max-h-96">
+    <div>
       <img class="object-contain w-full" src="/generators/2.jpeg" />
     </div>
 
-    <div class="max-h-96">
+    <div>
       <img class="object-contain w-full" src="/generators/3.jpeg" />
     </div>
 
-    <div class="max-h-96">
+    <div>
       <img class="object-cover w-full" src="/brake-disks/1.jpeg" />
     </div>
 
-    <div class="max-h-96">
+    <div>
       <img class="object-cover" src="/brake-disks/2.jpeg" />
     </div>
 
-    <div class="max-h-96">
+    <div>
       <img class="object-contain w-full" src="/brake-disks/3.jpeg" />
     </div>
   </section>
+
   <!-- map -->
-  <section class="container mx-auto px-4">
-    <div><img src="/map/map.jpeg" /></div>
+  <section id="map">
+    <div><img class="h-screen" src="/map/map.jpeg" /></div>
   </section>
 
   <!-- контакты -->
-  <section id="key" class="container mx-auto px-4 py-24">
-    <div>контакты</div>
-
-    <div>
-      <h1>Find us</h1>
-      -------------
+  <section id="key" class="container mx-auto overflow-hidden">
+    <div class="bg-yellow-400 mx-auto text-center h-screen  max-w-xl p-2">
+      <h1>Контакты</h1>
+      ---------------
       <!-- dash -->
-      <div class="flex-column">
-        <div>
+      <div class="flex flex-col md:flex-row place-content-center">
+        <div class="p-4 text-left">
           <div>
             <p>address</p>
             <p>phone number</p>
@@ -85,21 +111,34 @@
         </div>
 
         <div>
-          <form action="">
-            Enter Your name
-            <input type="text" name="" id="" />
+          <form class="flex flex-col  text-left bg-white p-2">
+            Ваше имя
+            <input class="border-2 border-black" type="text" name="" id="" />
 
-            Enter Your Email
-            <input type="text" name="" id="" />
+            Ваш электроящик
+            <input class="border-2 border-black" type="text" name="" id="" />
 
-            Phone
-            <input type="text" name="" id="" />
+            Номер телефона
+            <input class="border-2 border-black" type="text" name="" id="" />
 
-            Enter Your message here
+            Введите сообщение
+            <textarea class="border-2 border-black mb-4" rows="5"></textarea>
 
-            <input type="text" name="" id="" />
-
-            <button>Submit</button>
+            <button
+              class="
+                  bg-gray-600
+                  text-gray-100
+                  p-3
+                  shadow-xl
+                  rounded-lg
+                  hover:bg-opacity-60
+                  transition
+                  uppercase
+                  focus:outline-none
+                "
+            >
+              Отправить
+            </button>
           </form>
         </div>
       </div>

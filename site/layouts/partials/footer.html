@@ -1,10 +1,21 @@
 <footer>
-  <div class="flex justify-center py-1">2021</div>
+  <div class="flex-col text-center py-1">
+    <div>2021</div>
+    <div><a href="#">оферта</a></div>
+  </div>
 </footer>
 
 <script>
   toContact.addEventListener("click", (e) => {
     key.scrollIntoView({
+      block: "start",
+      inline: "nearest",
+      behavior: "smooth",
+    });
+  });
+
+  toMap.addEventListener("click", (e) => {
+    map.scrollIntoView({
       block: "start",
       inline: "nearest",
       behavior: "smooth",
