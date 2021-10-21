@@ -7,4 +7,4 @@ dev:
 build:
 	hugo
 
-	
+docker: docker image build .

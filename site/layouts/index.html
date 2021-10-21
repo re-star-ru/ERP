@@ -1,15 +1,16 @@
 {{ define "main" }}
   <main class="container text-center h-screen mx-auto pt-40">
     <div class="py-4">
-      <h1 class="text-5xl font-bold font-mono">Ре-Стар</h1>
+      <h1 class="text-5xl font-bold">Ре-Стар</h1>
       <h2 class="text-xl">СТО</h2>
     </div>
 
-    <div class="py-4 mb-8">
-      <h2 class="text-base font-bold uppercase">ремонт стартеров</h2>
-      <h2 class="text-base font-bold uppercase">ремонт генераторов</h2>
+    <div class="py-4 mb-8 ">
+      <h2 class="text-base font-bold uppercase">
+        ремонтируем стартеры генераторы
+      </h2>
       <h2 class="text-base font-bold uppercase mb-4">
-        проточка тормозных дисков
+        сделаем проточку тормозных дисков
       </h2>
       <div class="text-gray-500">работаем в Пятигорске с 2004</div>
     </div>
@@ -138,29 +139,14 @@
 
   <!-- галерея -->
   <section class="grid gap-1 grid-cols-1 md:grid-cols-3 mb-12 ">
-    <div>
-      <img class="object-contain w-full" src="/generators/1.jpeg" />
-    </div>
+    {{ range (readDir "./static/generators") }}
+      {{ delimit (slice "/generators" .Name) "/" | partial "gallery/item.html" }}
+    {{ end }}
 
-    <div>
-      <img class="object-contain w-full" src="/generators/2.jpeg" />
-    </div>
+    {{ range (readDir "./static/brake-disks") }}
+      {{ delimit (slice "/brake-disks" .Name) "/" | partial "gallery/item.html" }}
+    {{ end }}
 
-    <div>
-      <img class="object-contain w-full" src="/generators/3.jpeg" />
-    </div>
-
-    <div>
-      <img class="object-cover w-full" src="/brake-disks/1.jpeg" />
-    </div>
-
-    <div>
-      <img class="object-cover" src="/brake-disks/2.jpeg" />
-    </div>
-
-    <div>
-      <img class="object-contain w-full" src="/brake-disks/3.jpeg" />
-    </div>
   </section>
 
   <!-- map -->
