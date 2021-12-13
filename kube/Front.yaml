@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restar-deployment
+spec:
+  selector:
+    matchLabels:
+      app: restar
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: restar
+    spec:
+      containers:
+        - name: restar
+          image: ghcr.io/re-star-ru/erp:latest
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              memory: "128M"
+              cpu: "250m"
+            limits:
+              memory: "256M"
+              cpu: "250m"
