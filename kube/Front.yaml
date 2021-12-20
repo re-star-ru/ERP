@@ -1,53 +1,64 @@
-kind: Namespace
 apiVersion: v1
+kind: Namespace
 metadata:
   name: restar
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: site
-  namespace: restar
-
-spec:
-  ports:
-    - name: http
-      port: 8080
-  selector:
-    app: restar
-    task: restar
 
 ---
-kind: Deployment
+# re-star.ru site
 apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: restar-deployment
-  namespace: restar
   labels:
-    app: restar
-    name: restar
-
+    app: re-star-ru
+  name: re-star-ru
+  namespace: restar
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: restar
-      task: restar
+      app: re-star-ru
   template:
     metadata:
       labels:
-        app: restar
-        task: restar
+        app: re-star-ru
     spec:
       containers:
-        - name: restar
-          image: ghcr.io/re-star-ru/erp:latest
+        - image: ghcr.io/re-star-ru/erp:latest
+          name: re-star-ru
+          resources:
+            limits:
+              memory: "128M"
+              cpu: "500m"
           ports:
             - containerPort: 8080
-          resources:
-            requests:
-              memory: "128M"
-              cpu: "250m"
-            limits:
-              memory: "256M"
-              cpu: "250m"
+              name: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: re-star-ru
+  namespace: restar
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: re-star-ru
+
+---
+apiVersion: projectcontour.io/v1
+kind: HTTPProxy
+metadata:
+  name: re-star-ru
+  namespace: restar
+spec:
+  virtualhost:
+    fqdn: re-star.ru
+    tls:
+      secretName: kube-system/re-star-ru-wildcard
+  routes:
+    - services:
+        - name: re-star-ru
+          port: 8080
