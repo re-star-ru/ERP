@@ -38,9 +38,9 @@ jobs:
 
       - name: Deploy with kube-tools
         uses: stefanprodan/kube-tools@v1
-        # env:
-        # KUBE_CONFIG: $HOME/.kube/config
-        # KUBE_CONFIG_DATA: $HOME/.kube/config
+        env:
+          # KUBE_CONFIG: $HOME/.kube/config
+          KUBE_CONFIG_DATA: ${{secrets.GITHUB_TOKEN}}
 
         with:
           command: |
