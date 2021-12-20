@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v2
 
       - run: |
+          cd kube
           mkdir -p .kube
           echo "${{ env.KUBECONFIG_FILE }}" > $KUBECONFIG
 
