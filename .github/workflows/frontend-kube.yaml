@@ -39,13 +39,11 @@ jobs:
       - name: Deploy with kube-tools
         uses: stefanprodan/kube-tools@v1
         env:
-          # KUBE_CONFIG: $HOME/.kube/config
-          KUBE_CONFIG_DATA: ${{secrets.GITHUB_TOKEN}}
-
+          KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG}}
         with:
           command: |
             cd kube
-            echo ${KUBE_CONFIG_DATA} > /tmp/config
+            echo ${{env.KUBE_CONFIG_DATA}} > /tmp/config
             echo "Run test kube !"
             echo "CONFIG >>>"
             cat /tmp/config
