@@ -11,6 +11,7 @@ env:
   GITHUB_REF: ${{github.ref}}
   GITHUB_SHA: ${{github.sha}}
   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  # KUBE_CONFIG_DATA: $HOME/.kube/config
 
 jobs:
   build:
@@ -44,7 +45,7 @@ jobs:
         with:
           command: |
             cd kube
-            echo ${secrets.KUBE_CONFIG} > $KUBE_CONFIG
+            echo ${{secrets.GITHUB_TOKEN}} > $KUBE_CONFIG
             echo "Run test kube !"
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
