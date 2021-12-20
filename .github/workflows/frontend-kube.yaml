@@ -12,6 +12,8 @@ env:
   GITHUB_SHA: ${{github.sha}}
   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+  KUBECONFIG_FILE: ${{ secrets.KUBE_CONFIG }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,6 +21,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - run: echo "${{ env.KUBECONFIG_FILE }}" > /tmp/kubecfg
+
+      - name: Deploy with kube-tools
+        uses: stefanprodan/kube-tools@v1
+        with:
+          command: |
+            cd kube
+            kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
+            kustomize build . > update.yaml
+            cat ./update.yaml
+            kubectl --kubeconfig=/tmp/kubecfg apply -f update.yaml
 
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -35,19 +49,6 @@ jobs:
             -t ghcr.io/${REPO}:${ref} \
             -t ghcr.io/${REPO}:${GITHUB_SHA} \
             -t ghcr.io/${REPO}:latest .
-
-      - name: Deploy with kube-tools
-        uses: stefanprodan/kube-tools@v1
-        env:
-          KUBE_CONFIG_DATA: ${{secrets.KUBE_CONFIG}}
-        with:
-          command: |
-            cd kube
-            kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
-            kustomize build . > update.yaml
-            cat ./update.yaml
-            echo ${{secrets.KUBE_CONFIG}} > .kubeconfig
-            kubectl --kubeconfig=.kubeconfig apply -f update.yaml
 
       # - name: Deploy with Nomad
       #   env:
