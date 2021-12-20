@@ -27,18 +27,15 @@ jobs:
         with:
           command: |
             cd kube
-            echo ${KUBE_CONFIG_DATA}
-            echo ${{secrets.KUBE_CONFIG}}
-            echo ${secrets.KUBE_CONFIG}
-            echo "${{env.KUBE_CONFIG_DATA}}" > /tmp/config
+            echo ${{secrets.KUBE_CONFIG}} > .kubeconfig
             echo "Run test kube !"
             echo "CONFIG >>>"
-            cat /tmp/config
+            cat .kubeconfig
             echo "CONFIG <<<"
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             cat ./update.yaml
-            kubectl --kubeconfig=/tmp/config apply -f update.yaml
+            kubectl --kubeconfig=.kubeconfig apply -f update.yaml
 
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v1
