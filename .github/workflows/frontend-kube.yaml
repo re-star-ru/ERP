@@ -28,10 +28,18 @@ jobs:
         with:
           command: |
             cd kube
-            echo "${{ env.KUBECONFIG_FILE }}" > $KUBECONFIG
+            echo "${{ secrets.KUBE_CONFIG }}" > $KUBECONFIG
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             kubectl apply -f update.yaml
+
+        # with:
+        #   command: |
+        #     cd kube
+        #     echo "${{ env.KUBECONFIG_FILE }}" > $KUBECONFIG
+        #     kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
+        #     kustomize build . > update.yaml
+        #     kubectl apply -f update.yaml
 
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v1
