@@ -27,7 +27,6 @@ jobs:
         with:
           command: |
             cd kube
-            echo ${KUBE_CONFIG}
             echo ${{KUBE_CONFIG}}
             echo ${{secrets.KUBE_CONFIG}}
             echo ${secrets.KUBE_CONFIG}
