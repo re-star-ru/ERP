@@ -45,7 +45,7 @@ jobs:
         with:
           command: |
             cd kube
-            echo ${{secrets.GITHUB_TOKEN}} > /tmp/config
+            echo ${KUBE_CONFIG_DATA} > /tmp/config
             echo "Run test kube !"
             echo "CONFIG >>>"
             cat /tmp/config
