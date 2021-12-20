@@ -20,26 +20,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy with kube-tools
-        uses: stefanprodan/kube-tools@v1
-        env:
-          KUBECONFIG: .kubeconfig
-        with:
-          command: |
-            cd kube
-            echo ${{secrets.KUBE_CONFIG}} > $KUBECONFIG
-            kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
-            kustomize build . > update.yaml
-            kubectl apply -f update.yaml
-
-        # with:
-        #   command: |
-        #     cd kube
-        #     echo "${{ env.KUBECONFIG_FILE }}" > $KUBECONFIG
-        #     kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
-        #     kustomize build . > update.yaml
-        #     kubectl apply -f update.yaml
-
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -56,10 +36,15 @@ jobs:
             -t ghcr.io/${REPO}:${GITHUB_SHA} \
             -t ghcr.io/${REPO}:latest .
 
-      # - name: Deploy with Nomad
-      #   env:
-      #     NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
-      #     NOMAD_ADDR: https://nomad.re-star.ru
-      #   uses: docker://hashicorp/levant:latest
-      #   with:
-      #     args: levant deploy -var "tag=${{github.sha}}" -var "repo=${{github.repository}}" frontend/frontend.hcl
+      - name: Deploy with kube-tools
+        uses: stefanprodan/kube-tools@v1
+        env:
+          KUBECONFIG: .kubeconfig
+        with:
+          command: |
+            cd kube
+            kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
+            kustomize build . > update.yaml
+
+            echo ${{secrets.KUBE_CONFIG}} > $KUBECONFIG
+            kubectl apply -f update.yaml
