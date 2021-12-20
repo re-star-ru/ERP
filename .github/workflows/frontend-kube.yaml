@@ -41,7 +41,7 @@ jobs:
           command: |
             cd kube
             echo "Run test kube !"
-            kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/re-star-ru/erp:latest 
+            kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             cat ./update.yaml
 
