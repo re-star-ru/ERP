@@ -12,6 +12,7 @@ env:
   GITHUB_SHA: ${{github.sha}}
   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+  KUBECONFIG: .kube/config
   KUBECONFIG_FILE: ${{ secrets.KUBE_CONFIG }}
 
 jobs:
@@ -22,7 +23,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - run: echo "${{ env.KUBECONFIG_FILE }}" > /tmp/kubecfg
+      - run: |
+          mkdir -p .kube
+          echo "${{ env.KUBECONFIG_FILE }}" > $KUBECONFIG
 
       - name: Deploy with kube-tools
         uses: stefanprodan/kube-tools@v1
@@ -32,7 +35,7 @@ jobs:
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             cat ./update.yaml
-            kubectl --kubeconfig=/tmp/kubecfg apply -f update.yaml
+            kubectl apply -f update.yaml
 
       - name: set up Docker Buildx
         uses: docker/setup-buildx-action@v1
