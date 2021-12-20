@@ -12,7 +12,7 @@ env:
   GITHUB_SHA: ${{github.sha}}
   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-  KUBECONFIG: .kube/config
+  KUBECONFIG: .kubeconfig
   KUBECONFIG_FILE: ${{ secrets.KUBE_CONFIG }}
 
 jobs:
@@ -22,11 +22,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - run: |
-          cd kube
-          mkdir -p .kube
-          echo "${{ env.KUBECONFIG_FILE }}" > $KUBECONFIG
 
       - name: Deploy with kube-tools
         uses: stefanprodan/kube-tools@v1
