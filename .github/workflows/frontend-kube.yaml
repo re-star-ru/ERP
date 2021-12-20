@@ -12,9 +12,6 @@ env:
   GITHUB_SHA: ${{github.sha}}
   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
-  KUBECONFIG: .kubeconfig
-  KUBECONFIG_FILE: ${{ secrets.KUBE_CONFIG }}
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,6 +22,8 @@ jobs:
 
       - name: Deploy with kube-tools
         uses: stefanprodan/kube-tools@v1
+        env:
+          KUBECONFIG: .kubeconfig
         with:
           command: |
             cd kube
