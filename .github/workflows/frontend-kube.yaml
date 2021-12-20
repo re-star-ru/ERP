@@ -38,14 +38,18 @@ jobs:
 
       - name: Deploy with kube-tools
         uses: stefanprodan/kube-tools@v1
+        env:
+          KUBE_CONFIG: $HOME/.kube/config
+
         with:
           command: |
             cd kube
+            echo ${secrets.KUBE_CONFIG} > $KUBE_CONFIG
             echo "Run test kube !"
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             cat ./update.yaml
-            kubectl --kubeconfig=${secrets.KUBE_CONFIG} apply -f update.yaml
+            kubectl apply -f update.yaml
 
       # - name: Deploy with Nomad
       #   env:
