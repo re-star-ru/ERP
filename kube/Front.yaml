@@ -1,23 +1,49 @@
-apiVersion: apps/v1
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: restar
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: site
+  namespace: restar
+
+spec:
+  ports:
+    - name: http
+      port: 8080
+  selector:
+    app: restar
+    task: restar
+
+---
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   name: restar-deployment
+  namespace: restar
+  labels:
+    app: restar
+    name: restar
+
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: restar
-  replicas: 2
+      task: restar
   template:
     metadata:
       labels:
         app: restar
+        task: restar
     spec:
       containers:
         - name: restar
           image: ghcr.io/re-star-ru/erp:latest
           ports:
-            - containerPort: 80
-              protocol: TCP
+            - containerPort: 8080
           resources:
             requests:
               memory: "128M"
