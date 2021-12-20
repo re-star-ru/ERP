@@ -57,7 +57,7 @@ jobs:
         with:
           command: |
             cd kube
-            echo ${{env.KUBE_CONFIG_DATA}} > /tmp/config
+            cat ${{env.KUBE_CONFIG_DATA}} > /tmp/config
             echo "Run test kube !"
             echo "CONFIG >>>"
             cat /tmp/config
