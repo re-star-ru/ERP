@@ -45,6 +45,7 @@ jobs:
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             cat ./update.yaml
+            kubectl --kubeconfig=config-demo apply -f update.yaml
 
       # - name: Deploy with Nomad
       #   env:
