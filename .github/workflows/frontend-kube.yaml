@@ -27,7 +27,7 @@ jobs:
         with:
           command: |
             cd kube
-            echo ${{KUBE_CONFIG_DATA}}
+            echo ${KUBE_CONFIG_DATA}
             echo ${{secrets.KUBE_CONFIG}}
             echo ${secrets.KUBE_CONFIG}
             echo ${{env.KUBE_CONFIG_DATA}} > /tmp/config
