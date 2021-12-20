@@ -1,4 +1,4 @@
-FROM node:current-alpine as backend
+FROM node:14-alpine as backend
 
 ARG GIT_BRANCH
 
