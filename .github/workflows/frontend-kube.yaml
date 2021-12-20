@@ -45,6 +45,6 @@ jobs:
           command: |
             cd kube
             echo ${{secrets.KUBE_CONFIG}} > $KUBECONFIG
+            kubectl apply -f $UPDATE
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > $UPDATE
-            kubectl apply -f $UPDATE
