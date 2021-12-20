@@ -40,11 +40,11 @@ jobs:
         uses: stefanprodan/kube-tools@v1
         env:
           KUBECONFIG: .kubeconfig
+          UPDATE: .update.yaml
         with:
           command: |
             cd kube
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
-            kustomize build . > update.yaml
-
+            kustomize build . > $UPDATE
             echo ${{secrets.KUBE_CONFIG}} > $KUBECONFIG
             kubectl apply -f update.yaml
