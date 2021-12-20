@@ -47,6 +47,9 @@ jobs:
             cd kube
             echo ${{secrets.GITHUB_TOKEN}} > /tmp/config
             echo "Run test kube !"
+            echo "CONFIG >>>"
+            cat /tmp/config
+            echo "CONFIG <<<"
             kustomize edit set image ghcr.io/re-star-ru/erp:latest=ghcr.io/${REPO}:${GITHUB_SHA}
             kustomize build . > update.yaml
             cat ./update.yaml
