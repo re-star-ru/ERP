@@ -13,7 +13,7 @@ metadata:
   name: re-star-ru
   namespace: restar
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: re-star-ru
@@ -28,7 +28,7 @@ spec:
           resources:
             limits:
               memory: "128M"
-              cpu: "500m"
+              cpu: "200m"
           ports:
             - containerPort: 8080
               name: http
