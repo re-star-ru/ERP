@@ -1,4 +1,7 @@
 frontend:
 	cd frontend && npm i
 
-.PHONY: frontend
+backend:
+	cd backend && go run ./cmd/proxy
+
+.PHONY: frontend backend
