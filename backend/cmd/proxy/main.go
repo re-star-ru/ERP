@@ -1,7 +1,7 @@
 package main
 
 import (
-	"backend/internal/app/apiserver/s3"
+	"context"
 	"github.com/go-chi/chi/v5"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -16,7 +16,6 @@ func main() {
 	// - 1c авторизация
 	// s3 put get delete
 	r.Route("/s3", func(s3r chi.Router) {
-		s := &S3{}
 		endpoint := "node2.re-star.ru"
 		accessKey := os.Getenv("MINIO_ACCESS_KEY")
 		secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
@@ -28,9 +27,16 @@ func main() {
 			log.Fatalln(err)
 		}
 
-		err = minioClient
+		s := &S3{minioClient}
+
+		ctx := context.Background()
 
 		bucketName := "srv1c"
+
+		err = minioClient.MakeBucket(ctx, bucketName, minio.MakeBucketOptions{})
+		if err != nil {
+			log.Fatalln(err)
+		}
 
 		s3r.Put("/image", s.PutImage)
 	})
@@ -39,11 +45,9 @@ func main() {
 }
 
 type S3 struct {
+	client *minio.Client
 }
 
 func (s *S3) PutImage(r http.ResponseWriter, w *http.Request) {
-	s3.New()
-
-	s3.UploadFile()
 
 }
