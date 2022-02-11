@@ -1,0 +1,4 @@
+PUT replica.restar:8000/s3/image
+Content-Type: image/jpeg
+
+< /home/restar/Desktop/Новая%20папка/1.png

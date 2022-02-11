@@ -1,3 +1,6 @@
+include .env
+export
+
 frontend:
 	cd frontend && npm i
 
