@@ -1,4 +1,6 @@
-PUT replica.restar:8000/s3/image
+PUT replica.restar:8100/s3/image
 Content-Type: image/jpeg
+< '/home/restar/Desktop/Новая%20папка/1.png'
 
-< /home/restar/Desktop/Новая%20папка/1.png
+###
+GET http://localhost:8100/1c/products

@@ -1,21 +1,36 @@
 package main
 
 import (
+	"backend/cmd/proxy/item"
 	"context"
+	"encoding/json"
+	"net/http"
+	"os"
+	"path"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/satori/go.uuid"
-	"log"
-	"net/http"
-	"os"
-	"path"
+	"github.com/rs/zerolog"
+	log "github.com/rs/zerolog/log"
+	uuid "github.com/satori/go.uuid"
 )
 
 func main() {
+	log.Logger = log.
+		With().Caller().
+		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
 	r := chi.NewRouter()
 	r.With()
+
+	r.Route("/", func(r chi.Router) {
+		fs := http.FileServer(http.Dir("/home/restar/git/erp/site/public"))
+		r.Handle("/*", fs)
+	})
+
+	r.Get("/item", item.Serve)
 
 	// - 1c авторизация
 	// s3 put get delete
@@ -30,7 +45,7 @@ func main() {
 			Secure: false,
 		})
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatal().Err(err).Send()
 		}
 
 		s := &S3{minioClient, "srv1c"}
@@ -41,19 +56,48 @@ func main() {
 		if err != nil {
 			exists, errBucketExists := minioClient.BucketExists(ctx, s.srv1cbucket)
 			if errBucketExists == nil && exists {
-				log.Printf("we already own %s\n", s.srv1cbucket)
+				log.Printf("we already own %s", s.srv1cbucket)
 			} else {
-				log.Fatalln(err)
+				log.Fatal().Err(err).Send()
 			}
 		} else {
-			log.Printf("suscessfully created %s\n\n", s.srv1cbucket)
+			log.Printf("suscessfully created %s", s.srv1cbucket)
 		}
 
 		s3r.Put("/image", s.PutImage)
 		s3r.Delete("/image", s.DeleteImage)
 	})
 	// -
-	log.Fatalln(http.ListenAndServe(":8000", r))
+
+	r.Route("/1c", func(r chi.Router) {
+		c := NewClient1c(
+			os.Getenv("ONEC_HOST"),
+			os.Getenv("ONEC_TOKEN"),
+		)
+
+		r.Use(middleware.Logger)
+		r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
+			ps, err := c.Products()
+			if err != nil {
+				logError(w, err, 400, "cant get products")
+				return
+			}
+
+			if err := json.NewEncoder(w).Encode(ps); err != nil {
+				logError(w, err, 500, "cannot unmarshal")
+				return
+			}
+
+		})
+	})
+
+	log.Debug().Msg("listen at :" + os.Getenv("HOST"))
+	log.Fatal().Err(http.ListenAndServe(":"+os.Getenv("HOST"), r))
+}
+
+func logError(w http.ResponseWriter, err error, statusCode int, errorInfo string) {
+	log.Err(err).Msg(errorInfo)
+	http.Error(w, err.Error(), statusCode)
 }
 
 type S3 struct {
@@ -63,17 +107,17 @@ type S3 struct {
 
 func (s *S3) PutImage(w http.ResponseWriter, r *http.Request) {
 	filePath := path.Join("images", uuid.NewV4().String()+".jpeg")
-	log.Println(filePath)
+	log.Debug().Msg(filePath)
 	info, err := s.client.PutObject(
 		context.Background(), s.srv1cbucket, filePath, r.Body, -1,
 		minio.PutObjectOptions{ContentType: r.Header.Get("Content-Type")},
 	)
 
 	if err != nil {
-		log.Println("ошибка загрузки изображения: ", err)
+		log.Err(err).Msg("ошибка загрузки изображения")
 	}
 
-	log.Printf("путь к файлу: %s/%s \n", info.Bucket, info.Key)
+	log.Printf("путь к файлу: %s/%s", info.Bucket, info.Key)
 
 	w.Write([]byte(path.Join(info.Bucket, info.Key)))
 }
