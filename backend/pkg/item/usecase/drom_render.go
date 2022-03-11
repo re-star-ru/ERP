@@ -79,13 +79,13 @@ func (r *DromRender) Render(price map[string]item.Item) error {
 		i++
 	}
 
-	type Nesting struct {
-		Offers []*Offer `xml:"offers>offer"`
+	type Offers struct {
+		XMLName xml.Name `xml:"offers"`
+		Offers  []*Offer `xml:"offer"`
 	}
 
-	nesting := Nesting{
-		Offers: offers,
-	}
+	nesting := &Offers{}
+	nesting.Offers = offers
 
 	b, err := xml.MarshalIndent(nesting, " ", " ")
 	if err != nil {
