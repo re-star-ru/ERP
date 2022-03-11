@@ -1,8 +1,16 @@
-FROM golang:alpine
+FROM ghcr.io/umputun/baseimage/buildgo:latest as build
 
-RUN mkdir /files
-COPY . /files
-WORKDIR /files
-RUN go build ./cmd/apiserver
+WORKDIR /build
+ADD . /build
 
-ENTRYPOINT ["/files/apiserver"]
+RUN ls /build
+RUN go build -o app ./cmd/proxy
+
+FROM ghcr.io/umputun/baseimage/app:lastest
+
+COPY --from=build /build/app /srv/app
+WORKDIR /srv
+
+
+
+CMD ["/srv/app"]

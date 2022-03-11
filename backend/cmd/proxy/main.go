@@ -2,6 +2,9 @@ package main
 
 import (
 	"backend/cmd/proxy/item"
+	"backend/pkg/item/delivery"
+	"backend/pkg/item/repo"
+	"backend/pkg/item/usecase"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -23,7 +26,6 @@ func main() {
 		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	r := chi.NewRouter()
-	r.With()
 
 	r.Route("/", func(r chi.Router) {
 		fs := http.FileServer(http.Dir("/home/restar/git/erp/site/public"))
@@ -34,21 +36,20 @@ func main() {
 
 	// - 1c авторизация
 	// s3 put get delete
+	endpoint := os.Getenv("MINIO_ENDPOINT")
+	accessKey := os.Getenv("MINIO_ACCESS_KEY")
+	secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
+	minioClient, err := minio.New(endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(accessKey, secretAccessKey, ""),
+		Secure: false,
+	})
+	if err != nil {
+		log.Fatal().Err(err).Send()
+	}
+
+	s := &S3{minioClient, "srv1c"}
 	r.Route("/s3", func(s3r chi.Router) {
 		s3r.Use(middleware.Logger)
-
-		endpoint := os.Getenv("MINIO_ENDPOINT")
-		accessKey := os.Getenv("MINIO_ACCESS_KEY")
-		secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
-		minioClient, err := minio.New(endpoint, &minio.Options{
-			Creds:  credentials.NewStaticV4(accessKey, secretAccessKey, ""),
-			Secure: false,
-		})
-		if err != nil {
-			log.Fatal().Err(err).Send()
-		}
-
-		s := &S3{minioClient, "srv1c"}
 
 		ctx := context.Background()
 
@@ -70,14 +71,17 @@ func main() {
 	// -
 
 	r.Route("/1c", func(r chi.Router) {
-		c := NewClient1c(
+		c := repo.NewClient1c(
 			os.Getenv("ONEC_HOST"),
 			os.Getenv("ONEC_TOKEN"),
+		)
+		id := delivery.NewItemDelivery(
+			usecase.NewItemUsecase(c, minioClient),
 		)
 
 		r.Use(middleware.Logger)
 		r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
-			ps, err := c.Products()
+			ps, err := c.Products(100)
 			if err != nil {
 				logError(w, err, 400, "cant get products")
 				return
@@ -89,6 +93,8 @@ func main() {
 			}
 
 		})
+		r.Post("/updatePricelist", id.UpdatePricelists)
+
 	})
 
 	log.Debug().Msg("listen at :" + os.Getenv("HOST"))

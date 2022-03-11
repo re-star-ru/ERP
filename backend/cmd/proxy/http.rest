@@ -4,3 +4,6 @@ Content-Type: image/jpeg
 
 ###
 GET http://localhost:8100/1c/products
+
+###
+POST  http://localhost:8000/1c/updatePricelist?limit=20
