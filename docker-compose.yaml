@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  proxy:
+    build: ./backend
+    image: restar/proxy:latest
+    container_name: "restar-proxy"
+    restart: always
+    network_mode: host
+    environment:
+      - HOST
+      - MINIO_ENDPOINT
+      - MINIO_ACCESS_KEY
+      - MINIO_SECRET_KEY
+      - ONEC_HOST
+      - ONEC_TOKEN
+      - TIME_ZONE
