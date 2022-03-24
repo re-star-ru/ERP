@@ -36,4 +36,5 @@ func main() {
 func logError(w http.ResponseWriter, err error, statusCode int, errorInfo string) {
 	log.Err(err).Msg(errorInfo)
 	http.Error(w, err.Error(), statusCode)
+
 }
