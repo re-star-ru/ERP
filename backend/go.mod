@@ -1,6 +1,6 @@
 module backend
 
-go 1.17
+go 1.18
 
 require (
 	github.com/DataDog/zstd v1.4.5 // indirect
@@ -40,6 +40,7 @@ require (
 
 require (
 	github.com/go-chi/chi/v5 v5.0.7
+	github.com/google/uuid v1.3.0
 	github.com/minio/minio-go/v7 v7.0.21
 	github.com/rs/zerolog v1.26.1
 	github.com/satori/go.uuid v1.2.0
@@ -55,7 +56,6 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/google/uuid v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

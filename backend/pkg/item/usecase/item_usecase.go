@@ -88,7 +88,7 @@ func NewItemUsecase(repo1c repo.IClient1c, m *minio.Client) *ItemUsecase {
 }
 
 func (iu *ItemUsecase) UploadPricelists(limit int) error {
-	products, err := iu.repo1c.Products(limit)
+	products, err := iu.repo1c.Products(0, limit)
 	if err != nil {
 		return fmt.Errorf("cant get producst from 1c %w", err)
 	}

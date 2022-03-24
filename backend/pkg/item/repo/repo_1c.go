@@ -6,9 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
-
-	"github.com/rs/zerolog/log"
 )
 
 func NewClient1c(host, token string) *Client1c {
@@ -22,25 +19,21 @@ type Client1c struct {
 }
 
 type IClient1c interface {
-	Products(limit int) (map[string]item.Item, error)
+	Products(offset, limit int) (map[string]item.Item, error)
 }
 
-func (c *Client1c) Products(limit int) (map[string]item.Item, error) {
-	r, err := http.NewRequest("GET", c.Host+"products", nil)
+func (c *Client1c) Products(offset, limit int) (map[string]item.Item, error) {
+	r, err := http.NewRequest("GET", c.Host+"products/batch", nil)
 	if err != nil {
-		log.Fatal().Err(err).Msg("create new request")
+		return nil, fmt.Errorf("cant create new products barch request %w", err)
 	}
-	q := r.URL.Query()
-	q.Add("limit", strconv.Itoa(limit))
-
-	r.URL.RawQuery = q.Encode()
-
 	r.Header.Set("Authorization", "Basic "+c.Token)
 
 	resp, err := c.hc.Do(r)
 	if err != nil {
-		return nil, fmt.Errorf("do request %w", err)
+		return nil, fmt.Errorf("cant do request %w", err)
 	}
+	defer r.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
 		body, err := io.ReadAll(resp.Body)
