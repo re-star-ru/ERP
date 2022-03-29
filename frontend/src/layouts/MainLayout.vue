@@ -58,9 +58,10 @@
       bordered
       content-class="bg-grey-1"
     >
+
+  /*  v-if="this.$store.getters.isLogged"  */
       <q-list>
         <q-item
-          v-if="this.$store.getters.isLogged"
           clickable
           v-ripple
           to="/profile"
@@ -69,14 +70,16 @@
             <q-icon name="ion-person" />
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{ $store.state.auth.email }}</q-item-label>
+            // <q-item-label> $store.state.auth.email </q-item-label>
             <q-item-label caption>
-              {{ $store.state.auth.aclGroup }}
+               $store.state.auth.aclGroup
             </q-item-label>
           </q-item-section>
         </q-item>
+
+v-if="!this.$store.getters.isLogged"
+
         <q-item
-          v-if="!this.$store.getters.isLogged"
           @click="openLoginDialog"
           clickable
           v-ripple
@@ -90,8 +93,9 @@
           </q-item-section>
         </q-item>
 
-        <q-item
           v-if="!this.$store.getters.isLogged"
+
+        <q-item
           @click="openRegistrationDialog"
           clickable
           v-ripple
@@ -113,9 +117,12 @@
           v-bind="link"
         />
 
-        <q-separator v-if="this.$store.getters.isLogged" color="primary" />
+v-if="this.$store.getters.isLogged"
+   v-if="this.$store.getters.isLogged"
+
+<q-separator  color="primary" />
         <q-item
-          v-if="this.$store.getters.isLogged"
+
           @click="logout"
           clickable
           v-ripple
@@ -286,16 +293,16 @@
 
 <script>
 import EssentialLink from 'components/EssentialLink'
-import { openURL } from 'quasar'
+// import { openURL } from 'quasar'
 
 export default {
   name: 'MainLayout',
 
   components: {
-    EssentialLink,
+    EssentialLink
   },
 
-  data() {
+  data () {
     return {
       acceptLicense: false,
       openLicense: false,
@@ -310,143 +317,143 @@ export default {
           title: 'Главная',
           caption: 'restar',
           icon: 'ion-home',
-          link: '/',
+          link: '/'
         },
         {
           title: 'Продукты',
           caption: 'products',
           icon: 'ion-home',
-          link: '/products',
+          link: '/products'
         },
         {
           title: 'Корзина',
           caption: 'cart',
           icon: 'ion-cart',
-          link: '/cart',
+          link: '/cart'
         },
         {
           title: 'Менеджер каталога',
           caption: 'catalog-manager',
           icon: 'ion-folder',
-          link: '/catalog-manager',
+          link: '/catalog-manager'
         },
         {
           title: 'Каталог',
           caption: 'catalog',
           icon: 'ion-folder',
-          link: '/catalog',
+          link: '/catalog'
         },
         {
           title: 'Предложения',
           caption: 'offers',
           icon: 'ion-flame',
-          link: '/offers',
+          link: '/offers'
         },
         {
           title: 'Остатки',
           caption: 'amount',
           icon: 'ion-search',
-          link: '/amount',
+          link: '/amount'
         },
         {
           title: 'test',
           caption: 'test',
           icon: 'ion-test',
           link: '/test',
-          onlyManager: true,
-        },
-      ],
+          onlyManager: true
+        }
+      ]
     }
   },
   methods: {
-    async searchProducts() {
+    async searchProducts () {
       try {
-        await this.$store.dispatch('searchProducts', this.text)
+        // await this.$store.dispatch('searchProducts', this.text)
       } catch (e) {
         this.$q.notify({
           message: 'Ошибка',
-          color: 'red',
+          color: 'red'
         })
         console.log(e)
       }
     },
-    clearProducts() {
+    clearProducts () {
       this.text = ''
-      this.$store.commit('clearProducts')
+      // this.$store.commit('clearProducts')
     },
-    openLoginDialog() {
+    openLoginDialog () {
       this.loginDialog = true
     },
-    closeLoginDialog() {
+    closeLoginDialog () {
       this.email = ''
       this.password = ''
       this.loginDialog = false
     },
-    openRegistrationDialog() {
+    openRegistrationDialog () {
       console.log('open registration')
       this.registrationDialog = true
     },
-    closeRegistrationDialog() {
+    closeRegistrationDialog () {
       this.registrationDialog = false
     },
-    async checkLogin() {
+    async checkLogin () {
       console.log('checklogin')
-      let credentials = {
-        email: this.email,
-        password: this.password,
-      }
+      // const credentials = {
+      //   email: this.email,
+      //   password: this.password
+      // }
 
       try {
-        await this.$store.dispatch('login', { credentials })
+        // await this.$store.dispatch('login', { credentials })
         this.$q.notify({
           message: ' Вы вошли',
-          color: 'accent',
+          color: 'accent'
         })
         this.closeLoginDialog()
       } catch (e) {
         this.$q.notify({
           message: e.message,
-          color: 'red',
+          color: 'red'
         })
       }
     },
 
-    logout() {
-      console.log(this.$store.getters.isLogged)
-      this.$store.dispatch('logout')
+    logout () {
+      // console.log(this.$store.getters.isLogged)
+      // this.$store.dispatch('logout')
     },
-    async registration() {
-      let credentials = {
-        email: this.email,
-        password: this.password,
-      }
+    async registration () {
+      // const credentials = {
+      //   email: this.email,
+      //   password: this.password
+      // }
 
       try {
-        await this.$store.dispatch('registration', { credentials })
+        // await this.$store.dispatch('registration', { credentials })
         this.$q.notify({
           message: ' Вы зарегистрировались и вошли',
-          color: 'accent',
+          color: 'accent'
         })
         this.closeRegistrationDialog()
       } catch (e) {
         this.$q.notify({
           message: e.response.data,
-          color: 'red',
+          color: 'red'
         })
         console.dir(e)
       }
-    },
+    }
   },
   computed: {
-    activeLinks() {
-      if (
-        this.$store.getters.isLogged &&
-        this.$store.getters.aclGroup === 'manager'
-      ) {
-        return this.essentialLinks
-      }
+    activeLinks () {
+      // if (
+      //   // this.$store.getters.isLogged &&
+      //   // this.$store.getters.aclGroup === 'manager'
+      // ) {
+      //   return this.essentialLinks
+      // }
       return this.essentialLinks.filter((link) => link.onlyManager !== true)
-    },
-  },
+    }
+  }
 }
 </script>

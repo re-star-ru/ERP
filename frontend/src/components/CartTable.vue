@@ -25,15 +25,15 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       cart: '',
-      total: 0,
+      total: 0
     }
   },
   methods: {
-    calculate() {
-      if (this.cart.addedProducts != undefined) {
+    calculate () {
+      if (this.cart.addedProducts !== undefined) {
         console.log('us obj')
         console.log(Object.values(this.cart.addedProducts))
         this.total = Object.values(this.cart.addedProducts).reduce(
@@ -44,16 +44,16 @@ export default {
         )
       }
     },
-    async getUserCart() {
+    async getUserCart () {
       console.log('getting users cart')
       const res = await this.$axios.get('cart')
       this.cart = res.data
       this.calculate()
       console.log(res)
-    },
+    }
   },
-  created() {
+  created () {
     this.getUserCart()
-  },
+  }
 }
 </script>

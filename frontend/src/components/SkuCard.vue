@@ -188,7 +188,7 @@ export default {
       mainproductproperties: Array
     }
   },
-  data() {
+  data () {
     return {
       pagination: {
         rowsPerPage: 0,
@@ -215,7 +215,7 @@ export default {
     }
   },
   methods: {
-    openPopupSkuCard() {
+    openPopupSkuCard () {
       this.popupOpened = true
     }
   }

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-let productType = {
+const productType = {
   id: String,
   name: String,
   guid: String,
@@ -64,31 +64,31 @@ let productType = {
   creator: {
     id: String,
     email: String,
-    name: String,
+    name: String
   },
   createdAt: String,
-  lastModified: String,
+  lastModified: String
 }
 
 export default {
   // name: 'ComponentName',
   props: ['id'],
-  data() {
+  data () {
     return {
       showRaw: false,
       newProduct: false,
 
-      product: productType,
+      product: productType
     }
   },
 
   methods: {
-    onReset() {
+    onReset () {
       this.product.name = ''
       this.product.sku = ''
     },
 
-    async onSubmit() {
+    async onSubmit () {
       const res = await this.$axios.put(
         `products/${this.product.id}`,
         this.product
@@ -99,7 +99,7 @@ export default {
           color: 'green-4',
           textColor: 'white',
           icon: 'ion-cloud-done',
-          message: 'Товар успешно обновлен',
+          message: 'Товар успешно обновлен'
         })
         return
       }
@@ -107,11 +107,11 @@ export default {
         color: 'red-4',
         textColor: 'white',
         icon: 'ion-bug',
-        message: 'Товар не добавлен',
+        message: 'Товар не добавлен'
       })
     },
 
-    async getProductInfo() {
+    async getProductInfo () {
       console.log('get product with id:', this.id)
       try {
         const res = await this.$axios.get(`products/${this.id}`)
@@ -119,10 +119,10 @@ export default {
       } catch (e) {
         console.log(e)
       }
-    },
+    }
   },
-  created() {
+  created () {
     this.getProductInfo()
-  },
+  }
 }
 </script>

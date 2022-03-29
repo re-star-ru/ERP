@@ -1,19 +1,20 @@
-import Vue from 'vue'
-import Axios from 'axios'
+// import Vue from 'vue'
 import { LocalStorage } from 'quasar'
+import { boot } from 'quasar/wrappers'
+import axios from 'axios'
+// import Axios from 'axios'
 
-let baseURL = 'https://api.re-star.ru/v1'
+const api = axios.create({
+  baseURL: 'https://api.re-star.ru/v1',
+  headers: { Authorization: `Bearer ${LocalStorage.getItem('accessToken')}` },
+  timeout: 3000
+})
+
 if (process.env.DEV) {
-  baseURL = 'http://localhost:3000'
+  api.baseURL = 'http://localhost:3000'
 }
 
-Axios.defaults.baseURL = baseURL
-Axios.defaults.timeout = 3000
-
-let accessToken = LocalStorage.getItem('accessToken')
-
-if (accessToken) {
-  Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
-}
-
-Vue.prototype.$axios = Axios
+export default boot(({ app }) => {
+  app.config.globalProperties.$axios = axios
+  app.config.globalProperties.$api = api
+})

@@ -1,10 +1,11 @@
-# Restar26 (frontend)
+# Quasar App (frontend)
 
-
-A Quasar Framework app
+A Quasar Project
 
 ## Install the dependencies
 ```bash
+yarn
+# or
 npm install
 ```
 
@@ -14,13 +15,19 @@ quasar dev
 ```
 
 
+### Lint the files
+```bash
+yarn lint
+# or
+npm run lint
+```
+
+
+
 ### Build the app for production
 ```bash
 quasar build
 ```
 
 ### Customize the configuration
-See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
-
-## TODO
-Подумать над sitemap и SEO
+See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js).

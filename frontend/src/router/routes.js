@@ -3,58 +3,58 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/Index.vue') },
+      { path: '', component: () => import('pages/PageIndex.vue') },
       { path: '/offers', redirect: '/offers/1' },
       {
         path: '/profile',
         name: 'profile',
-        component: () => import('pages/Profile'),
+        component: () => import('pages/PageProfile')
       },
 
       {
         path: '/products',
         name: 'products',
-        component: () => import('pages/Products'),
+        component: () => import('pages/PageProducts')
       },
       {
         path: '/cart',
         name: 'cart',
-        component: () => import('pages/Cart'),
+        component: () => import('pages/PageCart')
       },
       {
         path: '/catalog-manager',
         name: 'catalog-manager',
-        component: () => import('pages/CatalogManager'),
+        component: () => import('pages/PageCatalogManager'),
         children: [
           {
             path: ':id',
             component: () => import('components/ProductCardEditor'),
             name: 'editproductbyid',
-            props: true,
-          },
-        ],
+            props: true
+          }
+        ]
       },
       {
         path: '/offers/:page',
         name: 'page',
-        component: () => import('pages/Offers'),
+        component: () => import('pages/PageOffers')
       },
-      { path: '/amount', component: () => import('pages/Amount') },
+      { path: '/amount', component: () => import('pages/PageAmount') },
       {
         name: 'catalog',
         path: '/catalog',
-        component: () => import('pages/Catalog'),
+        component: () => import('pages/PageCatalog')
       },
-      { path: '/test', component: () => import('pages/Test') },
-      { path: '/license', component: () => import('pages/License') },
-    ],
-  },
+      { path: '/test', component: () => import('pages/PageTest') },
+      { path: '/license', component: () => import('pages/PageLicense') }
+    ]
+  }
 ]
 
 // Always leave this as last one
 routes.push({
-  path: '*',
-  component: () => import('pages/Error404.vue'),
+  path: '/:catchAll(.*)"',
+  component: () => import('pages/PageError404.vue')
 })
 
 export default routes
