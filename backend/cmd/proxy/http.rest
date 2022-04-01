@@ -7,3 +7,6 @@ GET http://localhost:8100/1c/products
 
 ###
 POST  http://localhost:8100/1c/updatePricelist?limit=20
+
+### get users
+GET http://localhost:8100/onec/products

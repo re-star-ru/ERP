@@ -293,13 +293,46 @@ v-if="this.$store.getters.isLogged"
 
 <script>
 import EssentialLink from 'components/EssentialLink'
-// import { openURL } from 'quasar'
+import { useQuasar } from 'quasar'
+import { useAmountStore } from 'src/stores/amount'
+import { ref } from 'vue'
 
 export default {
   name: 'MainLayout',
 
   components: {
     EssentialLink
+  },
+
+  setup (props) {
+    const store = useAmountStore()
+    const $q = useQuasar()
+    const text = ref('')
+
+    const searchProducts = async () => {
+      if (text.value === '') {
+        $q.notify({
+          message: 'минимум 3 символа для поиска',
+          color: 'red'
+        })
+        return
+      }
+
+      try {
+        store.searchProducts(text.value)
+      } catch (e) {
+        $q.notify({
+          message: 'Ошибка' + e,
+          color: 'red'
+        })
+        console.log('ошибка' + e)
+      }
+    }
+
+    return {
+      text,
+      searchProducts
+    }
   },
 
   data () {
@@ -310,7 +343,6 @@ export default {
       password: '',
       loginDialog: false,
       registrationDialog: false,
-      text: '',
       leftDrawerOpen: false,
       essentialLinks: [
         {
@@ -366,17 +398,6 @@ export default {
     }
   },
   methods: {
-    async searchProducts () {
-      try {
-        // await this.$store.dispatch('searchProducts', this.text)
-      } catch (e) {
-        this.$q.notify({
-          message: 'Ошибка',
-          color: 'red'
-        })
-        console.log(e)
-      }
-    },
     clearProducts () {
       this.text = ''
       // this.$store.commit('clearProducts')

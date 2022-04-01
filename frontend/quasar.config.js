@@ -49,8 +49,14 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
-      vueRouterMode: process.env.VUE_ROUTER_MODE,
+      vueRouterMode: 'history',
       publicPath: process.env.VUE_ROUTER_BASE,
+
+      env: {
+        API: ctx.dev
+          ? 'http://localhost:8100'
+          : 'https://api.re-star.ru/v1'
+      },
 
       // transpile: false,
       // publicPath: '/',
@@ -103,7 +109,9 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify'
+      ]
     },
 
     // animations: 'all', // --- includes all animations

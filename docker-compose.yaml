@@ -4,7 +4,7 @@ services:
   proxy:
     build: ./backend
     image: restar/proxy:latest
-    container_name: "restar-proxy"
+    container_name: 'restar-proxy'
     restart: always
     network_mode: host
     environment:
@@ -15,3 +15,14 @@ services:
       - ONEC_HOST
       - ONEC_TOKEN
       - TIME_ZONE
+      
+  mongo:
+    image: mongo:4
+    network_mode: host
+    restart: always
+    container_name: 'erp-mongodb'
+    environment:
+      - TIME_ZONE
+
+volumes:
+  dbmonbo:

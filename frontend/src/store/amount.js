@@ -8,19 +8,19 @@ export const state = () => {
 }
 
 export const mutations = {
-  setProductsData(state, data) {
+  setProductsData (state, data) {
     state.data = data
   },
-  clearProducts(state) {
+  clearProducts (state) {
     state.data = []
   },
-  toggleLoading(state) {
+  toggleLoading (state) {
     state.loading = !state.loading
   }
 }
 
 export const actions = {
-  async searchProducts({ commit }, text) {
+  async searchProducts ({ commit }, text) {
     try {
       commit('toggleLoading')
       const res = await axios.get('/search/' + text, {

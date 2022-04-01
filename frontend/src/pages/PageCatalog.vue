@@ -67,7 +67,7 @@ export default {
       console.log('get catalog')
       try {
         console.log('req query', this.$route.query)
-        const resp = await this.$axios.get('/catalog', {
+        const resp = await this.$api.get('/catalog', {
           params: {
             ...this.$route.query,
             q: this.searchString

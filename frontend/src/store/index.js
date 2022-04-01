@@ -5,7 +5,6 @@ import Vuex from 'vuex'
 import * as amount from './amount'
 import * as auth from './auth'
 
-
 Vue.use(Vuex)
 
 /*
@@ -17,7 +16,7 @@ Vue.use(Vuex)
  * with the Store instance.
  */
 
-export default function(/* { ssrContext } */) {
+export default function (/* { ssrContext } */) {
   return new Vuex.Store({
     modules: {
       // example

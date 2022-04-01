@@ -5,23 +5,36 @@
         :grid="$q.screen.lt.sm"
         title="Остатки"
         no-data-label="Остатков не найдено"
-        :data="products"
+        :data="store.data"
         :columns="columns"
         v-model:pagination="pagination"
         row-key="index"
-        :loading="loading"
+        :loading="store.loading"
         :visibleColumns="visibleColumns"
       >
+
         <template v-slot:loading>
           <q-inner-loading showing color="primary" />
         </template>
+
       </q-table>
     </div>
   </q-page>
 </template>
 
 <script>
+
+import { useAmountStore } from 'src/stores/amount'
+
 export default {
+  setup (props) {
+    const store = useAmountStore()
+
+    return {
+      store
+    }
+  },
+
   data () {
     return {
       text: '',
@@ -67,14 +80,14 @@ export default {
   },
   methods: {
     searchProducts () {}
-  },
-  computed: {
-    products () {
-      return this.$store.state.amount.data
-    },
-    loading () {
-      return this.$store.state.amount.loading
-    }
   }
+  // computed: {
+  //   products () {
+  //     return this.$store.state.amount.data
+  //   },
+  //   loading () {
+  //     return this.$store.state.amount.loading
+  //   }
+  // }
 }
 </script>

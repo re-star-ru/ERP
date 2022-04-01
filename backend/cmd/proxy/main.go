@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/rs/zerolog"
 	log "github.com/rs/zerolog/log"
@@ -11,7 +12,7 @@ import (
 func main() {
 	log.Logger = log.
 		With().Caller().
-		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr})
+		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.Stamp})
 
 	// - 1c авторизация
 	// s3 put get delete
@@ -30,11 +31,17 @@ func main() {
 	})
 
 	log.Debug().Msg("listen at :" + os.Getenv("HOST"))
-	log.Fatal().Err(http.ListenAndServe(":"+os.Getenv("HOST"), r))
+	log.Fatal().Err(http.ListenAndServe(":"+os.Getenv("HOST"), r)).Send()
 }
 
 func logError(w http.ResponseWriter, err error, statusCode int, errorInfo string) {
 	log.Err(err).Msg(errorInfo)
 	http.Error(w, err.Error(), statusCode)
+}
 
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok {
+		return value
+	}
+	return fallback
 }

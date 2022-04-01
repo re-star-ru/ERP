@@ -5,7 +5,7 @@ ARG GIT_BRANCH
 ADD . /build
 WORKDIR /build
 #RUN apk add --no-cache --update git tzdata ca-certificates
-# TODO: -D for draft build
+# TODO: -D for draft buildfasd
 
 RUN npm i
 RUN npm run build

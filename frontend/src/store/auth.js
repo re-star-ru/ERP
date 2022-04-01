@@ -6,28 +6,28 @@ export const state = () => {
     accessToken: LocalStorage.getItem('accessToken') || '',
     email: LocalStorage.getItem('email') || '',
     aclGroup: LocalStorage.getItem('aclGroup') || '',
-    user: {},
+    user: {}
   }
 }
 
 export const getters = {
   isLogged: (state) => !!state.accessToken,
-  aclGroup: (state) => state.aclGroup,
+  aclGroup: (state) => state.aclGroup
 }
 
 export const actions = {
-  async login({ commit }, { credentials }) {
+  async login ({ commit }, { credentials }) {
     try {
-      const res = await axios.post(`auth/sign-in`, credentials)
+      const res = await axios.post('auth/sign-in', credentials)
       console.log(res.data)
 
       commit('saveLocalAuth', {
         email: credentials.email,
-        accessToken: res.data,
+        accessToken: res.data
       })
     } catch (e) {
       if (e.code === 5) {
-        let err = new Error('Неправильные символы')
+        const err = new Error('Неправильные символы')
         console.log(err)
         throw err
       }
@@ -38,24 +38,20 @@ export const actions = {
     }
   },
 
-  async registration({ commit }, { credentials }) {
-    try {
-      const res = await axios.post(`auth/sign-up`, credentials)
-      commit('saveLocalAuth', {
-        email: credentials.email,
-        accessToken: res.data,
-      })
-    } catch (e) {
-      throw e
-    }
+  async registration ({ commit }, { credentials }) {
+    const res = await axios.post('auth/sign-up', credentials)
+    commit('saveLocalAuth', {
+      email: credentials.email,
+      accessToken: res.data
+    })
   },
-  logout({ commit }) {
+  logout ({ commit }) {
     commit('clearLocalAuth')
-  },
+  }
 }
 
 export const mutations = {
-  clearLocalAuth(state) {
+  clearLocalAuth (state) {
     LocalStorage.remove('email')
     LocalStorage.remove('accessToken')
     LocalStorage.remove('aclGroup')
@@ -65,7 +61,7 @@ export const mutations = {
     state.aclGroup = ''
   },
 
-  saveLocalAuth(state, data) {
+  saveLocalAuth (state, data) {
     state.email = data.email
     state.accessToken = data.accessToken
     state.aclGroup = 'test'
@@ -77,8 +73,6 @@ export const mutations = {
       console.dir(error)
     }
 
-    axios.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${data.accessToken}`
-  },
+    axios.defaults.headers.common.Authorization = `Bearer ${data.accessToken}`
+  }
 }
