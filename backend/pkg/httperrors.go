@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"github.com/go-chi/render"
 	"net/http"
 	"net/url"
 	"runtime"
@@ -11,7 +12,7 @@ import (
 // SendErrorJSON makes {error: blah, message: blah, code: 42} json body and responds with error code
 func SendErrorJSON(w http.ResponseWriter, r *http.Request, httpStatusCode int, err error, details string) {
 	//log.Warn().Err(errDetailsMsg(w, r, httpStatusCode, details))
-	//render.Status(r, httpStatusCode)
+	render.Status(r, httpStatusCode)
 	//render.JSON(w, r, JSON{"error": err.Error(), "message": details, "code": errCode})
 }
 
