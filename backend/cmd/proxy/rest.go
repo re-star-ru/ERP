@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/cors"
@@ -59,7 +59,16 @@ func Rest(c cfg) *chi.Mux {
 	itemUsecase := usecase.NewItemUsecase(itemRepo, minioClient)
 	itemHttp := delivery.NewItemDelivery(itemUsecase)
 
-	r.With(middleware.Logger).Get("/search/{query}", itemHttp.SearchBySKU)
+	//r.With(middleware.Logger).Get("/search/{query}", func(w http.ResponseWriter, r *http.Request) {
+	//
+	//	itemRepo.TextSearch()
+	//	if err = itemRepo.Proxy(w, r.Method, r.Host); err != nil {
+	//		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "ошибка 1с")
+	//	}
+	//})
+
+	r.Get("/search/{query}", itemHttp.SearchBySKU)
+
 	r.Route("/1c", func(r chi.Router) {
 		r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
 			ps, err := itemRepo.Items(100, 100)

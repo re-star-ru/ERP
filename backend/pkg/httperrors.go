@@ -1,22 +1,28 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	"github.com/go-chi/render"
+	"github.com/rs/zerolog/log"
 	"net/http"
 	"net/url"
 	"runtime"
 	"strings"
 )
 
+var (
+	ErrWrongInput = errors.New("wrong input")
+)
+
 // SendErrorJSON makes {error: blah, message: blah, code: 42} json body and responds with error code
 func SendErrorJSON(w http.ResponseWriter, r *http.Request, httpStatusCode int, err error, details string) {
-	//log.Warn().Err(errDetailsMsg(w, r, httpStatusCode, details))
+	log.Warn().Err(err).Msg(errDetailsMsg(r, httpStatusCode, details))
 	render.Status(r, httpStatusCode)
-	//render.JSON(w, r, JSON{"error": err.Error(), "message": details, "code": errCode})
+	render.JSON(w, r, JSON{"error": err.Error(), "message": details})
 }
 
-func errDetailsMsg(r *http.Request, httpStatusCode int, err error, details string) string {
+func errDetailsMsg(r *http.Request, httpStatusCode int, details string) string {
 	uinfoStr := ""
 
 	//if sess, err := session.GetSession(r); err != nil {
@@ -35,6 +41,8 @@ func errDetailsMsg(r *http.Request, httpStatusCode int, err error, details strin
 			line, funcNameElems[len(funcNameElems)-1])
 	}
 
-	return fmt.Sprintf("%s - %v - %d - %s%s - %s",
-		details, err, httpStatusCode, uinfoStr, q, srcFileInfo)
+	return fmt.Sprintf("%s - %d - %s%s - %s",
+		details, httpStatusCode, uinfoStr, q, srcFileInfo)
 }
+
+type JSON map[string]interface{}

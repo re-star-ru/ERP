@@ -87,6 +87,7 @@ paths:
 
   /search/{sku}:
     get:
+      deprecated: true
       description: Поиск по артикулу
       parameters:
         - in: path

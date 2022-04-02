@@ -12,13 +12,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/go-chi/docgen"
-
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5/middleware"
 
 	"github.com/go-chi/cors"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 // Rest is rest server struct
@@ -124,11 +122,6 @@ func (s *Rest) routes() chi.Router {
 	})
 
 	r.With(middleware.SetHeader("Content-type", "application/json")).Get("/health-check", healthCheckHandler)
-	r.With(middleware.SetHeader("Content-type", "application/json")).Get("/doc", func(w http.ResponseWriter, req *http.Request) {
-		if _, err := w.Write([]byte(docgen.JSONRoutesDoc(r))); err != nil {
-			log.Println(err)
-		}
-	})
 
 	// swagger api
 	r.Group(func(sr chi.Router) {

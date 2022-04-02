@@ -16,7 +16,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 type TestSlicer struct {

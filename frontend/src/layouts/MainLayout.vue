@@ -321,10 +321,10 @@ export default {
       try {
         await store.searchProducts(text.value)
       } catch (e) {
-        console.log('ошибка' + e)
         $q.notify({
-          message: 'Ошибка: ' + e,
-          color: 'red'
+          color: 'red',
+          message: e.message,
+          caption: e.error
         })
       }
     }

@@ -15,6 +15,7 @@ export const useAmountStore = defineStore('counter', {
 
   actions: {
     async searchProducts (text) {
+      console.log('TEXT' + text)
       try {
         this.toggleLoading()
         const res = await api.get('/search/' + text)
@@ -22,7 +23,7 @@ export const useAmountStore = defineStore('counter', {
         this.toggleLoading()
       } catch (e) {
         this.toggleLoading()
-        throw e
+        throw new StoreError(e)
       }
     },
 
@@ -43,3 +44,26 @@ export const useAmountStore = defineStore('counter', {
     }
   }
 })
+
+class StoreError extends Error {
+  constructor (e) {
+    super('Store error')
+    this.error = 'ошибка сервера'
+    this.message = 'неизвестная ошибка'
+
+    console.dir(e)
+
+    const j = e.toJSON()
+    console.dir(j)
+
+    if (e.response || e.request) {
+      this.error = e.response.data.error
+      this.message = e.response.data.message
+    } else {
+      this.error = 'ошибка клиента'
+      this.message = e.message
+
+      console.log('Error', e.message)
+    }
+  }
+}

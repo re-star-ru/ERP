@@ -9,9 +9,7 @@ require (
 	github.com/casbin/casbin v1.9.1
 	github.com/disintegration/imaging v1.6.2
 	github.com/gabriel-vasile/mimetype v1.1.1
-	github.com/go-chi/chi v4.1.2+incompatible
 	github.com/go-chi/cors v1.1.1
-	github.com/go-chi/docgen v1.0.5
 	github.com/go-playground/validator/v10 v10.3.0
 	github.com/gofrs/uuid v3.3.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.1.0

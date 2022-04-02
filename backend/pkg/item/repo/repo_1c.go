@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
 func NewRepoOnec(host, token string) *ClientOnec {
-	c := &ClientOnec{host, token, http.Client{}}
+	c := &ClientOnec{host, token, http.Client{Timeout: time.Second * 3}} // todo: config timeout
 	return c
 }
 
@@ -49,7 +50,7 @@ func (c *ClientOnec) Items(offset, limit int) (map[string]item.Item, error) {
 }
 
 func (c *ClientOnec) TextSearch(s string) (map[string]item.Item, error) {
-	w, err := c.newRequest("GET", c.Host+"products/"+s)
+	w, err := c.newRequest("GET", c.Host+"products/text-search/"+s)
 	if err != nil {
 		return nil, err
 	}
@@ -84,5 +85,24 @@ func (c *ClientOnec) newRequest(method, path string) (*http.Request, error) {
 	}
 	w.Header.Set("Authorization", "Basic "+c.Token)
 
-	return nil, err
+	return w, err
+}
+
+func (c *ClientOnec) Proxy(w io.Writer, method, path string) error {
+	req, err := c.newRequest(method, path)
+	if err != nil {
+		return err
+	}
+
+	r, err := c.hc.Do(req)
+	if err != nil {
+		return fmt.Errorf("cant do request %w", err)
+	}
+	defer r.Body.Close()
+
+	if _, err = io.Copy(w, r.Body); err != nil {
+		return err
+	}
+
+	return nil
 }
