@@ -319,13 +319,13 @@ export default {
       }
 
       try {
-        store.searchProducts(text.value)
+        await store.searchProducts(text.value)
       } catch (e) {
+        console.log('ошибка' + e)
         $q.notify({
-          message: 'Ошибка' + e,
+          message: 'Ошибка: ' + e,
           color: 'red'
         })
-        console.log('ошибка' + e)
       }
     }
 

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
-import { Notify } from 'quasar'
 
 export const useAmountStore = defineStore('counter', {
   state: () => ({
@@ -19,12 +18,11 @@ export const useAmountStore = defineStore('counter', {
       try {
         this.toggleLoading()
         const res = await api.get('/search/' + text)
-
         this.setProductsData(res.data)
         this.toggleLoading()
       } catch (e) {
-        Notify(e)
         this.toggleLoading()
+        throw e
       }
     },
 

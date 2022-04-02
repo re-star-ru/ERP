@@ -2,14 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"net/http"
-	"os"
-
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
+	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
+	"net/http"
 
 	"backend/cmd/proxy/item"
 	"backend/pkg/img"
@@ -35,6 +34,13 @@ func Rest(c cfg) *chi.Mux {
 	is := img.NewImageService(minioClient, "srv1c")
 
 	r := chi.NewRouter()
+	//r.Use(cors.Default().Handler)
+	r.Use(cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET"},
+		AllowedHeaders: []string{"*"},
+	}).Handler)
+
 	r.Route("/", func(r chi.Router) {
 		fs := http.FileServer(http.Dir("/home/restar/git/erp/site/public")) // wtf?
 		r.Handle("/*", fs)
@@ -49,17 +55,14 @@ func Rest(c cfg) *chi.Mux {
 
 	// -
 
-	r.Route("/1c", func(r chi.Router) {
-		c := repo.NewClient1c(
-			os.Getenv("ONEC_HOST"),
-			os.Getenv("ONEC_TOKEN"),
-		)
-		id := delivery.NewItemDelivery(
-			usecase.NewItemUsecase(c, minioClient),
-		)
+	itemRepo := repo.NewRepoOnec(c.onecHost, c.onecToken)
+	itemUsecase := usecase.NewItemUsecase(itemRepo, minioClient)
+	itemHttp := delivery.NewItemDelivery(itemUsecase)
+	r.Get("/search", itemHttp.SearchBySKU)
 
+	r.Route("/1c", func(r chi.Router) {
 		r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
-			ps, err := c.Products(100, 100)
+			ps, err := itemRepo.Items(100, 100)
 			if err != nil {
 				logError(w, err, 400, "cant get products")
 				return
@@ -71,7 +74,8 @@ func Rest(c cfg) *chi.Mux {
 			}
 
 		})
-		r.Post("/updatePricelist", id.UpdatePricelists)
+
+		r.Post("/updatePricelist", itemHttp.UpdatePricelists)
 
 	})
 

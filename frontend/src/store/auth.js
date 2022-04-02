@@ -16,7 +16,10 @@ export const getters = {
 }
 
 export const actions = {
-  async login ({ commit }, { credentials }) {
+    async login ({ commit }, { credentials }) {
+      
+
+
     try {
       const res = await axios.post('auth/sign-in', credentials)
       console.log(res.data)

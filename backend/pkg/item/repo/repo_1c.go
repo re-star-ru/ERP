@@ -8,21 +8,17 @@ import (
 	"net/http"
 )
 
-func NewClient1c(host, token string) *Client1c {
-	c := &Client1c{host, token, http.Client{}}
+func NewRepoOnec(host, token string) *ClientOnec {
+	c := &ClientOnec{host, token, http.Client{}}
 	return c
 }
 
-type Client1c struct {
+type ClientOnec struct {
 	Host, Token string
 	hc          http.Client
 }
 
-type IClient1c interface {
-	Products(offset, limit int) (map[string]item.Item, error)
-}
-
-func (c *Client1c) Products(offset, limit int) (map[string]item.Item, error) {
+func (c *ClientOnec) Items(offset, limit int) (map[string]item.Item, error) {
 	r, err := http.NewRequest("GET", c.Host+"products/batch", nil)
 	if err != nil {
 		return nil, fmt.Errorf("cant create new products barch request %w", err)

@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"backend/pkg/item"
-	"backend/pkg/item/repo"
 	"context"
 	"fmt"
 
@@ -10,8 +9,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type IItemUsecase interface {
-	UploadPricelists(limit int) error
+type ItemRepo interface {
+	// Items will return batch of items from repo
+	Items(offset, limit int) (map[string]item.Item, error)
 }
 
 type Renderer interface {
@@ -20,7 +20,7 @@ type Renderer interface {
 
 type ItemUsecase struct {
 	renders []Renderer
-	repo1c  repo.IClient1c
+	repo    ItemRepo
 }
 
 const pol = `
@@ -62,7 +62,7 @@ const pol = `
 
 `
 
-func NewItemUsecase(repo1c repo.IClient1c, m *minio.Client) *ItemUsecase {
+func NewItemUsecase(repo ItemRepo, m *minio.Client) *ItemUsecase {
 	bucket := "pricelists"
 
 	err := m.MakeBucket(context.Background(), bucket, minio.MakeBucketOptions{})
@@ -83,12 +83,12 @@ func NewItemUsecase(repo1c repo.IClient1c, m *minio.Client) *ItemUsecase {
 
 	return &ItemUsecase{
 		renders: []Renderer{NewDromRender(bucket, m)},
-		repo1c:  repo1c,
+		repo:    repo,
 	}
 }
 
 func (iu *ItemUsecase) UploadPricelists(limit int) error {
-	products, err := iu.repo1c.Products(0, limit)
+	products, err := iu.repo.Items(0, limit)
 	if err != nil {
 		return fmt.Errorf("cant get producst from 1c %w", err)
 	}

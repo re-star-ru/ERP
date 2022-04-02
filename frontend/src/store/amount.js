@@ -20,7 +20,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async searchProducts ({ commit }, text) {
+  async searchProducts ( text) {
     try {
       commit('toggleLoading')
       const res = await axios.get('/search/' + text, {
