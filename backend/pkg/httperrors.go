@@ -17,7 +17,7 @@ var (
 
 // SendErrorJSON makes {error: blah, message: blah, code: 42} json body and responds with error code
 func SendErrorJSON(w http.ResponseWriter, r *http.Request, httpStatusCode int, err error, details string) {
-	log.Warn().Err(err).Msg(errDetailsMsg(r, httpStatusCode, details))
+	log.Warn().CallerSkipFrame(1).Err(err).Msg(errDetailsMsg(r, httpStatusCode, details))
 	render.Status(r, httpStatusCode)
 	render.JSON(w, r, JSON{"error": err.Error(), "message": details})
 }
@@ -34,11 +34,9 @@ func errDetailsMsg(r *http.Request, httpStatusCode int, details string) string {
 	}
 
 	srcFileInfo := ""
-	if pc, file, line, ok := runtime.Caller(2); ok {
-		fnameElems := strings.Split(file, "/")
+	if pc, _, _, ok := runtime.Caller(2); ok {
 		funcNameElems := strings.Split(runtime.FuncForPC(pc).Name(), "/")
-		srcFileInfo = fmt.Sprintf("[%s:%d %s]", strings.Join(fnameElems[len(fnameElems)-3:], "/"),
-			line, funcNameElems[len(funcNameElems)-1])
+		srcFileInfo = fmt.Sprintf("[%s]", funcNameElems[len(funcNameElems)-1])
 	}
 
 	return fmt.Sprintf("%s - %d - %s%s - %s",

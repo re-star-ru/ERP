@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"backend/pkg"
-	"backend/pkg/item"
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"net/http"
@@ -14,7 +13,7 @@ import (
 type IItemUsecase interface {
 	UploadPricelists(limit int) error
 
-	Search(s string) (map[string]item.Item, error)
+	Search(s string) ([]interface{}, error)
 }
 
 type ItemDelivery struct {
@@ -40,7 +39,6 @@ func (it *ItemDelivery) UpdatePricelists(w http.ResponseWriter, r *http.Request)
 
 func (it *ItemDelivery) SearchBySKU(w http.ResponseWriter, r *http.Request) {
 	p := chi.URLParam(r, "query")
-	log.Printf("chi %v", p)
 	if len(p) < 3 {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "необходимо минимум 3 символа для поиска")
 		return

@@ -13,7 +13,7 @@ type ItemRepo interface {
 	// Items will return batch of items from repo
 	Items(offset, limit int) (map[string]item.Item, error)
 
-	TextSearch(string) (map[string]item.Item, error)
+	TextSearch(string) ([]interface{}, error)
 }
 
 type Renderer interface {
@@ -103,6 +103,6 @@ func (iu *ItemUsecase) UploadPricelists(limit int) error {
 	return nil
 }
 
-func (iu *ItemUsecase) Search(s string) (map[string]item.Item, error) {
+func (iu *ItemUsecase) Search(s string) ([]interface{}, error) {
 	return iu.repo.TextSearch(s)
 }

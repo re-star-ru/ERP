@@ -7,15 +7,12 @@ export const useAmountStore = defineStore('counter', {
     loading: false
   }),
 
-  // getters: {
-  //   doubleCount (state) {
-  //     return state.counter * 2
-  //   }
-  // },
+  getters: {
+    data: (state) => state.data
+  },
 
   actions: {
     async searchProducts (text) {
-      console.log('TEXT' + text)
       try {
         this.toggleLoading()
         const res = await api.get('/search/' + text)
@@ -53,8 +50,8 @@ class StoreError extends Error {
 
     console.dir(e)
 
-    const j = e.toJSON()
-    console.dir(j)
+    // const j = e.toJSON()
+    // console.dir(j)
 
     if (e.response || e.request) {
       this.error = e.response.data.error

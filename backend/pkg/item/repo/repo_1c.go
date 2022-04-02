@@ -9,8 +9,23 @@ import (
 	"time"
 )
 
+type ErrorOnec struct {
+	Err                                       string `json:"error"`
+	ModuleName, Raw, Line, Description, Cause string
+}
+
+func (e *ErrorOnec) fromJSON(r io.Reader) error {
+	return json.NewDecoder(r).Decode(e)
+}
+
+func (e ErrorOnec) Error() string {
+	return fmt.Sprintf("%s:%s - %s - %s - %s - %s",
+		e.Line, e.Cause, e.Err, e.ModuleName, e.Raw, e.Description,
+	)
+}
+
 func NewRepoOnec(host, token string) *ClientOnec {
-	c := &ClientOnec{host, token, http.Client{Timeout: time.Second * 3}} // todo: config timeout
+	c := &ClientOnec{host, token, http.Client{Timeout: time.Second * 60}} // todo: config timeout
 	return c
 }
 
@@ -49,7 +64,7 @@ func (c *ClientOnec) Items(offset, limit int) (map[string]item.Item, error) {
 	return m, nil
 }
 
-func (c *ClientOnec) TextSearch(s string) (map[string]item.Item, error) {
+func (c *ClientOnec) TextSearch(s string) ([]interface{}, error) {
 	w, err := c.newRequest("GET", c.Host+"products/text-search/"+s)
 	if err != nil {
 		return nil, err
@@ -62,16 +77,16 @@ func (c *ClientOnec) TextSearch(s string) (map[string]item.Item, error) {
 	defer r.Body.Close()
 
 	if r.StatusCode < 200 || r.StatusCode >= 400 {
-		body, err := io.ReadAll(r.Body)
-		if err != nil {
-			return nil, fmt.Errorf("cant read body: %w", err)
+		oe := ErrorOnec{}
+		if err = oe.fromJSON(r.Body); err != nil {
+			return nil, fmt.Errorf("cant read onecerror: %w", err)
 		}
 
-		return nil, fmt.Errorf("error: %s : %s : %d", body, r.Status, r.StatusCode)
+		return nil, fmt.Errorf("error - %s - %d - %w", r.Status, r.StatusCode, oe)
 	}
 
-	m := map[string]item.Item{}
-	if err := json.NewDecoder(r.Body).Decode(&m); err != nil {
+	var m []interface{}
+	if err = json.NewDecoder(r.Body).Decode(&m); err != nil {
 		return nil, fmt.Errorf("cannot decode body to products %w", err)
 	}
 
