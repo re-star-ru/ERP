@@ -58,8 +58,8 @@ func Rest(c cfg) *chi.Mux {
 	itemRepo := repo.NewRepoOnec(c.onecHost, c.onecToken)
 	itemUsecase := usecase.NewItemUsecase(itemRepo, minioClient)
 	itemHttp := delivery.NewItemDelivery(itemUsecase)
-	r.Get("/search", itemHttp.SearchBySKU)
 
+	r.With(middleware.Logger).Get("/search/{query}", itemHttp.SearchBySKU)
 	r.Route("/1c", func(r chi.Router) {
 		r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
 			ps, err := itemRepo.Items(100, 100)
