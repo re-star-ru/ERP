@@ -16,6 +16,7 @@ RUN npm run build
 #    cd cmd/app && \
 #    go build -o /build/rp -ldfl ags "-X main.revision=${version} -s -w"
 
+
 FROM umputun/reproxy:latest
 #todo: enable reproxy SPA mod
 COPY --from=backend /build/dist/spa /public
