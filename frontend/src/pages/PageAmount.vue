@@ -5,7 +5,7 @@
         :grid="$q.screen.lt.sm"
         title="Остатки"
         no-data-label="Остатков не найдено"
-        :data="store.data"
+        :rows="store.data"
         :columns="columns"
         v-model:pagination="pagination"
         row-key="index"
@@ -37,12 +37,18 @@ export default {
 
   data () {
     return {
-      text: '',
       pagination: {
         page: 1,
         rowsPerPage: 30
       },
-      visibleColumns: ['sku', 'name', 'spec', 'description', 'amount'],
+
+      visibleColumns: [
+        'sku',
+        'name',
+        'spec',
+        'description',
+        'amount'
+      ],
       columns: [
         {
           name: 'index',
@@ -60,9 +66,9 @@ export default {
           field: 'name'
         },
         {
-          name: 'spec',
+          name: 'char',
           label: 'Характеристика',
-          field: 'spec'
+          field: 'char'
         },
         {
           name: 'description',
@@ -77,17 +83,6 @@ export default {
         }
       ]
     }
-  },
-  methods: {
-    searchProducts () {}
   }
-  // computed: {
-  //   products () {
-  //     return this.$store.state.amount.data
-  //   },
-  //   loading () {
-  //     return this.$store.state.amount.loading
-  //   }
-  // }
 }
 </script>

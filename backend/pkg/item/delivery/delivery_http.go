@@ -55,3 +55,22 @@ func (it *ItemDelivery) SearchBySKU(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func (it *ItemDelivery) CatalogHandler(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query().Get("q")
+	if len(q) < 3 {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "необходимо минимум 3 символа для поиска")
+		return
+	}
+
+	ps, err := it.iu.Search(q)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "ошибка поиска")
+		return
+	}
+
+	if err = json.NewEncoder(w).Encode(ps); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "ошибка кодировки")
+		return
+	}
+}

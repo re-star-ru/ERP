@@ -8,7 +8,7 @@ export const useAmountStore = defineStore('counter', {
   }),
 
   getters: {
-    data: (state) => state.data
+    getData: (state) => state.data
   },
 
   actions: {

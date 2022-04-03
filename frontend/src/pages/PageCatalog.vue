@@ -21,44 +21,28 @@
     </div>
 
     <div class="col-12 row">
-      <!-- <ProductTypesMenu
-        v-on:childEvent="changeProductType"
-        class="q-pa-xs col-xs-12 col-sm-4 col-md-2"
-      />-->
       <div class="q-pa-xs col-xs-12 col-sm-8 col-md-10 row justify-center">
-        <SkuCard v-for="(v, i) in catalogData" :key="i" :sku-data="v" />
+        <SkuCard v-for="v in finded" :key="v.id" v-bind="v"/>
       </div>
     </div>
 
-    <div class="col-12 row justify-center">
-      <q-pagination
-        size="1em"
-        :value="currentPage"
-        color="primary"
-        :max="maxPages"
-        :max-pages="6"
-        :boundary-numbers="true"
-        :to-fn="toPage"
-      ></q-pagination>
-    </div>
   </q-page>
 </template>
 
 <script>
-// import ProductTypesMenu from 'components/ProductTypesMenu'
 import SkuCard from 'components/SkuCard'
 
 export default {
   components: {
-    // ProductTypesMenu,
     SkuCard
   },
   data () {
     return {
       perPage: 48,
-      maxGroupsCount: 0,
-      catalogData: [],
-      productTypes: [],
+      // maxGroupsCount: 0,
+      finded: [],
+      // catalogData: [],
+      // productTypes: [],
       searchString: ''
     }
   },
@@ -74,35 +58,36 @@ export default {
           }
         })
 
-        this.catalogData = resp.data.groups
-        this.maxGroupsCount = resp.data.count
-        this.perPage = resp.data.perPage
+        this.finded = resp.data
+        // this.catalogData = resp.data.groups
+        // this.maxGroupsCount = resp.data.count
+        // this.perPage = resp.data.perPage
 
         console.log(resp.data)
       } catch (e) {
-        // console.dir(e.response)
+        console.dir(e)
         this.$q.notify({
           type: 'warning',
           message: 'Ничего не найдено',
           timeout: 200
         })
-        this.catalogData = []
-        this.maxGroupsCount = 0
+        // this.catalogData = []
+        // this.maxGroupsCount = 0
       }
     },
 
     toPage (page) {
       return { query: { ...this.$route.query, p: page } }
-    },
-    changeProductType (val) {
-      console.log('change product type', val)
-      this.getCatalog({ ...this.query, t: val.guid })
     }
+    // changeProductType (val) {
+    //   console.log('change product type', val)
+    //   this.getCatalog({ ...this.query, t: val.guid })
+    // }
   },
   computed: {
-    maxPages () {
-      return Math.ceil(this.maxGroupsCount / this.perPage)
-    },
+    // maxPages () {
+    //   return Math.ceil(this.maxGroupsCount / this.perPage)
+    // },
     currentPage () {
       const p = Number(this.$route.query.p)
       if (Number.isNaN(p)) {

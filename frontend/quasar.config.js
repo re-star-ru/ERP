@@ -24,7 +24,6 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
     boot: [
-
       'axios'
     ],
 
@@ -43,6 +42,7 @@ module.exports = configure(function (ctx) {
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
+      'ionicons-v4',
       'roboto-font', // optional, you are not bound to it
       'material-icons' // optional, you are not bound to it
     ],

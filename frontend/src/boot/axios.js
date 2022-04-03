@@ -1,11 +1,9 @@
-import { LocalStorage } from 'quasar'
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
 export const api = axios.create({
   baseURL: process.env.API,
-  headers: { Authorization: `Bearer ${LocalStorage.getItem('accessToken')}` },
-  timeout: 5000
+  timeout: 10000
 })
 
 export default boot(({ app }) => {

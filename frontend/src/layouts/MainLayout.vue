@@ -59,79 +59,12 @@
       content-class="bg-grey-1"
     >
 
-  /*  v-if="this.$store.getters.isLogged"  */
       <q-list>
-        <q-item
-          clickable
-          v-ripple
-          to="/profile"
-        >
-          <q-item-section avatar>
-            <q-icon name="ion-person" />
-          </q-item-section>
-          <q-item-section>
-            // <q-item-label> $store.state.auth.email </q-item-label>
-            <q-item-label caption>
-               $store.state.auth.aclGroup
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-
-v-if="!this.$store.getters.isLogged"
-
-        <q-item
-          @click="openLoginDialog"
-          clickable
-          v-ripple
-        >
-          <q-item-section avatar>
-            <q-icon name="ion-log-out" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Вход</q-item-label>
-            <q-item-label caption>login</q-item-label>
-          </q-item-section>
-        </q-item>
-
-          v-if="!this.$store.getters.isLogged"
-
-        <q-item
-          @click="openRegistrationDialog"
-          clickable
-          v-ripple
-        >
-          <q-item-section avatar>
-            <q-icon name="ion-person-add" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>Регистрация</q-item-label>
-            <q-item-label caption>registration</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <q-separator color="primary" />
-
         <EssentialLink
-          v-for="link in activeLinks"
+          v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
         />
-
-v-if="this.$store.getters.isLogged"
-   v-if="this.$store.getters.isLogged"
-
-<q-separator  color="primary" />
-        <q-item
-
-          @click="logout"
-          clickable
-          v-ripple
-        >
-          <q-item-section avatar>
-            <q-icon name="ion-log-out" />
-          </q-item-section>
-          <q-item-section>Выход</q-item-section>
-        </q-item>
 
         <q-separator color="primary" />
 
@@ -191,103 +124,6 @@ v-if="this.$store.getters.isLogged"
       <router-view />
     </q-page-container>
 
-    <q-dialog
-      v-model="loginDialog"
-      @keyup.enter="checkLogin"
-      persistent
-      transition-show="scale"
-      transition-hide="scale"
-    >
-      <q-card
-        style="width: 500px; max-width: 80vw;"
-        class="bg-primary text-white"
-      >
-        <q-card-section>
-          <div class="text-h6">Вход</div>
-        </q-card-section>
-        <q-card-section class="bg-white text-teal">
-          <q-input
-            filled
-            v-model="email"
-            label="Email"
-            hint="Введите ваш email"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Неправильный email']"
-          />
-          <q-input
-            type="password"
-            filled
-            v-model="password"
-            label="Пароль"
-            hint="Введите пароль"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Неправильный пароль']"
-          />
-        </q-card-section>
-        <q-card-actions align="right" class="bg-white text-primary">
-          <q-btn flat label="OK" @click="checkLogin" />
-          <q-btn flat label="Отмена" @click="closeLoginDialog" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog
-      v-model="registrationDialog"
-      @keyup.enter="registration"
-      persistent
-      transition-show="scale"
-      transition-hide="scale"
-    >
-      <q-card
-        style="width: 500px; max-width: 80vw;"
-        class="bg-primary text-white"
-      >
-        <q-card-section>
-          <div class="text-h6">Регистрация</div>
-        </q-card-section>
-        <q-card-section class="bg-white text-teal">
-          <q-input
-            filled
-            v-model="email"
-            label="Email"
-            hint="Введите ваш email"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Неправильный email']"
-          />
-          <q-input
-            type="password"
-            filled
-            v-model="password"
-            label="Пароль"
-            hint="Введите пароль"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Неправильный пароль']"
-          />
-
-          <div>
-            <q-checkbox
-              v-model="acceptLicense"
-              class="text-primary"
-              label="Я принимаю лицензионное"
-            />
-            <q-btn
-              flat
-              unelevated
-              dense
-              type="a"
-              href="/license"
-              target="_blank"
-              >Соглашение</q-btn
-            >
-          </div>
-        </q-card-section>
-
-        <q-card-actions align="around" class="bg-white text-primary">
-          <q-btn flat label="OK" @click="registration" />
-          <q-btn flat label="Отмена" @click="closeRegistrationDialog" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-layout>
 </template>
 
@@ -351,129 +187,54 @@ export default {
           icon: 'ion-home',
           link: '/'
         },
-        {
-          title: 'Продукты',
-          caption: 'products',
-          icon: 'ion-home',
-          link: '/products'
-        },
-        {
-          title: 'Корзина',
-          caption: 'cart',
-          icon: 'ion-cart',
-          link: '/cart'
-        },
-        {
-          title: 'Менеджер каталога',
-          caption: 'catalog-manager',
-          icon: 'ion-folder',
-          link: '/catalog-manager'
-        },
+        // {
+        //   title: 'Продукты',
+        //   caption: 'products',
+        //   icon: 'ion-home',
+        //   link: '/products'
+        // },
+        // {
+        //   title: 'Корзина',
+        //   caption: 'cart',
+        //   icon: 'ion-cart',
+        //   link: '/cart'
+        // },
+        // {
+        //   title: 'Менеджер каталога',
+        //   caption: 'catalog-manager',
+        //   icon: 'ion-folder',
+        //   link: '/catalog-manager'
+        // },
         {
           title: 'Каталог',
           caption: 'catalog',
           icon: 'ion-folder',
           link: '/catalog'
         },
-        {
-          title: 'Предложения',
-          caption: 'offers',
-          icon: 'ion-flame',
-          link: '/offers'
-        },
+        // {
+        //   title: 'Предложения',
+        //   caption: 'offers',
+        //   icon: 'ion-flame',
+        //   link: '/offers'
+        // },
         {
           title: 'Остатки',
           caption: 'amount',
           icon: 'ion-search',
           link: '/amount'
-        },
-        {
-          title: 'test',
-          caption: 'test',
-          icon: 'ion-test',
-          link: '/test',
-          onlyManager: true
         }
+        // {
+        //   title: 'test',
+        //   caption: 'test',
+        //   icon: 'ion-test',
+        //   link: '/test'
+        // }
       ]
     }
   },
   methods: {
     clearProducts () {
       this.text = ''
-      // this.$store.commit('clearProducts')
-    },
-    openLoginDialog () {
-      this.loginDialog = true
-    },
-    closeLoginDialog () {
-      this.email = ''
-      this.password = ''
-      this.loginDialog = false
-    },
-    openRegistrationDialog () {
-      console.log('open registration')
-      this.registrationDialog = true
-    },
-    closeRegistrationDialog () {
-      this.registrationDialog = false
-    },
-    async checkLogin () {
-      console.log('checklogin')
-      // const credentials = {
-      //   email: this.email,
-      //   password: this.password
-      // }
-
-      try {
-        // await this.$store.dispatch('login', { credentials })
-        this.$q.notify({
-          message: ' Вы вошли',
-          color: 'accent'
-        })
-        this.closeLoginDialog()
-      } catch (e) {
-        this.$q.notify({
-          message: e.message,
-          color: 'red'
-        })
-      }
-    },
-
-    logout () {
-      // console.log(this.$store.getters.isLogged)
-      // this.$store.dispatch('logout')
-    },
-    async registration () {
-      // const credentials = {
-      //   email: this.email,
-      //   password: this.password
-      // }
-
-      try {
-        // await this.$store.dispatch('registration', { credentials })
-        this.$q.notify({
-          message: ' Вы зарегистрировались и вошли',
-          color: 'accent'
-        })
-        this.closeRegistrationDialog()
-      } catch (e) {
-        this.$q.notify({
-          message: e.response.data,
-          color: 'red'
-        })
-        console.dir(e)
-      }
-    }
-  },
-  computed: {
-    activeLinks () {
-      // if (
-      //   // this.$store.getters.isLogged &&
-      //   // this.$store.getters.aclGroup === 'manager'
-      // ) {
-      //   return this.essentialLinks
-      // }
-      return this.essentialLinks.filter((link) => link.onlyManager !== true)
     }
   }
 }

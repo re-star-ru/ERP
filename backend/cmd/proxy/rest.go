@@ -59,15 +59,8 @@ func Rest(c cfg) *chi.Mux {
 	itemUsecase := usecase.NewItemUsecase(itemRepo, minioClient)
 	itemHttp := delivery.NewItemDelivery(itemUsecase)
 
-	//r.With(middleware.Logger).Get("/search/{query}", func(w http.ResponseWriter, r *http.Request) {
-	//
-	//	itemRepo.TextSearch()
-	//	if err = itemRepo.Proxy(w, r.Method, r.Host); err != nil {
-	//		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "ошибка 1с")
-	//	}
-	//})
-
 	r.Get("/search/{query}", itemHttp.SearchBySKU)
+	r.Get("/catalog", itemHttp.CatalogHandler)
 
 	r.Route("/1c", func(r chi.Router) {
 		r.Get("/products", func(w http.ResponseWriter, r *http.Request) {
