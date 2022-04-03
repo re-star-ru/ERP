@@ -22,13 +22,14 @@ spec:
       labels:
         app: re-star-ru
     spec:
+      nodeName: primary.restar
       containers:
         - image: ghcr.io/re-star-ru/erp:latest
           name: re-star-ru
           resources:
             limits:
-              memory: "128M"
-              cpu: "200m"
+              memory: '128M'
+              cpu: '200m'
           ports:
             - containerPort: 8080
               name: http
