@@ -2,8 +2,8 @@ name: Front-kube
 on:
   push:
     paths:
-      - "frontend/**"
-      - ".github/workflows/frontend-kube.yaml"
+      - 'frontend/**'
+      - '.github/workflows/frontend-kube.yaml'
 
 env:
   REPO: ${{github.repository}}
@@ -11,7 +11,7 @@ env:
   GITHUB_REF: ${{github.ref}}
   GITHUB_SHA: ${{github.sha}}
   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  K: "01"
+  K: '02'
 
 jobs:
   build:
