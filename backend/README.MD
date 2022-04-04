@@ -1,13 +1,17 @@
+# Backend doc
 
-Caddy reverse proxy
-
+## Caddy reverse proxy
 
 casbin plugin for caddy :
+
+```http
 https://github.com/casbin/caddy-authz/blob/master/authz.go#L100
+```
 
 add oauth or jwt auth to plugin
 
-### caddy setup for reverse proxy
+## caddy setup for reverse proxy
+
 ```text
 Get backends dynamically from SRV record DNS queries:
 
