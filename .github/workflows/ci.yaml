@@ -10,7 +10,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: scripts
+        working-directory: backend
     env:
       REGISTRY: ghcr.io
       IMAGE_NAME: ${{ github.repository }}
