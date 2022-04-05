@@ -2,8 +2,8 @@ name: Go
 on:
   push:
     paths:
-      - "backend/**"
-      - ".github/workflows/frontend.yml"
+      - 'backend/**'
+      - '.github/workflows/frontend.yml'
 
 jobs:
   build:
