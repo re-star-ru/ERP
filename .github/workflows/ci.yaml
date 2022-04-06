@@ -58,5 +58,5 @@ jobs:
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
 
         run: |
-          envsubst \$IMAGE_NAME,\$TAG,\$ONEC_TOKEN,\$MINIO_ACCESS_KEY,\$MINIO_SECRET_KEY < service.nomad > job.nomad
+          envsubst \${IMAGE_NAME},\${TAG},\${ONEC_TOKEN},\${MINIO_ACCESS_KEY},\${MINIO_SECRET_KEY} < service.nomad > job.nomad
           nomad job run job.nomad
