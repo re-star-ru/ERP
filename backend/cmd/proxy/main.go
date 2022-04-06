@@ -30,8 +30,9 @@ func main() {
 		onecToken:       onceToken,
 	})
 
-	log.Debug().Msg("listen at :" + os.Getenv("HOST"))
-	log.Fatal().Err(http.ListenAndServe(os.Getenv("ADDR"), r)).Send()
+	addr := os.Getenv("ADDR")
+	log.Debug().Msg("listen at " + addr)
+	log.Fatal().Err(http.ListenAndServe(addr, r)).Send()
 }
 
 func logError(w http.ResponseWriter, err error, statusCode int, errorInfo string) {

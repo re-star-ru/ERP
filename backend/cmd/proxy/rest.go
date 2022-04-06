@@ -24,7 +24,7 @@ type cfg struct {
 }
 
 func Rest(c cfg) *chi.Mux {
-	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Send()
+	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Msg("resourse endpoints")
 
 	minioClient, err := minio.New(c.endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(c.accessKey, c.secretAccessKey, ""),
