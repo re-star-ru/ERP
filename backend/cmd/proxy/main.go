@@ -31,7 +31,7 @@ func main() {
 	})
 
 	log.Debug().Msg("listen at :" + os.Getenv("HOST"))
-	log.Fatal().Err(http.ListenAndServe(":"+os.Getenv("HOST"), r)).Send()
+	log.Fatal().Err(http.ListenAndServe(os.Getenv("ADDR"), r)).Send()
 }
 
 func logError(w http.ResponseWriter, err error, statusCode int, errorInfo string) {
