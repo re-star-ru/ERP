@@ -44,7 +44,7 @@ job "oprox" {
 
         ONEC_TOKEN = ${ONEC_TOKEN}
         MINIO_ACCESS_KEY = ${MINIO_ACCESS_KEY}
-        MINIO_SECRET_KEY = ${MINIO_SECRET_KEY}
+        MINIO_SECRET_KEY = "${MINIO_SECRET_KEY}"
       }
     }
   }
