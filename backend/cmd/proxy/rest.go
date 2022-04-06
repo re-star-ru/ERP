@@ -8,7 +8,6 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
 
 	"backend/cmd/proxy/item"
@@ -26,8 +25,6 @@ type cfg struct {
 func Rest(c cfg) *chi.Mux {
 	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Msg("resourse endpoints")
 
-	log.Info().Str("MINIO1", c.accessKey).Str("MINIO2", c.secretAccessKey).Msg("secrets")
-
 	minioClient, err := minio.New(c.endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(c.accessKey, c.secretAccessKey, ""),
 		Secure: true,
@@ -40,16 +37,15 @@ func Rest(c cfg) *chi.Mux {
 
 	r := chi.NewRouter()
 	//r.Use(cors.Default().Handler)
-	r.Use(cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET"},
-		AllowedHeaders: []string{"*"},
-	}).Handler)
-
-	r.Route("/", func(r chi.Router) {
-		fs := http.FileServer(http.Dir("/home/restar/git/erp/site/public")) // wtf?
-		r.Handle("/*", fs)
-	})
+	// r.Use(cors.New(cors.Options{
+	// 	AllowedOrigins: []string{"*"},
+	// 	AllowedMethods: []string{"GET"},
+	// 	AllowedHeaders: []string{"*"},
+	// }).Handler)
+	// r.Route("/", func(r chi.Router) {
+	// 	fs := http.FileServer(http.Dir("/home/restar/git/erp/site/public")) // wtf?
+	// 	r.Handle("/*", fs)
+	// })
 
 	r.Get("/item", item.Serve)
 	r.Route("/s3", func(s3r chi.Router) {
