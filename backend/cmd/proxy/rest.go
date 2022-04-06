@@ -27,7 +27,8 @@ func Rest(c cfg) *chi.Mux {
 	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Send()
 
 	minioClient, err := minio.New(c.endpoint, &minio.Options{
-		Creds: credentials.NewStaticV4(c.accessKey, c.secretAccessKey, ""),
+		Creds:  credentials.NewStaticV4(c.accessKey, c.secretAccessKey, ""),
+		Secure: true,
 	})
 	if err != nil {
 		log.Fatal().Err(err).Msg("Minio init error")
