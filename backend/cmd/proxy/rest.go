@@ -2,13 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
-	"net/http"
 
 	"backend/cmd/proxy/item"
 	"backend/pkg/img"
@@ -23,6 +24,8 @@ type cfg struct {
 }
 
 func Rest(c cfg) *chi.Mux {
+	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Send()
+
 	minioClient, err := minio.New(c.endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(c.accessKey, c.secretAccessKey, ""),
 		Secure: false,
