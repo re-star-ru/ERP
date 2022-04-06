@@ -42,6 +42,7 @@ job "oprox" {
       env {
         ADDR = ${NOMAD_ADDR_oprox_port}
 
+
         ONEC_TOKEN = "${ONEC_TOKEN}"
         MINIO_ACCESS_KEY = "${MINIO_ACCESS_KEY}"
         MINIO_SECRET_KEY = "${MINIO_SECRET_KEY}"
