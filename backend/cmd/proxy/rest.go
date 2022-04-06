@@ -31,7 +31,7 @@ func Rest(c cfg) *chi.Mux {
 		Secure: false,
 	})
 	if err != nil {
-		log.Fatal().Err(err).Send()
+		log.Fatal().Err(err).Msg("Minio init error")
 	}
 
 	is := img.NewImageService(minioClient, "srv1c")
