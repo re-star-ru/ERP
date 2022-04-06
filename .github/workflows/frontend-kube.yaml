@@ -1,10 +1,9 @@
-# name: Front-kube
-# on:
-#   push:
-#     paths:
-#       - 'frontend/**'
-#       - '.github/workflows/frontend-kube.yaml'
-
+name: Front-kube
+on:
+  push:
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-kube.yaml'
 # env:
 #   REPO: ${{github.repository}}
 #   USERNAME: ${{github.actor}}
@@ -13,10 +12,9 @@
 #   GITHUB_PACKAGE_TOKEN: ${{secrets.GITHUB_TOKEN}}
 #   K: '02'
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-
+jobs:
+  build:
+    runs-on: ubuntu-latest
 #     steps:
 #       - name: Checkout code
 #         uses: actions/checkout@v2
