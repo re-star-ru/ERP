@@ -71,7 +71,7 @@ func NewItemUsecase(repo ItemRepo, m *minio.Client) *ItemUsecase {
 	if err != nil {
 		exists, errBucketExists := m.BucketExists(context.Background(), bucket)
 		if errBucketExists == nil && exists {
-			log.Info().Msgf("we already own %s", bucket)
+			log.Printf("we already own %s", bucket)
 		} else {
 			log.Fatal().Err(err).Send()
 		}
