@@ -3,12 +3,11 @@ package pkg
 import (
 	"errors"
 	"fmt"
-	"github.com/go-chi/render"
-	"github.com/rs/zerolog/log"
 	"net/http"
 	"net/url"
-	"runtime"
-	"strings"
+
+	"github.com/go-chi/render"
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -33,14 +32,14 @@ func errDetailsMsg(r *http.Request, httpStatusCode int, details string) string {
 		q = qun
 	}
 
-	srcFileInfo := ""
-	if pc, _, _, ok := runtime.Caller(2); ok {
-		funcNameElems := strings.Split(runtime.FuncForPC(pc).Name(), "/")
-		srcFileInfo = fmt.Sprintf("[%s]", funcNameElems[len(funcNameElems)-1])
-	}
+	// srcFileInfo := ""
+	// if pc, _, _, ok := runtime.Caller(2); ok {
+	// 	funcNameElems := strings.Split(runtime.FuncForPC(pc).Name(), "/")
+	// 	srcFileInfo = fmt.Sprintf("[%s]", funcNameElems[len(funcNameElems)-1])
+	// }
 
-	return fmt.Sprintf("%s - %d - %s%s - %s",
-		details, httpStatusCode, uinfoStr, q, srcFileInfo)
+	return fmt.Sprintf("%s - %d - %s%s",
+		details, httpStatusCode, uinfoStr, q)
 }
 
 type JSON map[string]interface{}

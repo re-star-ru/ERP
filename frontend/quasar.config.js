@@ -55,7 +55,7 @@ module.exports = configure(function (ctx) {
       env: {
         API: ctx.dev
           ? 'http://localhost:8100'
-          : 'https://api.re-star.ru/v1'
+          : 'https://api.re-star.ru/v1/oprox'
       },
 
       // transpile: false,
