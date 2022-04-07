@@ -36,6 +36,8 @@ func Rest(c cfg) *chi.Mux {
 	is := img.NewImageService(minioClient, "srv1c")
 
 	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+
 	//r.Use(cors.Default().Handler)
 	// r.Use(cors.New(cors.Options{
 	// 	AllowedOrigins: []string{"*"},
