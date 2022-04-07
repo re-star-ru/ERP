@@ -11,7 +11,8 @@ import (
 
 type ItemRepo interface {
 	// Items will return batch of items from repo
-	Items(offset, limit int) (map[string]item.Item, error)
+	ItemsWithOffcetLimit(offset, limit int) (map[string]item.Item, error)
+	Items() ([]item.Item, error)
 
 	TextSearch(string) ([]interface{}, error)
 }
@@ -90,7 +91,7 @@ func NewItemUsecase(repo ItemRepo, m *minio.Client) *ItemUsecase {
 }
 
 func (iu *ItemUsecase) UploadPricelists(limit int) error {
-	products, err := iu.repo.Items(0, limit)
+	products, err := iu.repo.ItemsWithOffcetLimit(0, limit)
 	if err != nil {
 		return fmt.Errorf("cant get producst from 1c %w", err)
 	}
