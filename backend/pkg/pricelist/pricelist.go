@@ -10,9 +10,9 @@ import (
 )
 
 type consumerMeta struct {
-	Name     string
-	Path     string
-	Consumer func([]item.Item) io.Reader
+	Name   string
+	Path   string
+	Render func(items []item.Item) (r io.Reader, contentType string, err error)
 }
 
 type Itemer interface {
@@ -20,7 +20,7 @@ type Itemer interface {
 }
 
 type Storer interface {
-	Store(key, contentType string , io.Reader) (string, error)
+	Store(key string, contentType string, r io.Reader) (path string, err error)
 }
 
 type Usecase struct {
@@ -31,7 +31,6 @@ type Usecase struct {
 }
 
 func NewPricerUsecase(store Storer, i Itemer) *Usecase {
-
 	u := &Usecase{
 		"https://s3.re-star.ru/pricelists",
 		make(map[string]consumerMeta),
@@ -41,17 +40,13 @@ func NewPricerUsecase(store Storer, i Itemer) *Usecase {
 
 	// setup consumers
 	u.Consumers["drom"] = consumerMeta{
-		Name:     "drom",
-		Path:     "drom.xml",
-		Consumer: renderer.DromRender,
+		Name:   "drom",
+		Path:   "drom.xml",
+		Render: renderer.DromRender,
 	}
 
 	return u
 }
-
-// GetPricelistByServiceName(string) string // return path to s3 pricelist by consumer name
-// GetPricelists() map[string]string        // return map [consumer: pricelist]
-// Update()
 
 func (s *Usecase) GetPricelistByConsumerName(name string) (string, error) {
 	v, ok := s.Consumers[name]
@@ -90,19 +85,27 @@ func getPath(basepath, pth string) (string, error) {
 	return u.String(), nil
 }
 
-// Upadte download info from onec and update pricelists
-func (s *Usecase) Update() error {
+// Update download info from onec and update pricelists
+func (s *Usecase) Update() (err error) {
 	items, err := s.Items()
 	if err != nil {
 		return err
 	}
 
-	for k, v := range s.Consumers {
-		document := v.Consumer(items)
+	var document io.Reader
 
-		s.store.Store(s)
+	var contentType string
 
+	for _, consumer := range s.Consumers {
+		document, contentType, err = consumer.Render(items)
+		if err != nil {
+			return fmt.Errorf("cant render consumer %v, got error: %w", consumer.Name, err)
+		}
+
+		if _, err = s.store.Store(path.Join(s.S3path, consumer.Path), contentType, document); err != nil {
+			return fmt.Errorf("cant store consumer %v, got error: %w", consumer.Name, err)
+		}
 	}
 
-	panic("update todo")
+	return nil
 }

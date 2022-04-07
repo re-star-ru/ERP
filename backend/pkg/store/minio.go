@@ -15,8 +15,8 @@ type MinioStore struct {
 	bucketPolicy string
 }
 
-func NewMinioStore(c *minio.Client) (*MinioStore, error) {
-	m := &MinioStore{minio: c, bucket: "oprox", bucketPolicy: `
+func NewMinioStore(c *minio.Client) (stor *MinioStore, err error) {
+	stor = &MinioStore{minio: c, bucket: "oprox", bucketPolicy: `
 	{
 		"Version": "2012-10-17",
 		"Statement": [
@@ -53,23 +53,23 @@ func NewMinioStore(c *minio.Client) (*MinioStore, error) {
 		]
 	}`}
 
-	err := m.minio.MakeBucket(context.Background(), m.bucket, minio.MakeBucketOptions{})
+	err = stor.minio.MakeBucket(context.Background(), stor.bucket, minio.MakeBucketOptions{})
 	if err != nil {
-		exists, errBucketExists := m.minio.BucketExists(context.Background(), m.bucket)
+		exists, errBucketExists := stor.minio.BucketExists(context.Background(), stor.bucket)
 		if errBucketExists == nil && exists {
-			log.Info().Msgf("minio already own %s", m.bucket)
+			log.Info().Msgf("minio already own %s", stor.bucket)
 		} else {
 			return nil, err
 		}
 	} else {
-		log.Info().Msgf("minio bucket suscessfully created %s", m.bucket)
+		log.Info().Msgf("minio bucket suscessfully created %s", stor.bucket)
 	}
 
-	if err := m.minio.SetBucketPolicy(context.Background(), m.bucket, m.bucketPolicy); err != nil {
+	if err = stor.minio.SetBucketPolicy(context.Background(), stor.bucket, stor.bucketPolicy); err != nil {
 		return nil, err
 	}
 
-	return m, nil
+	return stor, nil
 }
 
 func (m *MinioStore) Store(fpath, contentType string, r io.Reader) (string, error) {

@@ -34,15 +34,3 @@ func main() {
 	log.Debug().Msg("listen at " + addr)
 	log.Fatal().Err(http.ListenAndServe(addr, r)).Send()
 }
-
-func logError(w http.ResponseWriter, err error, statusCode int, errorInfo string) {
-	log.Err(err).Msg(errorInfo)
-	http.Error(w, err.Error(), statusCode)
-}
-
-func getEnv(key, fallback string) string {
-	if value, ok := os.LookupEnv(key); ok {
-		return value
-	}
-	return fallback
-}
