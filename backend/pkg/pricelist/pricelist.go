@@ -3,6 +3,7 @@ package pricelist
 import (
 	"backend/pkg/item"
 	"backend/pkg/renderer"
+	"errors"
 	"fmt"
 	"io"
 	"net/url"
@@ -31,7 +32,7 @@ type Usecase struct {
 }
 
 func NewPricerUsecase(store Storer, i Itemer) *Usecase {
-	u := &Usecase{
+	ucase := &Usecase{
 		"https://s3.re-star.ru/pricelists",
 		make(map[string]consumerMeta),
 		i,
@@ -39,23 +40,24 @@ func NewPricerUsecase(store Storer, i Itemer) *Usecase {
 	}
 
 	// setup consumers
-	u.Consumers["drom"] = consumerMeta{
+	ucase.Consumers["drom"] = consumerMeta{
 		Name:   "drom",
 		Path:   "drom.xml",
 		Render: renderer.DromRender,
 	}
 
-	return u
+	return ucase
 }
+
+var ErrNoSuchConsumer = errors.New("no such consumer")
 
 func (s *Usecase) GetPricelistByConsumerName(name string) (string, error) {
 	v, ok := s.Consumers[name]
 	if !ok {
-		return "", fmt.Errorf("no consumer with name %v", name)
+		return "", fmt.Errorf("%w: %v", ErrNoSuchConsumer, name)
 	}
 
 	return getPath(s.S3path, v.Name)
-
 }
 
 // GetPricelists returns list with price consumers and paths
