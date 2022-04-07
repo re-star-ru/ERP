@@ -60,7 +60,7 @@ func (s *ImageService) PutImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.Status(r, http.StatusCreated)
-	io.WriteString(w, path.Join(info.Bucket, info.Key))
+	render.PlainText(w, r, path.Join(info.Bucket, info.Key))
 }
 
 func (s *ImageService) DeleteImage(w http.ResponseWriter, r *http.Request) {
