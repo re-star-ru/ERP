@@ -73,6 +73,10 @@ func condition(cond string) string {
 func DromRender(items []item.Item) (io.Reader, string, error) {
 	offers := make([]*Offer, len(items))
 	for idx := 0; len(items) > idx; idx++ {
+		if items[idx].Price == 0 {
+			continue // пропускаем если нет цены
+		}
+
 		offers[idx] = &Offer{
 			Ordercode: items[idx].ID,
 
