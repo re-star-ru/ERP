@@ -3,16 +3,12 @@ package delivery
 import (
 	"backend/pkg"
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
 	"net/http"
-	"strconv"
 
-	"github.com/rs/zerolog/log"
+	"github.com/go-chi/chi/v5"
 )
 
 type IItemUsecase interface {
-	UploadPricelists(limit int) error
-
 	Search(s string) ([]interface{}, error)
 }
 
@@ -23,17 +19,6 @@ type ItemDelivery struct {
 func NewItemDelivery(iu IItemUsecase) *ItemDelivery {
 	return &ItemDelivery{
 		iu: iu,
-	}
-}
-
-func (it *ItemDelivery) UpdatePricelists(w http.ResponseWriter, r *http.Request) {
-	log.Debug().Msgf("limit: %s", r.URL.Query().Get("limit"))
-	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
-
-	if err := it.iu.UploadPricelists(limit); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		log.Err(err).Msg("cant update price list")
-		return
 	}
 }
 

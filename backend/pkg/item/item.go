@@ -6,7 +6,11 @@ type Item struct {
 	Name string `json:"name"`
 	Char string `json:"char"`
 
-	Images []string `json:"images"`
+	Images []struct {
+		Owner string `json:"owner"`
+		Path  string `json:"path"`
+		Main  bool   `json:"main"`
+	} `json:"images"`
 
 	Amount        int `json:"amount"`
 	Price         int `json:"price"`

@@ -75,7 +75,7 @@ func (c *ClientOnec) Items() ([]item.Item, error) {
 	if err != nil {
 		return nil, fmt.Errorf("cant do request %w", err)
 	}
-	defer r.Body.Close()
+	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 400 {
 		body, err := io.ReadAll(resp.Body)
@@ -86,17 +86,12 @@ func (c *ClientOnec) Items() ([]item.Item, error) {
 		return nil, fmt.Errorf("error: %s : %s : %d", body, resp.Status, resp.StatusCode)
 	}
 
-	m := map[string]item.Item{}
+	m := []item.Item{}
 	if err := json.NewDecoder(resp.Body).Decode(&m); err != nil {
-		return nil, fmt.Errorf("cannot decode body to products %w", err)
+		return nil, fmt.Errorf("cannot decode body to products: %w", err)
 	}
 
-	items := make([]item.Item, 0, len(m))
-	for _, v := range m {
-		items = append(items, v)
-	}
-
-	return items, nil
+	return m, nil
 }
 
 func (c *ClientOnec) TextSearch(s string) ([]interface{}, error) {

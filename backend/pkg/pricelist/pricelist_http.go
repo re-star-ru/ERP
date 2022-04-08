@@ -25,6 +25,11 @@ func NewPricelistHttp(p Pricer) *PricelistHttpService {
 
 func (ps *PricelistHttpService) ManualRefreshHandler(w http.ResponseWriter, r *http.Request) {
 
+	if err := ps.pricer.Update(); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant update")
+		return
+	}
+
 }
 
 func (ps *PricelistHttpService) PricelistHandler(w http.ResponseWriter, r *http.Request) {

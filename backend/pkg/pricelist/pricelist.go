@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/url"
 	"path"
 )
 
@@ -22,21 +21,21 @@ type Itemer interface {
 
 type Storer interface {
 	Store(key string, contentType string, r io.Reader) (path string, err error)
+	Path() string
 }
 
 type Usecase struct {
-	S3path    string
-	Consumers map[string]consumerMeta
-	Itemer
-	store Storer
+	S3Directory string
+	Consumers   map[string]consumerMeta
+	it          Itemer
+	store       Storer
 }
 
 func NewPricerUsecase(store Storer, i Itemer) *Usecase {
 	ucase := &Usecase{
-		"https://s3.re-star.ru/pricelists",
+		"preicelists",
 		make(map[string]consumerMeta),
-		i,
-		store,
+		i, store,
 	}
 
 	// setup consumers
@@ -57,7 +56,7 @@ func (s *Usecase) GetPricelistByConsumerName(name string) (string, error) {
 		return "", fmt.Errorf("%w: %v", ErrNoSuchConsumer, name)
 	}
 
-	return getPath(s.S3path, v.Name)
+	return fmt.Sprintf("%s/%s/%s", s.store.Path(), s.S3Directory, v.Path), nil
 }
 
 // GetPricelists returns list with price consumers and paths
@@ -65,38 +64,23 @@ func (s *Usecase) GetPricelists() (map[string]string, error) {
 	m := make(map[string]string)
 
 	for k, v := range s.Consumers {
-		pth, err := getPath(s.S3path, v.Path)
-		if err != nil {
-			return nil, err
-		}
-
-		m[k] = pth
+		m[k] = fmt.Sprintf("%s/%s/%s", s.store.Path(), s.S3Directory, v.Path)
 	}
 
 	return m, nil
 }
 
-func getPath(basepath, pth string) (string, error) {
-	u, err := url.Parse(basepath)
-	if err != nil {
-		return "", fmt.Errorf("wrong s3path: %w", err)
-	}
-
-	u.Path = path.Join(u.Path, pth)
-
-	return u.String(), nil
-}
-
 // Update download info from onec and update pricelists
 func (s *Usecase) Update() (err error) {
-	items, err := s.Items()
+	items, err := s.it.Items()
 	if err != nil {
 		return err
 	}
 
-	var document io.Reader
-
-	var contentType string
+	var (
+		document    io.Reader
+		contentType string
+	)
 
 	for _, consumer := range s.Consumers {
 		document, contentType, err = consumer.Render(items)
@@ -104,7 +88,7 @@ func (s *Usecase) Update() (err error) {
 			return fmt.Errorf("cant render consumer %v, got error: %w", consumer.Name, err)
 		}
 
-		if _, err = s.store.Store(path.Join(s.S3path, consumer.Path), contentType, document); err != nil {
+		if _, err = s.store.Store(path.Join(s.S3Directory, consumer.Path), contentType, document); err != nil {
 			return fmt.Errorf("cant store consumer %v, got error: %w", consumer.Name, err)
 		}
 	}

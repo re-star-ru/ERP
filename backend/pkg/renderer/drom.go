@@ -32,7 +32,7 @@ type ProductMap map[string]item.Item
 // </offers>
 
 type Offer struct {
-	Name          string // Наименование что это
+	Name          string `xml:"name"` // Наименование что это : Датчик температуры охлаждающей жидкости
 	OemNumber     string // номер агрегата
 	AnalogNumbers string // with comma delim артикул
 	Manufacturer  string // производитель

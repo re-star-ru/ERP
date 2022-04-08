@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"path"
 
@@ -11,12 +12,15 @@ import (
 
 type MinioStore struct {
 	minio        *minio.Client
+	endpoint     string
 	bucket       string
 	bucketPolicy string
 }
 
 func NewMinioStore(c *minio.Client) (stor *MinioStore, err error) {
-	stor = &MinioStore{minio: c, bucket: "oprox", bucketPolicy: `
+	stor = &MinioStore{minio: c, bucket: "oprox",
+		endpoint: "https://s3.re-star.ru",
+		bucketPolicy: `
 	{
 		"Version": "2012-10-17",
 		"Statement": [
@@ -78,4 +82,8 @@ func (m *MinioStore) Store(fpath, contentType string, r io.Reader) (string, erro
 	)
 
 	return path.Join(info.Bucket, info.Key), err
+}
+
+func (m *MinioStore) Path() string {
+	return fmt.Sprintf("%s/%s", m.endpoint, m.bucket)
 }

@@ -36,21 +36,30 @@ func Rest(c cfg) *chi.Mux {
 	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Msg("resourse endpoints")
 
 	minioClient := newMinio(c)
-	is := img.NewImageService(minioClient, "srv1c")
-	r := chi.NewRouter()
+	stor, err := store.NewMinioStore(minioClient) // global app bucket
+	if err != nil {
+		log.Fatal().Err(err).Msgf("cant create minio store")
+		return nil
+	}
 
+	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	// TODO: Authorized routes and anonymouse route
 	r.Route("/s3", func(s3r chi.Router) {
+		is := img.NewImageService(minioClient, "srv1c") // srv1c image bucket
 		s3r.Use(middleware.Logger)
 		s3r.Put("/image", is.PutImage)
 		s3r.Delete("/image", is.DeleteImage)
 	})
 	// -
+
 	itemRepo := repo.NewRepoOnec(c.onecHost, c.onecToken)
-	itemUsecase := usecase.NewItemUsecase(itemRepo, minioClient)
+	itemUsecase := usecase.NewItemUsecase(itemRepo)
 	itemHttp := delivery.NewItemDelivery(itemUsecase)
+
+	pricer := pricelist.NewPricerUsecase(stor, itemRepo)
+	priceSrv := pricelist.NewPricelistHttp(pricer)
 
 	{
 		// site api
@@ -59,18 +68,12 @@ func Rest(c cfg) *chi.Mux {
 	}
 
 	{
-		stor, err := store.NewMinioStore(minioClient)
-		if err != nil {
-			log.Fatal().Err(err).Msgf("cant create minio store")
-			return nil
-		}
 		// pricelist api
-		pricer := pricelist.NewPricerUsecase(stor, itemRepo)
-		priceSrv := pricelist.NewPricelistHttp(pricer)
-
-		r.Get("/pricelists", priceSrv.PricelistHandler)
-		r.Get("/pricelist/{name}", priceSrv.PricelistByConsumerHandler)
-		r.Post("/pricelist/refresh", priceSrv.ManualRefreshHandler)
+		r.Route("/pricelists", func(r chi.Router) {
+			r.Get("/", priceSrv.PricelistHandler)
+			r.Get("/{name}", priceSrv.PricelistByConsumerHandler)
+			r.Post("/refresh", priceSrv.ManualRefreshHandler)
+		})
 	}
 
 	return r
