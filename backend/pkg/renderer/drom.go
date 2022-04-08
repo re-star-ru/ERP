@@ -32,30 +32,60 @@ type ProductMap map[string]item.Item
 // </offers>
 
 type Offer struct {
-	Name          string `xml:"name"` // Наименование что это : Датчик температуры охлаждающей жидкости
-	OemNumber     string // номер агрегата
-	AnalogNumbers string // with comma delim артикул
-	Manufacturer  string // производитель
-	Ordercode     string
-	Condition     string // Б/у или новый
-	Brandcars     string // Марка
-	Modelcars     string // Модель
-	Engine        string // двигатель
-	Year          string // год
+	Name          string `xml:"name"`           // Наименование что это : Датчик температуры охлаждающей жидкости
+	OemNumber     string `xml:"oem_number"`     // номер агрегата
+	AnalogNumbers string `xml:"analog_numbers"` // with comma delim артикул,все номера артикула
+	Manufacturer  string `xml:"manufacturer"`   // производитель
+	Ordercode     string `xml:"ordercode"`
 
-	Amount int
-	Price  int
+	Condition string `xml:"condition"` // Б/у или новый
+
+	Brandcars string `xml:"brandcars"` // Марка
+	Modelcars string `xml:"modelcars"` // Модель
+	Engine    string `xml:"engine"`    // двигатель
+
+	Photos string `xml:"photos"`
+
+	Year   int `xml:"year"` // год
+	Amount int `xml:"amount"`
+	Price  int `xml:"price"`
+}
+
+func photosString(imgs []item.Image) (str string) {
+	for i, v := range imgs {
+		str += v.Path
+		if i < len(imgs)-1 {
+			str += ", "
+		}
+	}
+
+	return str
+}
+
+func condition(cond string) string {
+	if cond == "RG" {
+		return "Б/У"
+	}
+
+	return "Новый"
 }
 
 func DromRender(items []item.Item) (io.Reader, string, error) {
 	offers := make([]*Offer, len(items))
 	for idx := 0; len(items) > idx; idx++ {
 		offers[idx] = &Offer{
-			Name:      items[idx].SKU,
-			OemNumber: items[idx].Name,
 			Ordercode: items[idx].ID,
-			Amount:    items[idx].Amount,
-			Price:     items[idx].Price,
+
+			Name:          items[idx].Type,
+			Manufacturer:  items[idx].Char,
+			OemNumber:     items[idx].Name,
+			AnalogNumbers: items[idx].SKU,
+
+			Condition: condition(items[idx].Char),
+			Photos:    photosString(items[idx].Images),
+
+			Amount: items[idx].Amount,
+			Price:  items[idx].Price / 100, // убираем копейки
 		}
 	}
 
@@ -70,7 +100,10 @@ func DromRender(items []item.Item) (io.Reader, string, error) {
 	buf := bytes.NewBuffer([]byte{})
 	buf.WriteString(xml.Header)
 
-	if err := xml.NewEncoder(buf).Encode(nesting); err != nil {
+	enc := xml.NewEncoder(buf)
+	enc.Indent("", "  ")
+
+	if err := enc.Encode(nesting); err != nil {
 		return nil, "", fmt.Errorf("cant encode pricelist %w", err)
 	}
 

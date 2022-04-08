@@ -77,6 +77,14 @@ func (s *Usecase) Update() (err error) {
 		return err
 	}
 
+	// prepare item struct
+	// fill imgs path
+	for i, v := range items {
+		for ii, vv := range v.Images {
+			items[i].Images[ii].Path = fmt.Sprintf("https://s3.re-star.ru/%s", vv.Path) // fix todo
+		}
+	}
+
 	var (
 		document    io.Reader
 		contentType string
