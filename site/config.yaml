@@ -1,6 +1,6 @@
 baseURL: "https://re-star.ru/"
 languageCode: "ru"
-title: "Re-Star"
+title: "RESTAR"
 module:
   mounts:
     - source: content

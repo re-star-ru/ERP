@@ -1,7 +1,13 @@
 {{ define "main" }}
-  <main class="container text-center h-screen mx-auto pt-40">
+  <main class="container text-center mx-auto h-screen sm:pt-40">
     <div class="py-4">
-      <h1 class="text-5xl font-bold">Ре-Стар</h1>
+
+      <h1 class="text-5xl font-bold py-8">
+        <a href="/">
+          <img class="inline w-48" src="logo.svg" alt="">
+        </a>
+      </h1>
+
       <h2 class="text-xl">СТО</h2>
     </div>
 
@@ -19,7 +25,7 @@
       <a href="tel:+79283222555" class="button"> Позвонить 📱 </a>
       <button id="toMap" class="button">Проехать 🚗</button>
       <button id="toContact" class="button">Написать 📧</button>
-      <a href="/item" class="button">Наши товары 🛒</a>
+      <a href="/item" class="bg-yellow-400 text-black button"> Комплектующие 🔎</a>
     </div>
   </main>
 
@@ -29,39 +35,32 @@
   <!-- отзывы клиентов -->
   <section class="container mx-auto bg-gray-600 rounded-xl p-4 mb-4">
     <div class="w-full h-80 flex flex-nowrap overflow-hidden gap-4">
-      <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
+      {{/*  <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
         <div>Имя</div>
         <div>Дата</div>
         <div>Оценка</div>
         <div>Отзыв</div>
+      </div>  */}}
+
+      <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
+        <div>Иван Лукашевич</div>
+        <div>2 месяца назад</div>
+        <div>⭐⭐⭐⭐⭐</div>
+        <div>Довольно быстро отремонтировали генератор, по деньгам относительно не дёшево, но большая часть - стоимость запчастей, за работу ценник вполне адекватный.</div>
       </div>
 
       <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
-        <div>Имя</div>
-        <div>Дата</div>
-        <div>Оценка</div>
-        <div>Отзыв</div>
+        <div>Serg Pupkov</div>
+        <div>5 месяцев назад</div>
+        <div>⭐⭐⭐⭐⭐</div>
+        <div>Очень хороший сервис. Работают грамотные специалисты. Очень понравилось обслуживание. Все сделали быстро и на высоком уровне. Ребята спасибо вам за быстрый ремонт.</div>
       </div>
 
       <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
-        <div>Имя</div>
-        <div>Дата</div>
-        <div>Оценка</div>
-        <div>Отзыв</div>
-      </div>
-
-      <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
-        <div>Имя</div>
-        <div>Дата</div>
-        <div>Оценка</div>
-        <div>Отзыв</div>
-      </div>
-
-      <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
-        <div>Имя</div>
-        <div>Дата</div>
-        <div>Оценка</div>
-        <div>Отзыв</div>
+        <div>Глеб Семенов</div>
+        <div>8 месяцев назад</div>
+        <div>⭐⭐⭐⭐⭐</div>
+        <div>Очень квалифицированные ребята... Быстро нашли проблему в генераторе и устранили)) Рекомендую! Chevrolet Tahoe 2017</div>
       </div>
     </div>
     <div class="text-center text-gray-100">.....</div>
