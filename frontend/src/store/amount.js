@@ -8,7 +8,7 @@ export const state = () => {
 }
 
 export const mutations = {
-  setProductsData (state, data) {
+  setProductsData (state, npm install esbuild) {
     state.data = data
   },
   clearProducts (state) {

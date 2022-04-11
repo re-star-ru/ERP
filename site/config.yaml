@@ -1,9 +1,3 @@
 baseURL: "https://re-star.ru/"
 languageCode: "ru"
 title: "RESTAR"
-module:
-  mounts:
-    - source: content
-      target: content
-    - source: prebuild/public/item
-      target: content/item
