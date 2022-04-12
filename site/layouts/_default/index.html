@@ -1,17 +1,16 @@
 {{ define "main" }}
   <main class="container text-center mx-auto h-screen sm:pt-40">
     <div class="py-4">
-
       <h1 class="text-5xl font-bold py-8">
         <a href="/">
-          <img class="inline w-48" src="logo.svg" alt="">
+          <img class="inline w-48" src="logo.svg" alt="" />
         </a>
       </h1>
 
       <h2 class="text-xl">СТО</h2>
     </div>
 
-    <div class="py-4 mb-8 ">
+    <div class="py-4 mb-8">
       <h2 class="text-base font-bold uppercase">
         ремонтируем стартеры генераторы
       </h2>
@@ -25,7 +24,9 @@
       <a href="tel:+79283222555" class="button"> Позвонить 📱 </a>
       <button id="toMap" class="button">Проехать 🚗</button>
       <button id="toContact" class="button">Написать 📧</button>
-      <a href="/item" class="bg-yellow-400 text-black button"> Комплектующие 🔎</a>
+      <a href="/item" class="bg-yellow-400 text-black button">
+        Комплектующие 🔎</a
+      >
     </div>
   </main>
 
@@ -35,78 +36,77 @@
   <!-- отзывы клиентов -->
   <section class="container mx-auto bg-gray-600 rounded-xl p-4 mb-4">
     <div class="w-full h-80 flex flex-nowrap overflow-hidden gap-4">
-      {{/*  <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
+      {{/* <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
         <div>Имя</div>
         <div>Дата</div>
         <div>Оценка</div>
         <div>Отзыв</div>
-      </div>  */}}
+        </div>
+      */}}
+
 
       <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
         <div>Иван Лукашевич</div>
         <div>2 месяца назад</div>
         <div>⭐⭐⭐⭐⭐</div>
-        <div>Довольно быстро отремонтировали генератор, по деньгам относительно не дёшево, но большая часть - стоимость запчастей, за работу ценник вполне адекватный.</div>
+        <div>
+          Довольно быстро отремонтировали генератор, по деньгам относительно не
+          дёшево, но большая часть - стоимость запчастей, за работу ценник
+          вполне адекватный.
+        </div>
       </div>
 
       <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
         <div>Serg Pupkov</div>
         <div>5 месяцев назад</div>
         <div>⭐⭐⭐⭐⭐</div>
-        <div>Очень хороший сервис. Работают грамотные специалисты. Очень понравилось обслуживание. Все сделали быстро и на высоком уровне. Ребята спасибо вам за быстрый ремонт.</div>
+        <div>
+          Очень хороший сервис. Работают грамотные специалисты. Очень
+          понравилось обслуживание. Все сделали быстро и на высоком уровне.
+          Ребята спасибо вам за быстрый ремонт.
+        </div>
       </div>
 
       <div class="flex-none w-60 bg-gray-100 rounded-lg p-4">
         <div>Глеб Семенов</div>
         <div>8 месяцев назад</div>
         <div>⭐⭐⭐⭐⭐</div>
-        <div>Очень квалифицированные ребята... Быстро нашли проблему в генераторе и устранили)) Рекомендую! Chevrolet Tahoe 2017</div>
+        <div>
+          Очень квалифицированные ребята... Быстро нашли проблему в генераторе и
+          устранили)) Рекомендую! Chevrolet Tahoe 2017
+        </div>
       </div>
     </div>
     <div class="text-center text-gray-100">.....</div>
     <a
       href="https://g.page/r/CS64wNdys3OhEAg/review"
-      class="
-            bg-yellow-400
-              p-3npx tailwindcss init -p
-              border-4
-              border-gray-600
-              shadow-xl
-              rounded-lg
-              transition
-              focus:outline-none
-              text-lg
-              font-bold
-              block
-              w-60
-              mx-auto
-              text-center
-              mb-4
-      "
+      class="bg-yellow-400 p-3 border-4 border-gray-600 shadow-xl rounded-lg transition focus:outline-none text-lg font-bold block w-60 mx-auto text-center mb-4"
       >Оставьте свой отзыв!</a
     >
   </section>
 
   <!-- галерея -->
-  <section class="grid gap-1 grid-cols-1 md:grid-cols-3 mb-12 ">
+  <section class="grid gap-1 grid-cols-1 md:grid-cols-3 mb-12">
     {{ range (readDir "./static/generators") }}
-      {{ delimit (slice "/generators" .Name) "/" | partial "gallery/item.html" }}
+      {{ delimit (slice "/generators"
+        .Name) "/" | partial "gallery/item.html"
+      }}
     {{ end }}
-
     {{ range (readDir "./static/brake-disks") }}
-      {{ delimit (slice "/brake-disks" .Name) "/" | partial "gallery/item.html" }}
+      {{ delimit (slice "/brake-disks" .Name) "/" |
+        partial "gallery/item.html"
+      }}
     {{ end }}
-
   </section>
 
   <!-- map -->
-  <section id="map" class="container mx-auto mb-12 ">
+  <section id="map" class="container mx-auto mb-12">
     <!-- <div><img class="h-screen" src="/map/map.jpeg" /></div> -->
     <iframe
       title="Место Ре-Стар на карте"
       class="h-screen w-full rounded-xl"
       src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4298.481941112845!2d43.126419412448975!3d44.023615039279775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40577767367d090d%3A0xa173b372d7c0b82e!2z0KHRgtCw0YDRgtC10YDRiyDQk9C10L3QtdGA0LDRgtC-0YDRiyDQn9GP0YLQuNCz0L7RgNGB0Lo!5e0!3m2!1sru!2sru!4v1634204082061!5m2!1sru!2sru"
-      style="border:0;"
+      style="border: 0"
       allowfullscreen=""
       loading="lazy"
     ></iframe>
@@ -146,21 +146,12 @@
         <div>
           <a
             href="https://wa.me/+79283222555"
-            class="bg-green-500
-              p-3
-              shadow-xl
-              rounded-lg
-              transition
-              focus:outline-none
-              text-lg font-bold
-              block
-              mx-auto
-              mb-4"
+            class="bg-green-500 p-3 shadow-xl rounded-lg transition focus:outline-none text-lg font-bold block mx-auto mb-4"
             >Пишите нам в WhatsApp!</a
           >
 
           <form
-            class="flex flex-col  text-left bg-gray-100 py-2 px-4 rounded-md shadow-2xl"
+            class="flex flex-col text-left bg-gray-100 py-2 px-4 rounded-md shadow-2xl"
           >
             <h5 class="text-xl font-bold">E-Mail</h5>
 
@@ -195,17 +186,7 @@
             ></textarea>
 
             <button
-              class="
-                  bg-gray-600
-                  text-gray-100
-                  p-3
-                  shadow-xl
-                  rounded-lg
-                  hover:bg-opacity-60
-                  transition
-                  uppercase
-                  focus:outline-none
-                "
+              class="bg-gray-600 text-gray-100 p-3 shadow-xl rounded-lg hover:bg-opacity-60 transition uppercase focus:outline-none"
             >
               Отправить
             </button>
@@ -214,4 +195,26 @@
       </div>
     </div>
   </section>
+
+  <script>
+    toContact.addEventListener("click", (e) => {
+      key.scrollIntoView({
+        block: "start",
+        inline: "nearest",
+        behavior: "smooth",
+      });
+    });
+
+    toMap.addEventListener("click", (e) => {
+      map.scrollIntoView({
+        block: "start",
+        inline: "nearest",
+        behavior: "smooth",
+      });
+    });
+  </script>
+
+  <div class="text-center">
+    <a class="underline text-blue-400 text-xl" href="/terms">оферта</a>
+  </div>
 {{ end }}

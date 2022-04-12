@@ -26,3 +26,9 @@ const restar = { lat: 44.02234487559395, lng: 43.12768422513493 };
 
 Кнопка снизу большая и рядом кнопка с соцсетью или телеграм
 в мобильном виде
+
+hugo static re-star.ru // static
+go ssr      re-star.ru/catalog // can add filters catalog?offset,limit,query, of 1 redir to -> /item (dynamic) (vue js)
+            re-star.ru/item/{item} // static generate (static) (pull time~1hour) (dynamic load price and amount)
+            {item} // sku card with names + pricelist
+
