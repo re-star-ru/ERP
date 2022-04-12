@@ -1,3 +1,7 @@
+{{ define "scripts" }}
+  <link rel="preload" as="image" href="/logo.svg" />
+{{ end }}
+
 {{ define "main" }}
   <main class="container text-center mx-auto h-screen sm:pt-40">
     <div class="py-4">
@@ -24,7 +28,7 @@
       <a href="tel:+79283222555" class="button"> Позвонить 📱 </a>
       <button id="toMap" class="button">Проехать 🚗</button>
       <button id="toContact" class="button">Написать 📧</button>
-      <a href="/item" class="bg-yellow-400 text-black button">
+      <a href="/catalog/" class="bg-yellow-400 text-black button">
         Комплектующие 🔎</a
       >
     </div>

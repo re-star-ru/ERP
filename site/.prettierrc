@@ -1,4 +1,6 @@
 {
+  "jsxSingleQuote": true,
+  "semi": false,
   "overrides": [
     {
       "files": ["*.html"],

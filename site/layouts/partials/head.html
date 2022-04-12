@@ -1,16 +1,14 @@
 <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" href="favicon.svg">
+
+<link rel="icon" href="/favicon.svg">
+
 <title>{{.Title}}</title>
 
+{{ $styles := resources.Get "css/main.css" }}
 
-{{/*  todo: сделать hash ссылку на main.css  */}}
-<link rel="stylesheet" href="/main.css" />
-
-{{/*  {{ $styles := resources.Get "css/main.css" | postCSS }}  */}}
-
-{{/*  {{ if .Site.IsServer }}
+{{ if .Site.IsServer }}
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" />
 {{ else }}
   {{ $styles := $styles | minify | fingerprint | resources.PostProcess }}
@@ -19,8 +17,10 @@
     href="{{ $styles.RelPermalink }}"
     integrity="{{ $styles.Data.Integrity }}"
   />
-{{ end }}  */}}
+{{ end }}
+{{/*  if site is server, include metrics   */}}
+{{ if .Site.IsServer }}
+{{ else }}
+  {{ partial "scripts/yandex-metrica" . }}
+{{ end }}
 
-{{/*  if site is server  */}}
-
-{{ partial "scripts/yandex-metrica" . }}

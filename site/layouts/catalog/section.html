@@ -1,0 +1,17 @@
+{{ define "scripts" }}
+  {{/* {{ $defines := dict "__VUE_OPTIONS_API__" `false` "__VUE_PROD_DEVTOOLS__" `true` }}
+  */}}
+  {{/* {{ $opts := dict "targetPath" "main.js" "defines" $defines  "JSXFactory" "h" }}
+  */}}
+  {{ $opts := dict "targetPath" "main.js" }}
+  {{ $scripts := resources.Get "script/main.tsx" | js.Build $opts }}
+  {{ if .Site.IsServer }}
+    <script src="{{ $scripts.RelPermalink }}" crossorigin defer></script>
+  {{ else }}
+    {{ $scripts := $scripts | minify | fingerprint | resources.PostProcess }}
+  {{ end }}
+{{ end }}
+
+{{ define "main" }}
+  <div id="app"></div>
+{{ end }}
