@@ -48,6 +48,7 @@ jobs:
             -rtDzvO
             --delete
             --chown=caddy:caddy
+            --rsync-path="mkdir -p /var/lib/caddy/deploy/example/ && rsync"
           SOURCE: 'site/public/'
           TARGET: '/var/lib/caddy/deploy/example'
           # strip_components: 2
