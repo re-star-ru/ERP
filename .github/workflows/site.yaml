@@ -45,11 +45,11 @@ jobs:
           REMOTE_USER: root
 
           ARGS: >-
-            -rltgoDzvO 
+            -rtDzvO
             --delete
             --chown=www-data:www-data
           SOURCE: 'site/public/'
-          TARGET: '/var/lib/caddy/deploy'
+          TARGET: '/var/lib/caddy/deploy/example'
           # strip_components: 2
           # rm: true
 #       - name: set up Docker Buildx
