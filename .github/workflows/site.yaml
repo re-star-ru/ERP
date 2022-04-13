@@ -23,7 +23,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
+
       - name: Build
+        working-directory: ./site
         run: hugo --gc --minify
 
       - name: copy dist via ssh key
@@ -32,7 +34,7 @@ jobs:
           host: re-star.ru
           username: root
           key: ${{ secrets.SSH_RESTAR }}
-          source: 'public'
+          source: './site/public/'
           target: '/var/lib/caddy/testdeploy'
 #       - name: set up Docker Buildx
 #         uses: docker/setup-buildx-action@v1
