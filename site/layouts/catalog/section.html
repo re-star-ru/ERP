@@ -9,6 +9,7 @@
     <script src="{{ $scripts.RelPermalink }}" crossorigin defer></script>
   {{ else }}
     {{ $scripts := $scripts | minify | fingerprint | resources.PostProcess }}
+    <script src="{{ $scripts.RelPermalink }}" integrity="{{ $scripts.Data.Integrity }}" crossorigin defer></script>
   {{ end }}
 {{ end }}
 
