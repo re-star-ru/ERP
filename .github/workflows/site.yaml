@@ -1,4 +1,4 @@
-name: Front-kube
+name: Static site deploy
 on:
   push:
     paths:
@@ -16,6 +16,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./site
     steps:
       - uses: actions/checkout@v3
 
