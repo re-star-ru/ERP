@@ -48,9 +48,8 @@ jobs:
             -rtgoDzvO
             --delete
             --chown=caddy:caddy
-            --rsync-path="mkdir -p /var/lib/caddy/deploy/ && rsync"
           SOURCE: 'site/public/'
-          TARGET: '/var/lib/caddy/deploy/example'
+          TARGET: '/var/lib/caddy/'
           # strip_components: 2
           # rm: true
 #       - name: set up Docker Buildx
