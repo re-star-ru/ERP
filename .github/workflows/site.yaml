@@ -21,20 +21,17 @@ jobs:
         working-directory: ./site
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
-
       - name: Build
-        run: hugo --minify
+        run: hugo --gc --minify
 
       - name: copy dist via ssh key
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.KEY }}
+          host: re-star.ru
+          username: root
+          key: ${{ secrets.SSH_RESTAR }}
           source: 'public'
           target: '/var/lib/caddy/testdeploy'
 #       - name: set up Docker Buildx
