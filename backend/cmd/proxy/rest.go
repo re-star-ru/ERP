@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/zerolog/log"
@@ -45,7 +44,7 @@ func Rest(c cfg) *chi.Mux {
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-	r.Use(cors.AllowAll().Handler) // todo: if dev
+	// r.Use(cors.AllowAll().Handler) // todo: if dev
 
 	// TODO: Authorized routes and anonymouse route
 	r.Route("/s3", func(s3r chi.Router) {
