@@ -34,6 +34,7 @@ jobs:
           key: ${{ secrets.SSH_RESTAR }}
           source: './site/public/'
           target: '/var/lib/caddy/testdeploy'
+          strip_components: 2
 #       - name: set up Docker Buildx
 #         uses: docker/setup-buildx-action@v1
 
