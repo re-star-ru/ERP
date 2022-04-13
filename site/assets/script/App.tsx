@@ -5,7 +5,7 @@ import React, { useState } from "react" // import * as React from "react"
 function App() {
   const [text, setText] = useState<string>("")
   const [founded, setFounded] = useState<Item[]>([
-    { amount: 1, char: "характеристика", id: "айди", name: "имя", type: "тип" },
+    // { amount: 1, char: "характеристика", id: "айди", name: "имя", type: "тип" },
   ])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
