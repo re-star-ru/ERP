@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "run-p hugo tailwind",
     "hugo": "hugo server -D --bind=0.0.0.0",
-    "tailwind": "npx tailwindcss -i ./src/main.css -o ./assets/css/main.css --watch"
+    "tailwind": "npx tailwindcss -i ./src/main.css -o ./assets/css/main.css --watch",
+    "css-build": "npx tailwindcss -i ./src/main.css -o ./assets/css/main.css --minify"
   },
   "keywords": [],
   "author": "",
