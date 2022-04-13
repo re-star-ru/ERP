@@ -49,7 +49,7 @@ jobs:
             --delete
             --chown=caddy:caddy
           SOURCE: 'site/public/'
-          TARGET: '/var/lib/caddy/'
+          TARGET: '/var/lib/caddy/deploy'
           # strip_components: 2
           # rm: true
 #       - name: set up Docker Buildx
