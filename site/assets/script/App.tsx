@@ -55,8 +55,8 @@ function App() {
 }
 export { App }
 
-// const url = "https://api.re-star.ru/v1/oprox"
-const url = "http://localhost:8100"
+const url = "https://api.re-star.ru/v1/oprox"
+// const url = "http://localhost:8100"
 
 type Item = {
   amount: number
