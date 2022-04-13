@@ -47,7 +47,7 @@ jobs:
           ARGS: >-
             -rtDzvO
             --delete
-            --chown=www-data:www-data
+            --chown=caddy:caddy
           SOURCE: 'site/public/'
           TARGET: '/var/lib/caddy/deploy/example'
           # strip_components: 2
