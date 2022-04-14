@@ -22,7 +22,7 @@ func main() {
 	onecHost := os.Getenv("ONEC_HOST")
 	onceToken := os.Getenv("ONEC_TOKEN")
 	production := true
-	if _, ok := os.LookupEnv("DEVELOPMENT"); !ok {
+	if _, ok := os.LookupEnv("DEVELOPMENT"); ok {
 		production = false
 	}
 

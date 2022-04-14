@@ -48,6 +48,7 @@ func Rest(c cfg) *chi.Mux {
 	r.Use(middleware.Logger)
 
 	if !c.production {
+		log.Info().Msg("development...")
 		r.Use(cors.AllowAll().Handler) // todo: if dev
 	}
 
