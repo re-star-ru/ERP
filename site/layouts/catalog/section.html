@@ -1,6 +1,11 @@
 {{ define "scripts" }}
+
+  {{ $externals := slice "react" }}
+
+  {{ $shims := dict "react" "assetss/shimsf/resact.js"  "react-dom" "assets/shims/react-dosm.js" }}
+
   {{ if .Site.IsServer }}
-    {{ $opts := dict "targetPath" "main.js" }}
+    {{ $opts := dict "targetPath" "main.js" "bundle" true "sourceMap" "inline" "shims" $shims }}
     {{ $scripts := resources.Get "script/main.tsx" | js.Build $opts }} <script src="{{ $scripts.RelPermalink }}" crossorigin defer></script>
   {{ else }}
 
