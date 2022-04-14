@@ -22,5 +22,6 @@
 {{ if .Site.IsServer }}
 {{ else }}
   {{ partial "scripts/yandex-metrica" . }}
+  {{ partial "scripts/google-anal.html" . }}
 {{ end }}
 
