@@ -1,15 +1,13 @@
 {{ define "scripts" }}
-  {{/* {{ $defines := dict "__VUE_OPTIONS_API__" `false` "__VUE_PROD_DEVTOOLS__" `true` }}
-  */}}
-  {{/* {{ $opts := dict "targetPath" "main.js" "defines" $defines  "JSXFactory" "h" }}
-  */}}
-  {{ $opts := dict "targetPath" "main.js" }}
-  {{ $scripts := resources.Get "script/main.tsx" | js.Build $opts }}
   {{ if .Site.IsServer }}
-    <script src="{{ $scripts.RelPermalink }}" crossorigin defer></script>
+    {{ $opts := dict "targetPath" "main.js" }}
+    {{ $scripts := resources.Get "script/main.tsx" | js.Build $opts }} <script src="{{ $scripts.RelPermalink }}" crossorigin defer></script>
   {{ else }}
-    {{ $scripts := $scripts | minify | fingerprint | resources.PostProcess }}
-    <script src="{{ $scripts.RelPermalink }}" integrity="{{ $scripts.Data.Integrity }}" crossorigin defer></script>
+
+    {{ $defines := dict "process.env.NODE_ENV" "'production'" }}
+    {{ $opts := dict "targetPath" "main.js" "defines" $defines "minify" true }}
+    {{ $scripts := resources.Get "script/main.tsx" | js.Build $opts }}
+    {{ $scripts := $scripts | minify | fingerprint | resources.PostProcess }} <script src="{{ $scripts.RelPermalink }}" integrity="{{ $scripts.Data.Integrity }}" crossorigin defer></script>
   {{ end }}
 {{ end }}
 
