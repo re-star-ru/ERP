@@ -1,6 +1,8 @@
-import React, { useState } from "react" // import * as React from "react"
-// import { Filters } from "./components/Filters"
+// import React from "react" // import * as React from "react"
 // import Tran from "./components/Tran"
+
+import React, { useState } from "react"
+import { Filters } from "./components/Filters"
 
 // import Card from "./components/Card"
 
@@ -59,10 +61,10 @@ function App(): JSX.Element {
           onClick={searchHandler}
         />
       </div>
-      {/* 
+
       <div className='px-4 pb-2 border-b  border-gray-200'>
         <Filters />
-      </div> */}
+      </div>
 
       <div>
         <CardList cards={founded} />
@@ -124,7 +126,6 @@ async function sendRequest(r: string): Promise<Item[]> {
   let response = await fetch(url + /search/ + r)
   if (response.ok) {
     let json = await response.json()
-    // console.log("resp", json)
     return json
   } else {
     alert("ошибка HTTP: " + response.status)

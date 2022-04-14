@@ -21,6 +21,10 @@ func main() {
 	secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
 	onecHost := os.Getenv("ONEC_HOST")
 	onceToken := os.Getenv("ONEC_TOKEN")
+	production := true
+	if _, ok := os.LookupEnv("DEVELOPMENT"); !ok {
+		production = false
+	}
 
 	r := Rest(cfg{
 		endpoint:        endpoint,
@@ -28,6 +32,7 @@ func main() {
 		secretAccessKey: secretAccessKey,
 		onecHost:        onecHost,
 		onecToken:       onceToken,
+		production:      production,
 	})
 
 	addr := os.Getenv("ADDR")
