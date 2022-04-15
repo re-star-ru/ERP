@@ -2,3 +2,4 @@ baseURL: "https://re-star.ru/"
 languageCode: "ru"
 
 title: "РЕСТАР"
+enableRobotsTXT: true
