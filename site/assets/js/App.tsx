@@ -84,7 +84,8 @@ function App(): JSX.Element {
           Найти
         </button>
       </div>
-      <div className='px-4 pb-2 border-b  border-gray-200'>
+
+      <div className='container  mx-auto max-w-3xl px-4 pb-2 border-b  border-gray-200'>
         <Filters />
       </div>
 
