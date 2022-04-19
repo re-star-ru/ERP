@@ -11,6 +11,7 @@ if (process.env.NODE_ENV !== "production") {
       name: "имя",
       type: "тип",
       sku: "артикул",
+      images: [{ main: true, owner: "my", path: "kek" }],
     },
   ]
 }
@@ -112,27 +113,6 @@ function App(): JSX.Element {
 }
 export { App }
 
-let url = "https://api.re-star.ru/v1/oprox"
-let noImage = "https://via.placeholder.com/800x600"
-
-if (process.env.NODE_ENV !== "production") {
-  url = "http://localhost:8100"
-  noImage = "https://loremflickr.com/800/600/cat"
-}
-
-type Item = {
-  amount: number
-  type: string
-  char: string
-  id: string
-  name: string
-  sku: string
-}
-
-type CardListProps = {
-  cards: Item[]
-}
-
 function SearchAlert() {
   return (
     <div
@@ -158,13 +138,77 @@ function SearchAlert() {
   )
 }
 
+// images: Array(5)
+// 0:
+// main: true
+// owner: "77367274-a5f1-41b7-80f4-d9e6f0070840"
+// path: "srv1c/images/48fceb63-ae56-4f35-9635-8514b97763b7.jpeg"
+// [[Prototype]]: Object
+// 1: {main: false, owner: '77367274-a5f1-41b7-80f4-d9e6f0070840', path: 'srv1c/images/fbb83137-4b51-4b21-9900-e26c620272fa.jpeg'}
+// 2: {main: false, owner: '77367274-a5f1-41b7-80f4-d9e6f0070840', path: 'srv1c/images/14efc2f0-9f68-484c-8d39-a5414e23bf90.jpeg'}
+// 3: {main: false, owner: '77367274-a5f1-41b7-80f4-d9e6f0070840', path: 'srv1c/images/c0d048cf-8ccd-4c91-8373-9f3b263e43e2.jpeg'}
+// 4: {main: false, owner: '77367274-a5f1-41b7-80f4-d9e6f0070840', path: 'srv1c/images/6822ef7b-81d6-40df-8b24-1e7edaf398ee.jpeg'}
+// length: 5
+// [[Prototype]]: Array(0)
+
+let url = "https://api.re-star.ru/v1/oprox"
+let noImage = "https://via.placeholder.com/800x600"
+
+if (process.env.NODE_ENV !== "production") {
+  url = "http://localhost:8100"
+  noImage = "https://loremflickr.com/800/600/cat"
+}
+
+type Image = {
+  main: boolean
+  owner: string
+  path: string
+}
+
+type Item = {
+  amount: number
+  type: string
+  char: string
+  id: string
+  name: string
+  sku: string
+  images: Image[]
+}
+
+type CardListProps = {
+  cards: Item[]
+}
+
+type ImageListProps = {
+  images: Image[]
+}
+
+function s3path(path: string): string {
+  return `https://s3.re-star.ru/${path}`
+}
+
+function ImageList(props: ImageListProps) {
+  const images = props.images
+
+  const imageList = images.map((image) => (
+    <li key={image.path}>
+      <img src={s3path(image.path)} alt={image.owner} />
+    </li>
+  ))
+
+  return <ul>{imageList}</ul>
+}
+
 function CardList(props: CardListProps) {
   const cards = props.cards
+
   const listCards = cards.map((card) => (
     <li
       className='max-w-sm bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700 p-4'
       key={card.id}
     >
+      <ImageList images={card.images} />
+
       <a href={`/item/${card.name}`}>
         <img className='rounded-t-lg' src={noImage} alt='product image' />
       </a>

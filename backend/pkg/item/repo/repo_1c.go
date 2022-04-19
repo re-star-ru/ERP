@@ -25,7 +25,9 @@ func (e ErrorOnec) Error() string {
 }
 
 func NewRepoOnec(host, token string) *ClientOnec {
-	c := &ClientOnec{host, token, http.Client{Timeout: time.Second * 60}} // todo: config timeout
+	c := &ClientOnec{host, token, http.Client{
+		Timeout: time.Second * 1,
+	}} // todo: config timeout
 	return c
 }
 
