@@ -1178,6 +1178,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-right: 0.5rem;
 }
 
+.mr-3 {
+  margin-right: 0.75rem;
+}
+
 .block {
   display: block;
 }
@@ -1256,6 +1260,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .flex-1 {
   flex: 1 1 0%;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
 }
 
 @-webkit-keyframes spin {
@@ -1418,6 +1426,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(254 249 195 / var(--tw-bg-opacity));
 }
 
+.bg-white {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
 .fill-gray-600 {
   fill: #4b5563;
 }
@@ -1469,6 +1482,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-right: 2rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .pt-10 {
   padding-top: 2.5rem;
 }
@@ -1497,8 +1514,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-top: 0.5rem;
 }
 
-.pt-8 {
-  padding-top: 2rem;
+.pb-10 {
+  padding-bottom: 2.5rem;
+}
+
+.pb-4 {
+  padding-bottom: 1rem;
 }
 
 .text-left {
@@ -1538,8 +1559,17 @@ Ensure the default browser behavior of the `hidden` attribute.
   line-height: 2.25rem;
 }
 
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
 .font-bold {
   font-weight: 700;
+}
+
+.font-medium {
+  font-weight: 500;
 }
 
 .font-semibold {
@@ -1584,9 +1614,19 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(229 231 235 / var(--tw-text-opacity));
 }
 
+.text-yellow-700 {
+  --tw-text-opacity: 1;
+  color: rgb(161 98 7 / var(--tw-text-opacity));
+}
+
 .text-gray-900 {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
+}
+
+.text-yellow-400 {
+  --tw-text-opacity: 1;
+  color: rgb(250 204 21 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -1690,6 +1730,11 @@ html {
   .dark\:text-gray-600 {
     --tw-text-opacity: 1;
     color: rgb(75 85 99 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-yellow-800 {
+    --tw-text-opacity: 1;
+    color: rgb(133 77 14 / var(--tw-text-opacity));
   }
 
   .dark\:text-white {
