@@ -3,3 +3,8 @@ languageCode: "ru"
 
 title: "Стартеры генераторы в Пятигорске — ремонт, купить на любые марки автомобилей — РЕСТАР"
 enableRobotsTXT: true
+
+minify:
+  tdewolff:
+    html:
+      keepQuotes: true
