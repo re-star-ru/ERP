@@ -1,4 +1,5 @@
 baseURL: "https://re-star.ru/"
 languageCode: "ru"
 
-title: "РЕСТАР"
+title: "Стартеры генераторы в Пятигорске — ремонт, купить на любые марки автомобилей — РЕСТАР"
+enableRobotsTXT: true

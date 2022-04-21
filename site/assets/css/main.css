@@ -1148,6 +1148,15 @@ Ensure the default browser behavior of the `hidden` attribute.
   outline-offset: 2px;
 }
 
+.absolute {
+  position: absolute;
+}
+
+.inset-x-0 {
+  left: 0px;
+  right: 0px;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1227,6 +1236,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .max-w-5xl {
   max-width: 64rem;
+}
+
+.max-w-xl {
+  max-width: 36rem;
+}
+
+.max-w-3xl {
+  max-width: 48rem;
 }
 
 .max-w-sm {
@@ -1396,9 +1413,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(254 242 242 / var(--tw-bg-opacity));
 }
 
-.bg-white {
+.bg-yellow-100 {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  background-color: rgb(254 249 195 / var(--tw-bg-opacity));
 }
 
 .fill-gray-600 {
@@ -1480,6 +1497,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-top: 0.5rem;
 }
 
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .text-left {
   text-align: left;
 }
@@ -1492,9 +1513,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   vertical-align: text-bottom;
 }
 
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
 .text-xl {
@@ -1650,6 +1671,11 @@ html {
   .dark\:border-gray-700 {
     --tw-border-opacity: 1;
     border-color: rgb(55 65 81 / var(--tw-border-opacity));
+  }
+
+  .dark\:bg-yellow-200 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 240 138 / var(--tw-bg-opacity));
   }
 
   .dark\:bg-gray-800 {
