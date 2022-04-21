@@ -120,7 +120,7 @@
   </section>
 
   <!-- галерея -->
-  <section class="grid gap-1 grid-cols-1 md:grid-cols-3 mb-12">
+  <div class="grid gap-1 grid-cols-1 md:grid-cols-3 mb-12">
     {{ range (readDir "./static/generators") }}
       {{ delimit (slice "/generators"
         .Name) "/" | partial "gallery/item.html"
@@ -131,10 +131,10 @@
         partial "gallery/item.html"
       }}
     {{ end }}
-  </section>
+  </div>
 
   <!-- map -->
-  <section id="map" class="container mx-auto mb-12">
+  <div id="map" class="container mx-auto mb-12">
     <!-- <div><img class="h-screen" src="/map/map.jpeg" /></div> -->
     <iframe
       title="Место Ре-Стар на карте"
@@ -144,7 +144,7 @@
       allowfullscreen=""
       loading="lazy"
     ></iframe>
-  </section>
+  </div>
 
   <!-- контакты -->
   <section id="key" class="container mx-auto overflow-hidden mb-12">
