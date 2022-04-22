@@ -112,3 +112,5 @@ dist
 tmp
 .idea
 *.db
+
+data.ms/
