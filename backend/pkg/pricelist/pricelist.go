@@ -45,6 +45,12 @@ func NewPricerUsecase(store Storer, i Itemer) *Usecase {
 		Render: renderer.DromRender,
 	}
 
+	ucase.Consumers["yandex"] = consumerMeta{
+		Name:   "yandex",
+		Path:   "yandex.xml",
+		Render: renderer.YandexRender,
+	}
+
 	return ucase
 }
 
