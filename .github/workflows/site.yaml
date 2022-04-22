@@ -33,7 +33,7 @@ jobs:
       - name: build css
         run: npm run css-build
       - name: Build hugo
-        run: hugo --gc
+        run: hugo --gc --minify
 
       - name: copy dist via rsync
         uses: easingthemes/ssh-deploy@main
