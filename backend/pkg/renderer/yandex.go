@@ -26,6 +26,7 @@ type YandexOffer struct {
 	CategoryId string `xml:"categoryId"` //*
 	Count      int    `xml:"count"`      //*
 
+	Store       bool   `xml:"store"`
 	Weight      string `xml:"weight"`      //* kilo
 	Dimensions  string `xml:"dimensions"`  //* sm (len/width/height)
 	Description string `xml:"description"` //*
@@ -90,9 +91,10 @@ func YandexRender(items []item.Item) (io.Reader, string, error) {
 			VendorCode: items[idx].Name,
 			CurrencyId: "RUR",
 			CategoryId: "100",
-			Price:      items[idx].Price,
+			Price:      items[idx].Price / 100,
 			Count:      items[idx].Amount,
 
+			Store:       true,
 			Weight:      "5.000",
 			Dimensions:  "40.000/20.000/20.000",
 			Description: "описание товара",
