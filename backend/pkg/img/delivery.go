@@ -43,7 +43,7 @@ type ImageService struct {
 
 // PutImage put image to s3 and return path bucket/key
 func (s *ImageService) PutImage(w http.ResponseWriter, r *http.Request) {
-	if r.ContentLength < 100 {
+	if r.ContentLength < 200 {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, errors.New("not an image"), "wrong content length")
 		return
 	}
