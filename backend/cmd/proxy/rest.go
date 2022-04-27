@@ -49,13 +49,12 @@ func Rest(c cfg) *chi.Mux {
 
 	if !c.production {
 		log.Info().Msg("development...")
-		r.Use(cors.AllowAll().Handler) // todo: if dev
+		r.Use(cors.AllowAll().Handler)
 	}
 
 	// TODO: Authorized routes and anonymouse route
 	r.Route("/s3", func(s3r chi.Router) {
 		is := img.NewImageService(minioClient, "srv1c") // srv1c image bucket
-		s3r.Use(middleware.Logger)
 		s3r.Put("/image", is.PutImage)
 		s3r.Delete("/image", is.DeleteImage)
 	})
