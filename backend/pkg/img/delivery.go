@@ -62,7 +62,6 @@ func (s *ImageService) PutImage(w http.ResponseWriter, r *http.Request) {
 		context.Background(), s.srv1cbucket, filePath, r.Body, r.ContentLength,
 		minio.PutObjectOptions{ContentType: r.Header.Get("Content-Type")},
 	)
-
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "error image upload")
 		return
