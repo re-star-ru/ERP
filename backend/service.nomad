@@ -32,6 +32,7 @@ job "oprox" {
       resources {
         cpu    = 500
         memory = 512
+        memory_max = 1024
       }
 
       config {
