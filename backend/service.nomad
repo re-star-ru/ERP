@@ -33,12 +33,12 @@ job "oprox" {
         cpu    = 500
         memory = 512
         memory_max = 1024
+        oom_score_adj = -1000
       }
 
       config {
         image        = "ghcr.io/${IMAGE_NAME}:${TAG}"
         network_mode = "host"
-        oom_score_adj = -1000
       }
 
       env {
