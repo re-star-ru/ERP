@@ -14,6 +14,8 @@ import (
 	"backend/pkg/item/usecase"
 	"backend/pkg/pricelist"
 	"backend/pkg/store"
+
+	_ "net/http/pprof"
 )
 
 type cfg struct {
