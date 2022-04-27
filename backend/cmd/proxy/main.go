@@ -37,5 +37,5 @@ func main() {
 
 	addr := os.Getenv("ADDR")
 	log.Debug().Msg("listen at " + addr)
-	log.Fatal().Err(http.ListenAndServe(addr, r)).Send()
+	log.Fatal().Err(http.ListenAndServe(addr, r)).Msg("server stopped")
 }
