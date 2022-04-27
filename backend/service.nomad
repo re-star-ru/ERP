@@ -28,6 +28,7 @@ job "oprox" {
 
     task "oprox" {
       driver = "docker"
+      oom_score_adj = -1000
 
       resources {
         cpu    = 500
