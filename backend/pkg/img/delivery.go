@@ -57,8 +57,9 @@ func (s *ImageService) PutImage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := path.Join("images", uuid.NewString()+".jpeg")
+
 	info, err := s.m.PutObject(
-		context.Background(), s.srv1cbucket, filePath, r.Body, -1,
+		context.Background(), s.srv1cbucket, filePath, r.Body, r.ContentLength,
 		minio.PutObjectOptions{ContentType: r.Header.Get("Content-Type")},
 	)
 
