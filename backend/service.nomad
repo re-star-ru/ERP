@@ -31,8 +31,8 @@ job "oprox" {
 
       resources {
         
-        cpu    = 0
-        memory = 0
+        // cpu    = 0
+        // memory = 0
 
       }
 
