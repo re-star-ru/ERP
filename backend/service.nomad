@@ -30,8 +30,8 @@ job "oprox" {
       driver = "docker"
 
       resources {
-        cpu    = 200
-        memory = 128
+        cpu    = 500
+        memory = 512
       }
 
       config {
