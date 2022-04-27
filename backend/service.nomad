@@ -28,7 +28,6 @@ job "oprox" {
 
     task "oprox" {
       driver = "docker"
-      oom_score_adj = -1000
 
       resources {
         cpu    = 500
@@ -39,6 +38,7 @@ job "oprox" {
       config {
         image        = "ghcr.io/${IMAGE_NAME}:${TAG}"
         network_mode = "host"
+        oom_score_adj = -1000
       }
 
       env {
