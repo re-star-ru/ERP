@@ -1,5 +1,9 @@
 # Backend doc
 
+## github actions
+
+add to commit message ```[skip ci]``` to skip commit deploy
+
 ## Caddy reverse proxy
 
 casbin plugin for caddy :

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -15,6 +17,7 @@ import (
 	"backend/pkg/pricelist"
 	"backend/pkg/store"
 
+	"net/http"
 	_ "net/http/pprof"
 )
 
@@ -57,8 +60,8 @@ func Rest(c cfg) *chi.Mux {
 	// TODO: Authorized routes and anonymouse route
 	r.Route("/s3", func(s3r chi.Router) {
 		is := img.NewImageService(minioClient, "srv1c") // srv1c image bucket
-		s3r.Put("/image", is.PutImage)
-		s3r.Delete("/image", is.DeleteImage)
+		s3r.With(SimpleAuthMiddleware).Put("/image", is.PutImage)
+		s3r.With(SimpleAuthMiddleware).Delete("/image", is.DeleteImage)
 	})
 	// -
 
@@ -85,4 +88,24 @@ func Rest(c cfg) *chi.Mux {
 	}
 
 	return r
+}
+
+func SimpleAuthMiddleware(h http.Handler) http.Handler {
+	apiKey, ok := os.LookupEnv("API_KEY")
+	if !ok {
+		log.Fatal().Msg("API_KEY env not set")
+	}
+
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Print("SimpleAuthMiddleware")
+
+		if r.Header.Get("Authorization") != "Bearer "+apiKey {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			log.Print("Unauthorized")
+			return
+		}
+
+		log.Printf("ok")
+		h.ServeHTTP(w, r)
+	})
 }

@@ -51,6 +51,7 @@ jobs:
       - name: Deploy
         env:
           TAG: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
           NOMAD_ADDR: https://nomad.re-star.ru
           # NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           ONEC_TOKEN: ${{ secrets.ONEC_TOKEN }}
@@ -58,5 +59,5 @@ jobs:
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
 
         run: |
-          envsubst \${IMAGE_NAME},\${TAG},\${ONEC_TOKEN},\${MINIO_ACCESS_KEY},\${MINIO_SECRET_KEY} < service.nomad > job.nomad
+          envsubst \${IMAGE_NAME},\${TAG},\${ONEC_TOKEN},\${MINIO_ACCESS_KEY},\${MINIO_SECRET_KEY},\${API_TOKEN} < service.nomad > job.nomad
           nomad job run job.nomad
