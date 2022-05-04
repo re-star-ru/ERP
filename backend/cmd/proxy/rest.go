@@ -103,7 +103,7 @@ func SimpleAuthMiddleware(h http.Handler) http.Handler {
 		log.Print("SimpleAuthMiddleware")
 
 		if r.Header.Get("X-API-KEY") != apiKey {
-			pkg.SendErrorJSON(w, r, http.StatusUnauthorized, errors.New("not auth"), "wrong api key")
+			pkg.SendErrorJSON(w, r, http.StatusUnauthorized, errors.New("not auth"), "wrong api key: "+r.Header.Get("X-API-KEY"))
 			return
 		}
 
