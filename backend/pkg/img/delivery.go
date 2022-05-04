@@ -78,7 +78,7 @@ func (s *ImageService) DeleteImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := s.m.RemoveObject(r.Context(), s.srv1cbucket, id, minio.RemoveObjectOptions{}); err != nil {
+	if err := s.m.RemoveObject(r.Context(), s.srv1cbucket, "images/"+id, minio.RemoveObjectOptions{}); err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "error image delete")
 		return
 	}
