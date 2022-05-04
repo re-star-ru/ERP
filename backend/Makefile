@@ -4,9 +4,6 @@ export
 dev:
 	go run ./cmd/proxy
 
-MINIO_ACCESS_KEY=ryR3bGLYsGXV
-MINIO_SECRET_KEY=AoRqxFTVWs3U
-
 rdocker: 
 	docker run --rm \
 		-p 8100:8100 \

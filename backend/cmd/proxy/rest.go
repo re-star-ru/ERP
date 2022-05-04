@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"os"
 
 	"github.com/go-chi/chi/v5"
@@ -10,6 +11,7 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/zerolog/log"
 
+	"backend/pkg"
 	"backend/pkg/img"
 	"backend/pkg/item/delivery"
 	"backend/pkg/item/repo"
@@ -60,7 +62,8 @@ func Rest(c cfg) *chi.Mux {
 	// TODO: Authorized routes and anonymouse route
 	r.Route("/s3", func(s3r chi.Router) {
 		is := img.NewImageService(minioClient, "srv1c") // srv1c image bucket
-		s3r.With(SimpleAuthMiddleware).Put("/image", is.PutImage)
+		s3r.Put("/image", is.PutImage)
+		// s3r.With(SimpleAuthMiddleware).Put("/image", is.PutImage)
 		s3r.With(SimpleAuthMiddleware).Delete("/image", is.DeleteImage)
 	})
 	// -
@@ -99,13 +102,12 @@ func SimpleAuthMiddleware(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Print("SimpleAuthMiddleware")
 
-		if r.Header.Get("Authorization") != "Bearer "+apiKey {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			log.Print("Unauthorized")
+		if r.Header.Get("X-API-KEY") != apiKey {
+			pkg.SendErrorJSON(w, r, http.StatusUnauthorized, errors.New("not auth"), "wrong api key")
 			return
 		}
 
-		log.Printf("ok")
+		log.Debug().Msg("auth ok")
 		h.ServeHTTP(w, r)
 	})
 }
