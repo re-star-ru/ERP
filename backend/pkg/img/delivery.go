@@ -4,10 +4,10 @@ import (
 	"backend/pkg"
 	"context"
 	"errors"
-	"io"
 	"net/http"
 	"path"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/google/uuid"
 	"github.com/minio/minio-go/v7"
@@ -72,6 +72,16 @@ func (s *ImageService) PutImage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *ImageService) DeleteImage(w http.ResponseWriter, r *http.Request) {
-	render.Status(r, http.StatusInternalServerError)
-	io.WriteString(w, "пока не реализованно")
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, errors.New("id is empty"), "id is empty")
+		return
+	}
+
+	if err := s.m.RemoveObject(r.Context(), s.srv1cbucket, id, minio.RemoveObjectOptions{}); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "error image delete")
+		return
+	}
+
+	render.Status(r, http.StatusOK)
 }

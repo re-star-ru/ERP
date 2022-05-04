@@ -64,7 +64,7 @@ func Rest(c cfg) *chi.Mux {
 		is := img.NewImageService(minioClient, "srv1c") // srv1c image bucket
 		s3r.Put("/image", is.PutImage)
 		// s3r.With(SimpleAuthMiddleware).Put("/image", is.PutImage)
-		s3r.With(SimpleAuthMiddleware).Delete("/image", is.DeleteImage)
+		s3r.With(SimpleAuthMiddleware).Delete("/image/{id}", is.DeleteImage)
 	})
 	// -
 
