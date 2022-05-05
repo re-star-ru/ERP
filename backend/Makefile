@@ -1,21 +1,24 @@
 include ../.dev.env
 export
 
+# rdocker: 
+#     docker run --rm \
+#         -p 8100:8100 \
+#         -e MINIO_ACCESS_KEY=ryR3bGLYsGXV \
+#         -e MINIO_SECRET_KEY=AoRqxFTVWs3U \
+#         -e ADDR=0.0.0.0:8100 \
+
 dev:
 	go run ./cmd/proxy
 
-rdocker: 
-	docker run --rm \
-		-p 8100:8100 \
-		-e MINIO_ACCESS_KEY=ryR3bGLYsGXV \
-		-e MINIO_SECRET_KEY=AoRqxFTVWs3U \
-		-e ADDR=0.0.0.0:8100 \
-		a564da9db929 
-
 meili:
 	docker run -d -it --rm \
-    -p 7700:7700 \
-    -v $(shell pwd)/data.ms:/data.ms \
-    getmeili/meilisearch:latest
+	-p 7700:7700 \
+	-v $(shell pwd)/data.ms:/data.ms \
+	-v $(shell pwd)/dumps:/dumps \
+	getmeili/meilisearch:latest
 
-.PHONY: backend rdocker
+indexUpd:
+	xh post localhost:7700/indexes/items/settings/typo-tolerance --raw '{ "disableOnAttributes": [], "enabled": false }'
+
+.PHONY: backend rdocker dev
