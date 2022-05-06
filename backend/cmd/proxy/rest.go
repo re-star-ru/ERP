@@ -85,8 +85,9 @@ func Rest(c cfg) *chi.Mux {
 		// pricelist api
 		r.Route("/pricelists", func(r chi.Router) {
 			r.Get("/", priceSrv.PricelistHandler)
-			r.Get("/{name}", priceSrv.PricelistByConsumerHandler)
 			r.Post("/refresh", priceSrv.ManualRefreshHandler)
+			r.Post("/meily", priceSrv.MeiliRequest)
+			r.Get("/{name}", priceSrv.PricelistByConsumerHandler)
 		})
 	}
 

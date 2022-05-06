@@ -2,6 +2,7 @@ package pricelist
 
 import (
 	"backend/pkg"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/render"
@@ -29,6 +30,12 @@ func (ps *PricelistHttpService) ManualRefreshHandler(w http.ResponseWriter, r *h
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant update")
 		return
 	}
+
+}
+
+func (ps *PricelistHttpService) MeiliRequest(w http.ResponseWriter, r *http.Request) {
+
+	log.Println("meili request")
 
 }
 

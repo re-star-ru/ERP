@@ -27,3 +27,25 @@ dynamic srv _api._tcp.example.com
 ## Oprox
 
 is proxy for once services and some buisness logic
+
+## Search entry
+
+```js
+{
+    "charGUID": "guid string", // primary key
+    "GUID": "guid of item",
+    "typeGUID": "guid of type",
+
+    // searchable
+    "sku": "analog group key",
+    "name": "name",
+    "type": "type of item, starter or generator or else",
+    "amount": "current amount",
+    "firstIncome": "first time when item entered the warehouse",
+    "lastExpance": "last time item sold"
+}
+```
+
+```js
+filterPurple = `filter = "lastExpance < ${time.Now()}"`
+```

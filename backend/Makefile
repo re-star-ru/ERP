@@ -21,4 +21,10 @@ meili:
 indexUpd:
 	xh post localhost:7700/indexes/items/settings/typo-tolerance --raw '{ "disableOnAttributes": [], "enabled": false }'
 
+clear:
+	xh delete localhost:7700/indexes/items/documents
+
+filter-purple:
+	 xh POST -j localhost:7700/indexes/items/search filter="lastExpance < 1557131207"
+
 .PHONY: backend rdocker dev
