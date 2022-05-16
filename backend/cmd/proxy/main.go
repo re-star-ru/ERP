@@ -10,9 +10,10 @@ import (
 )
 
 func main() {
+	zerolog.TimeFieldFormat = zerolog.TimeFormatUnixMs
 	log.Logger = log.
 		With().Caller().
-		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.Stamp})
+		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.StampMilli})
 
 	// - 1c авторизация
 	// s3 put get delete
