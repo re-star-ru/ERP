@@ -1,6 +1,9 @@
 include ../.dev.env
 export
 
+dev:
+	CGO_ENABLED=0 go run ./cmd/proxy
+
 # rdocker: 
 #     docker run --rm \
 #         -p 8100:8100 \
@@ -8,8 +11,7 @@ export
 #         -e MINIO_SECRET_KEY=AoRqxFTVWs3U \
 #         -e ADDR=0.0.0.0:8100 \
 
-dev:
-	go run ./cmd/proxy
+
 
 meili:
 	docker run -d -it --rm \

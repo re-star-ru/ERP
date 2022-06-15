@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/pkg/qr"
 	"errors"
 	"os"
 
@@ -81,6 +82,18 @@ func Rest(rest cfg) *chi.Mux {
 		// site api
 		router.Get("/search/{query}", itemHTTP.SearchBySKU)
 		router.Get("/catalog", itemHTTP.CatalogHandler)
+	}
+
+	{
+		// qr code сервис, получает параметры -
+		// текстовую строку для печати qr кода
+		// x, y - ширина высота картинки,
+		// и какой то шаблон для печати либо один из заранее подготовленных шаблонов
+		// я пока не решил
+		// возвращает готовый к печати pdf или png файл
+
+		qrd := qr.NewHTTPDelivery()
+		router.Post("/qr", qrd.NewQRCode)
 	}
 
 	{

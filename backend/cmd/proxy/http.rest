@@ -6,3 +6,6 @@ POST {{host}}/1c/updatePricelist?limit=20
 
 ### получить список продуктов
 GET {{host}}/onec/products
+
+### сгенерировать qr код
+POST {{host}}/qr

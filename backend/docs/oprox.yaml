@@ -1,0 +1,112 @@
+openapi: 3.0.3
+info:
+  title: oprox endpoints api
+  description: |
+    ### run in docker
+    ```
+      docker run -d -p 80:8080 swaggerapi/swagger-editor
+    ```
+    ### 1c basic auth
+    ```
+      API
+      6O7EHDWS0Sk$yZ%i80p5
+    ```
+
+  version: 1.0.0
+  contact:
+    name: swagger editor
+    url: https://editor.swagger.io/
+
+servers:
+  - url: 'http://localhost:8100'
+
+#components:
+#  securitySchemes:
+#    basicAuth:
+#      type: http
+#      scheme: basic
+#security:
+#  - basicAuth: []
+
+paths:
+
+  /qr/:
+    get:
+      description: получение информации номенклатуры
+      responses:
+        200:
+          description: "ok"
+        401:
+          description: bad
+
+  /products/*:
+    get:
+      description: получение информации номенклатуры
+      responses:
+        200:
+          description: "ok"
+        401:
+          description: bad
+
+  /products/text-search/{query}:
+    get:
+      description: возврат массива артикулов из полнотекстового поиска по запрошенной строке
+      parameters:
+        - in: path
+          description: строка поиска
+          name: query
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: "ok"
+
+  /products/batch:
+    get:
+      description: получить всю выгружаемую на площадки номенклатуру
+      responses:
+        200:
+          description: список номенклатуры
+
+  /stand/{order}/add:
+    post:
+      description: ДобавлениеФотоКТалонуРемонта
+      parameters:
+        - in: path
+          description: номер талона ремонта в 1с
+          name: order
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: ok
+
+  /offers/*:
+    get:
+      deprecated: true
+      description: Получить горячие остатки?
+      responses:
+        200:
+          description: ok
+
+  /search/{sku}:
+    get:
+      deprecated: true
+      description: Поиск по артикулу
+      parameters:
+        - in: path
+          description: имя артикула для поиска
+          name: sku
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        200:
+          description: список номенклатуры
