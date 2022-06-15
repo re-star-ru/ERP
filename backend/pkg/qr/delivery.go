@@ -2,13 +2,12 @@ package qr
 
 import (
 	"backend/pkg"
+	"bytes"
 	"fmt"
-	qrcode "github.com/skip2/go-qrcode"
-	"github.com/unidoc/unipdf/v3/common/license"
-	"github.com/unidoc/unipdf/v3/creator"
+	pdf "github.com/pdfcpu/pdfcpu/pkg/api"
+	"github.com/skip2/go-qrcode"
 	"image"
 	"image/draw"
-	"log"
 	"net/http"
 )
 
@@ -16,11 +15,6 @@ type HTTPDelivery struct {
 }
 
 func NewHTTPDelivery() *HTTPDelivery {
-	//3684ef89bc571ffa6405647865defed447490cf2e4c7f49257a2c779645d5d2a
-	if err := license.SetMeteredKey("3684ef89bc571ffa6405647865defed447490cf2e4c7f49257a2c779645d5d2a"); err != nil {
-		log.Fatal(err)
-	}
-
 	return &HTTPDelivery{}
 }
 
@@ -39,49 +33,96 @@ func (qr *HTTPDelivery) NewQRCode(w http.ResponseWriter, r *http.Request) {
 
 	widthMM, heightMM = heightMM, widthMM // swap width and height
 
-	//png.Encode(w, qrimage)
-
 	img := image.NewRGBA(image.Rect(0, 0, widthMM, heightMM))
 	draw.Draw(img, img.Bounds(), qrimage, image.Point{}, draw.Src)
 
-	c := creator.New()
-
-	pimg, err := c.NewImageFromGoImage(img)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-
-		return
-	}
-
-	c.SetPageSize(creator.PageSize{float64(widthMM), float64(heightMM)})
+	newPdf := new(bytes.Buffer)
 
 	for i := 3; i > 0; i-- {
-		c.NewPage()
 
-		if err = c.RotateDeg(-90); err != nil {
-			pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-
-			return
-		}
-
-		pimg.SetPos(0, 0)
-
-		if err = c.Draw(pimg); err != nil {
-			pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-
-			return
-		}
+		//c.NewPage()
+		//
+		//if err = c.RotateDeg(-90); err != nil {
+		//	pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+		//
+		//	return
+		//}
+		//
+		//pimg.SetPos(0, 0)
+		//
+		//if err = c.Draw(pimg); err != nil {
+		//	pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+		//
+		//	return
+		//}
 	}
 
-	//w.Header().Set("Content-Type", "image/png")
-	w.Header().Set("Content-Type", "application/pdf")
-
-	err = c.Write(w)
-	if err != nil {
+	if err = pdf.ImportImages(nil, newPdf, nil, nil, nil); err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
 		return
 	}
+
+	w.Header().Set("Content-Type", "application/pdf")
+	if _, err = newPdf.WriteTo(w); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+
+		return
+	}
+	//
+	//png.Encode(buf)
+	////png.Encode(w, qrimage)
+	//
+	//png
+	//
+	//pdf.ImportImages(nil, newPdf, buf, nil)
+	//
+	//img.
+	//	pdf.ImportImages(buf, wr)
+	//
+	//pdf.
+	//	pdf.Usage()
+	//
+	//c := creator.New()
+	//
+	//pimg, err := c.NewImageFromGoImage(img)
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//
+	//	return
+	//}
+	//
+	//c.SetPageSize(creator.PageSize{float64(widthMM), float64(heightMM)})
+	//
+	//optimize.Op
+	//c.SetOptimizer(model.Optimizer(model.OptimizeTypeNone))
+	//
+	//for i := 3; i > 0; i-- {
+	//	c.NewPage()
+	//
+	//	if err = c.RotateDeg(-90); err != nil {
+	//		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+	//
+	//		return
+	//	}
+	//
+	//	pimg.SetPos(0, 0)
+	//
+	//	if err = c.Draw(pimg); err != nil {
+	//		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+	//
+	//		return
+	//	}
+	//}
+	//
+	////w.Header().Set("Content-Type", "image/png")
+	//
+	//err = c.Write(w)
+	//if err != nil {
+	//	pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+	//
+	//	return
+	//}
 }
 
 func newQRImage(data string, width, border int) (image.Image, error) {
