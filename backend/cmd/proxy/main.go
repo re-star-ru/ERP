@@ -22,12 +22,13 @@ func main() {
 	secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
 	onecHost := os.Getenv("ONEC_HOST")
 	onceToken := os.Getenv("ONEC_TOKEN")
+
 	production := true
 	if _, ok := os.LookupEnv("DEVELOPMENT"); ok {
 		production = false
 	}
 
-	r := Rest(cfg{
+	rest := Rest(cfg{
 		endpoint:        endpoint,
 		accessKey:       accessKey,
 		secretAccessKey: secretAccessKey,
@@ -38,5 +39,5 @@ func main() {
 
 	addr := os.Getenv("ADDR")
 	log.Debug().Msg("listen at " + addr)
-	log.Fatal().Err(http.ListenAndServe(addr, r)).Msg("server stopped")
+	log.Fatal().Err(http.ListenAndServe(addr, rest)).Msg("server stopped")
 }

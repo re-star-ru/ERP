@@ -41,26 +41,28 @@ func newMinio(c cfg) *minio.Client {
 	return minioClient
 }
 
-func Rest(c cfg) *chi.Mux {
-	log.Info().Str("MINIO", c.endpoint).Str("ONEC", c.onecHost).Msg("resourse endpoints")
+func Rest(rest cfg) *chi.Mux {
+	log.Info().Str("MINIO", rest.endpoint).Str("ONEC", rest.onecHost).Msg("resources endpoints")
 
-	minioClient := newMinio(c)
+	minioClient := newMinio(rest)
+
 	stor, err := store.NewMinioStore(minioClient) // global app bucket
 	if err != nil {
 		log.Fatal().Err(err).Msgf("cant create minio store")
+
 		return nil
 	}
 
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
 
-	if !c.production {
+	if !rest.production {
 		log.Info().Msg("development...")
-		r.Use(cors.AllowAll().Handler)
+		router.Use(cors.AllowAll().Handler)
 	}
 
 	// TODO: Authorized routes and anonymouse route
-	r.Route("/s3", func(s3r chi.Router) {
+	router.Route("/s3", func(s3r chi.Router) {
 		is := img.NewImageService(minioClient, "srv1c") // srv1c image bucket
 		s3r.Put("/image", is.PutImage)
 		// s3r.With(SimpleAuthMiddleware).Put("/image", is.PutImage)
@@ -68,22 +70,22 @@ func Rest(c cfg) *chi.Mux {
 	})
 	// -
 
-	itemRepo := repo.NewRepoOnec(c.onecHost, c.onecToken)
+	itemRepo := repo.NewRepoOnec(rest.onecHost, rest.onecToken)
 	itemUsecase := usecase.NewItemUsecase(itemRepo)
-	itemHttp := delivery.NewItemDelivery(itemUsecase)
+	itemHTTP := delivery.NewItemDelivery(itemUsecase)
 
 	pricer := pricelist.NewPricerUsecase(stor, itemRepo)
 	priceSrv := pricelist.NewPricelistHttp(pricer)
 
 	{
 		// site api
-		r.Get("/search/{query}", itemHttp.SearchBySKU)
-		r.Get("/catalog", itemHttp.CatalogHandler)
+		router.Get("/search/{query}", itemHTTP.SearchBySKU)
+		router.Get("/catalog", itemHTTP.CatalogHandler)
 	}
 
 	{
 		// pricelist api
-		r.Route("/pricelists", func(r chi.Router) {
+		router.Route("/pricelists", func(r chi.Router) {
 			r.Get("/", priceSrv.PricelistHandler)
 			r.Post("/refresh", priceSrv.ManualRefreshHandler)
 			r.Post("/meily", priceSrv.MeiliRequest)
@@ -91,8 +93,10 @@ func Rest(c cfg) *chi.Mux {
 		})
 	}
 
-	return r
+	return router
 }
+
+var ErrNotAuthorized = errors.New("not authorized")
 
 func SimpleAuthMiddleware(h http.Handler) http.Handler {
 	apiKey, ok := os.LookupEnv("API_KEY")
@@ -104,7 +108,10 @@ func SimpleAuthMiddleware(h http.Handler) http.Handler {
 		log.Print("SimpleAuthMiddleware")
 
 		if r.Header.Get("X-API-KEY") != apiKey {
-			pkg.SendErrorJSON(w, r, http.StatusUnauthorized, errors.New("not auth"), "wrong api key: "+r.Header.Get("X-API-KEY"))
+			pkg.SendErrorJSON(w, r, http.StatusUnauthorized,
+				ErrNotAuthorized, "wrong api key: "+r.Header.Get("X-API-KEY"),
+			)
+
 			return
 		}
 

@@ -1,12 +1,8 @@
-PUT replica.restar:8100/s3/image
-Content-Type: image/jpeg
-< '/home/restar/Desktop/Новая%20папка/1.png'
+### список продуктов
+GET {{host}}/1c/products/
 
-###
-GET http://localhost:8100/1c/products
+### обновление прайс листа
+POST {{host}}/1c/updatePricelist?limit=20
 
-###
-POST  http://localhost:8100/1c/updatePricelist?limit=20
-
-### get users
-GET http://localhost:8100/onec/products
+### получить список продуктов
+GET {{host}}/onec/products
