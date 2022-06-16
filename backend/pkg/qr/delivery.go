@@ -1,128 +1,120 @@
 package qr
 
 import (
-	"backend/pkg"
-	"bytes"
 	"fmt"
-	pdf "github.com/pdfcpu/pdfcpu/pkg/api"
-	"github.com/skip2/go-qrcode"
 	"image"
 	"image/draw"
 	"net/http"
+	"os"
+
+	"github.com/golang/freetype"
+	"github.com/golang/freetype/truetype"
+	"github.com/rs/zerolog/log"
+	"github.com/signintech/gopdf"
+	"github.com/skip2/go-qrcode"
+	"golang.org/x/image/font"
+
+	"backend/pkg"
 )
 
 type HTTPDelivery struct {
+	fnt *truetype.Font
 }
 
 func NewHTTPDelivery() *HTTPDelivery {
-	return &HTTPDelivery{}
+	fontBytes, err := os.ReadFile("./assets/fonts/RobotoMono-Medium.ttf")
+	if err != nil {
+		log.Fatal().Err(err).Msg("cant read font")
+	}
+
+	fnt, err := freetype.ParseFont(fontBytes)
+	if err != nil {
+		log.Fatal().Err(err).Msg("cant parse font")
+	}
+
+	return &HTTPDelivery{
+		fnt: fnt,
+	}
 }
 
 func (qr *HTTPDelivery) NewQRCode(w http.ResponseWriter, r *http.Request) {
 	dpm := 1 * 8 // dots per mm
-	widthMM := 58 * dpm
-	heightMM := 30 * dpm
-	border := 1 * dpm
+	widthMM := 58
+	heightMM := 30
+	border := 1
 
-	qrimage, err := newQRImage("https://www.unidoc.com", heightMM, border)
+	qrimage, err := newQRImage("https://re-star.ru", heightMM*dpm, border*dpm)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
 		return
 	}
 
-	widthMM, heightMM = heightMM, widthMM // swap width and height
-
-	img := image.NewRGBA(image.Rect(0, 0, widthMM, heightMM))
+	img := image.NewRGBA(image.Rect(0, 0, widthMM*dpm, heightMM*dpm))
+	draw.Draw(img, img.Bounds(), image.White, image.Point{}, draw.Src) // draw white background
 	draw.Draw(img, img.Bounds(), qrimage, image.Point{}, draw.Src)
 
-	newPdf := new(bytes.Buffer)
+	if err = qr.addLabel(img, "WTF АБВГ WTF ЯЫК WTF asd asd aasdf asdf23412313123 фывфы", (heightMM*dpm)+8, 10); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
-	for i := 3; i > 0; i-- {
-
-		//c.NewPage()
-		//
-		//if err = c.RotateDeg(-90); err != nil {
-		//	pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-		//
-		//	return
-		//}
-		//
-		//pimg.SetPos(0, 0)
-		//
-		//if err = c.Draw(pimg); err != nil {
-		//	pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-		//
-		//	return
-		//}
+		return
 	}
 
-	if err = pdf.ImportImages(nil, newPdf, nil, nil, nil); err != nil {
+	if err = qr.addLabel(img, "asdf23412313123 фывфы", (heightMM*dpm)+8, 8*5); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+
+		return
+	}
+
+	rect := gopdf.Rect{W: float64(widthMM), H: float64(heightMM)}
+	pdf := gopdf.GoPdf{}
+	pdf.Start(gopdf.Config{Unit: gopdf.UnitMM, PageSize: *gopdf.PageSizeA4})
+
+	pdf.AddPage()
+
+	if err = pdf.ImageFrom(img, 0, 0, &rect); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+
+		return
+	}
+
+	pdf.AddPage()
+
+	if err = pdf.ImageFrom(img, 0, 0, &rect); err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/pdf")
-	if _, err = newPdf.WriteTo(w); err != nil {
+
+	if err = pdf.Write(w); err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
 		return
 	}
-	//
-	//png.Encode(buf)
-	////png.Encode(w, qrimage)
-	//
-	//png
-	//
-	//pdf.ImportImages(nil, newPdf, buf, nil)
-	//
-	//img.
-	//	pdf.ImportImages(buf, wr)
-	//
-	//pdf.
-	//	pdf.Usage()
-	//
-	//c := creator.New()
-	//
-	//pimg, err := c.NewImageFromGoImage(img)
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//
-	//	return
-	//}
-	//
-	//c.SetPageSize(creator.PageSize{float64(widthMM), float64(heightMM)})
-	//
-	//optimize.Op
-	//c.SetOptimizer(model.Optimizer(model.OptimizeTypeNone))
-	//
-	//for i := 3; i > 0; i-- {
-	//	c.NewPage()
-	//
-	//	if err = c.RotateDeg(-90); err != nil {
-	//		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-	//
-	//		return
-	//	}
-	//
-	//	pimg.SetPos(0, 0)
-	//
-	//	if err = c.Draw(pimg); err != nil {
-	//		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-	//
-	//		return
-	//	}
-	//}
-	//
-	////w.Header().Set("Content-Type", "image/png")
-	//
-	//err = c.Write(w)
-	//if err != nil {
-	//	pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-	//
-	//	return
-	//}
+}
+
+func (qr *HTTPDelivery) addLabel(img *image.RGBA, label string, x, y int) error {
+	c := freetype.NewContext()
+	c.SetFont(qr.fnt)
+	c.SetDPI(203.0)
+
+	size := 12.0
+	c.SetFontSize(size)
+
+	c.SetDst(img)
+	c.SetClip(img.Bounds())
+	c.SetSrc(image.Black)
+	c.SetHinting(font.HintingNone)
+
+	pt := freetype.Pt(x, y+int(c.PointToFixed(size)>>6))
+
+	if _, err := c.DrawString(label, pt); err != nil {
+		return fmt.Errorf("cant draw label: %w", err)
+	}
+
+	return nil
 }
 
 func newQRImage(data string, width, border int) (image.Image, error) {
