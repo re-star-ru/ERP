@@ -1,7 +1,10 @@
 package qr
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/skip2/go-qrcode"
+	"golang.org/x/image/math/fixed"
 	"image"
 	"image/draw"
 	"net/http"
@@ -11,7 +14,6 @@ import (
 	"github.com/golang/freetype/truetype"
 	"github.com/rs/zerolog/log"
 	"github.com/signintech/gopdf"
-	"github.com/skip2/go-qrcode"
 	"golang.org/x/image/font"
 
 	"backend/pkg"
@@ -37,13 +39,42 @@ func NewHTTPDelivery() *HTTPDelivery {
 	}
 }
 
+type qrrequest struct {
+	W    int      `json:"width"`  // > 0, in mm
+	H    int      `json:"height"` // > 0, in mm
+	Code string   `json:"code"`
+	Text []string `json:"text"`
+}
+
 func (qr *HTTPDelivery) NewQRCode(w http.ResponseWriter, r *http.Request) {
-	dpm := 1 * 8 // dots per mm
-	widthMM := 58
-	heightMM := 30
+	const dpm = 1 * 8 // dots per mm
+
+	var req qrrequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+
+		return
+	}
+
+	if req.W <= 0 || req.H <= 0 || len(req.Code) < 1 {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, fmt.Errorf("invalid width or height"), "")
+
+		return
+	}
+
+	// widthMM := 58
+	// heightMM := 30
+	// widthMM := 43
+	// heightMM := 25
+
+	widthMM := req.W
+	heightMM := req.H
+	code := req.Code
+	labels := req.Text
+
 	border := 1
 
-	qrimage, err := newQRImage("https://re-star.ru", heightMM*dpm, border*dpm)
+	qrimage, err := newQRImage(code, heightMM*dpm, border*dpm)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
@@ -51,16 +82,13 @@ func (qr *HTTPDelivery) NewQRCode(w http.ResponseWriter, r *http.Request) {
 	}
 
 	img := image.NewRGBA(image.Rect(0, 0, widthMM*dpm, heightMM*dpm))
+
 	draw.Draw(img, img.Bounds(), image.White, image.Point{}, draw.Src) // draw white background
 	draw.Draw(img, img.Bounds(), qrimage, image.Point{}, draw.Src)
 
-	if err = qr.addLabel(img, "WTF АБВГ WTF ЯЫК WTF asd asd aasdf asdf23412313123 фывфы", (heightMM*dpm)+8, 10); err != nil {
-		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+	labeler := newLabel(heightMM*dpm, 0, qr.fnt, img)
 
-		return
-	}
-
-	if err = qr.addLabel(img, "asdf23412313123 фывфы", (heightMM*dpm)+8, 8*5); err != nil {
+	if err = labeler.print(labels); err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
 
 		return
@@ -69,14 +97,6 @@ func (qr *HTTPDelivery) NewQRCode(w http.ResponseWriter, r *http.Request) {
 	rect := gopdf.Rect{W: float64(widthMM), H: float64(heightMM)}
 	pdf := gopdf.GoPdf{}
 	pdf.Start(gopdf.Config{Unit: gopdf.UnitMM, PageSize: *gopdf.PageSizeA4})
-
-	pdf.AddPage()
-
-	if err = pdf.ImageFrom(img, 0, 0, &rect); err != nil {
-		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
-
-		return
-	}
 
 	pdf.AddPage()
 
@@ -95,23 +115,86 @@ func (qr *HTTPDelivery) NewQRCode(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (qr *HTTPDelivery) addLabel(img *image.RGBA, label string, x, y int) error {
-	c := freetype.NewContext()
-	c.SetFont(qr.fnt)
-	c.SetDPI(203.0)
+type label struct {
+	prefix, middle, suffix string
 
-	size := 12.0
-	c.SetFontSize(size)
+	c *freetype.Context
 
-	c.SetDst(img)
-	c.SetClip(img.Bounds())
-	c.SetSrc(image.Black)
-	c.SetHinting(font.HintingNone)
+	maxChars int
+	pt       fixed.Point26_6
+	line     fixed.Int26_6
+}
 
-	pt := freetype.Pt(x, y+int(c.PointToFixed(size)>>6))
+func newLabel(x, y int, fnt *truetype.Font, img *image.RGBA) *label {
+	const fontSize = 10.0
 
-	if _, err := c.DrawString(label, pt); err != nil {
-		return fmt.Errorf("cant draw label: %w", err)
+	lbl := &label{}
+
+	ctx := freetype.NewContext()
+	ctx.SetFont(fnt)
+	ctx.SetDPI(203.0) //default dpi
+	ctx.SetFontSize(fontSize)
+	ctx.SetHinting(font.HintingNone)
+	ctx.SetSrc(image.Black)
+
+	lbl.pt = freetype.Pt(x, y+int(ctx.PointToFixed(fontSize)>>6))
+	lbl.c = ctx
+	lbl.line = ctx.PointToFixed(fontSize * 1.5)
+
+	// calc max charaters in line TODO
+	// work only on monospaced fonts
+
+	lbl.maxChars = lbl.calcMaxChars(img.Bounds().Max.X - x)
+	log.Printf("max chars: %v", lbl.maxChars)
+
+	ctx.SetDst(img)
+	ctx.SetClip(img.Bounds())
+
+	return lbl
+}
+
+func (lbl *label) calcMaxChars(lineWidth int) int {
+	log.Printf("line width: %v", lineWidth)
+
+	lbl.c.SetDst(image.NewRGBA(image.Rect(0, 0, lineWidth, 100)))
+
+	var (
+		left     = lbl.pt
+		maxChars int
+	)
+
+	for {
+		newPt, err := lbl.c.DrawString("X", left)
+		if err != nil {
+			log.Fatal().Err(err).Msg("cant draw label")
+		}
+
+		log.Printf("%+v, %+v", left, newPt)
+
+		if (newPt.X - lbl.pt.X).Round() > lineWidth {
+			break
+		}
+
+		left = newPt
+
+		maxChars++
+	}
+
+	log.Printf("%v", maxChars)
+
+	return maxChars
+}
+
+func (lbl *label) print(texts []string) error {
+	log.Printf("%+v", lbl.pt)
+
+	for _, text := range texts {
+		_, err := lbl.c.DrawString(text, lbl.pt)
+		if err != nil {
+			return fmt.Errorf("cant draw label: %w", err)
+		}
+
+		lbl.pt.Y += lbl.line
 	}
 
 	return nil

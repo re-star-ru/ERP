@@ -101,3 +101,17 @@ paths:
       responses:
         200:
           description: список номенклатуры
+
+  /tsd/cell/{barcode}/records:
+    get:
+      description: Остатки по ячейке
+      responses:
+        200:
+          description: ok
+
+  /product/{barcode}:
+    get:
+      description: Товар по штрихкоду
+      responses:
+        200:
+          description: ok

@@ -28,6 +28,7 @@ func NewRepoOnec(host, token string) *ClientOnec {
 	c := &ClientOnec{host, token, http.Client{
 		Timeout: time.Second * 120, // for long requests
 	}} // todo: config timeout
+
 	return c
 }
 

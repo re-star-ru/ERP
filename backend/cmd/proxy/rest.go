@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/pkg/qr"
+	"backend/pkg/warehouse/cell"
 	"errors"
 	"os"
 
@@ -43,7 +44,10 @@ func newMinio(c cfg) *minio.Client {
 }
 
 func Rest(rest cfg) *chi.Mux {
-	log.Info().Str("MINIO", rest.endpoint).Str("ONEC", rest.onecHost).Msg("resources endpoints")
+	log.Info().
+		Str("MINIO", rest.endpoint).
+		Str("ONEC", rest.onecHost).
+		Msg("resources endpoints")
 
 	minioClient := newMinio(rest)
 
@@ -90,10 +94,14 @@ func Rest(rest cfg) *chi.Mux {
 		// x, y - ширина высота картинки,
 		// и какой то шаблон для печати либо один из заранее подготовленных шаблонов
 		// я пока не решил
-		// возвращает готовый к печати pdf или png файл
+		// возвращает готовый к печати pdf файл в формате а4,
+		// в левом верхнем углну находится сам qr с параметрами
 
 		qrd := qr.NewHTTPDelivery()
 		router.Post("/qr", qrd.NewQRCode)
+
+		cellDel := cell.NewCellDelivery()
+		router.Get("/warehouse/cell/{id}", cellDel.Get)
 	}
 
 	{

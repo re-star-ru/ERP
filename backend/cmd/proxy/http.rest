@@ -9,3 +9,18 @@ GET {{host}}/onec/products
 
 ### сгенерировать qr код
 POST {{host}}/qr
+
+### сгенерировать qr код
+POST {{host}}/qr
+Content-Type: application/json
+
+{
+  "width": 58,
+  "height": 30,
+  "code": "https://re-star.ru/api/v1/rest/product?id=astd-adtd-tgsa&master=323",
+  "text": ["артикул", "характеристика", "наименование"]
+}
+
+### get once info by cell
+GET http://10.51.0.10:19201/sm1/hs/tsd/cell/N2_15-G-06/records
+Authorization: Basic QVBJOjZPN0VIRFdTMFNrJHlaJWk4MHA1
