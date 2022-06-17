@@ -20,7 +20,7 @@ ARG MINIO_SECRET_KEY
 ARG ONEC_TOKEN
 
 COPY --from=build /build/app /srv/app
-COPY --from=build /build/app/assets/fonts /srv/app/assets/fonts
+COPY --from=build /build/assets/fonts /srv/assets/fonts
 
 WORKDIR /srv
 CMD ["/srv/app"]
