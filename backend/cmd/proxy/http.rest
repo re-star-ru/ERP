@@ -17,7 +17,7 @@ Content-Type: application/json
 {
   "width": 58,
   "height": 30,
-  "code": "https://re-star.ru/warehouse/cell/N2_15-G-06",
+  "code": "https://re-star.ru/oprox/warehouse/cell/N2_15-G-06",
   "text": ["артикул", "характеристика", "наименование"]
 }
 
