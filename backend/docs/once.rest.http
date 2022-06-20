@@ -1,0 +1,11 @@
+### get once info by cell
+GET {{oncebasepath}}/tsd/cell/N2_15-G-06/records
+Authorization: {{basic}}
+
+### warehouse cell cell not found
+GET {{oncebasepath}}/warehouse/cell/2
+Authorization: {{basic}}
+
+### warehouse cell ok
+GET {{oncebasepath}}/warehouse/cell/N2_15-G-06
+Authorization: {{basic}}

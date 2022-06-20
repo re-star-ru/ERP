@@ -115,3 +115,10 @@ paths:
       responses:
         200:
           description: ok
+
+  /warehouse/cell/{cellID}:
+    get:
+      description: Остатки по ячейке
+      responses:
+        200:
+          description: ok

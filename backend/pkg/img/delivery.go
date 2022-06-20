@@ -75,11 +75,13 @@ func (s *ImageService) DeleteImage(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 	if id == "" {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, errors.New("id is empty"), "id is empty")
+
 		return
 	}
 
 	if err := s.m.RemoveObject(r.Context(), s.srv1cbucket, "images/"+id, minio.RemoveObjectOptions{}); err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "error image delete")
+
 		return
 	}
 

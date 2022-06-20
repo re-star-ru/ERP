@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/pkg/oneclient"
 	"backend/pkg/qr"
 	"backend/pkg/warehouse/cell"
 	"errors"
@@ -43,6 +44,7 @@ func newMinio(c cfg) *minio.Client {
 	return minioClient
 }
 
+//nolint:funlen
 func Rest(rest cfg) *chi.Mux {
 	log.Info().
 		Str("MINIO", rest.endpoint).
@@ -75,7 +77,9 @@ func Rest(rest cfg) *chi.Mux {
 	})
 	// -
 
-	itemRepo := repo.NewRepoOnec(rest.onecHost, rest.onecToken)
+	onecClient := oneclient.NewOneClient(rest.onecHost, rest.onecToken)
+
+	itemRepo := repo.NewRepoOnec(onecClient)
 	itemUsecase := usecase.NewItemUsecase(itemRepo)
 	itemHTTP := delivery.NewItemDelivery(itemUsecase)
 
@@ -100,8 +104,11 @@ func Rest(rest cfg) *chi.Mux {
 		qrd := qr.NewHTTPDelivery()
 		router.Post("/qr", qrd.NewQRCode)
 
-		cellDel := cell.NewCellDelivery()
-		router.Get("/warehouse/cell/{id}", cellDel.Get)
+		cellRepo := cell.NewRepoOnec(onecClient)
+		cellUC := cell.NewCellUsecase(cellRepo)
+		cellDel := cell.NewCellDelivery(cellUC)
+
+		router.Get("/warehouse/cell/{cellID}", cellDel.Get)
 	}
 
 	{
@@ -119,7 +126,7 @@ func Rest(rest cfg) *chi.Mux {
 
 var ErrNotAuthorized = errors.New("not authorized")
 
-func SimpleAuthMiddleware(h http.Handler) http.Handler {
+func SimpleAuthMiddleware(next http.Handler) http.Handler {
 	apiKey, ok := os.LookupEnv("API_KEY")
 	if !ok {
 		log.Fatal().Msg("API_KEY env not set")
@@ -137,6 +144,6 @@ func SimpleAuthMiddleware(h http.Handler) http.Handler {
 		}
 
 		log.Debug().Msg("auth ok")
-		h.ServeHTTP(w, r)
+		next.ServeHTTP(w, r)
 	})
 }
