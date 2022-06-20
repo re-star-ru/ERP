@@ -9,7 +9,7 @@ type Item struct {
 	CharacteristicGUID string `json:"characteristicGUID"`
 	Name               string `json:"name"`
 	Characteristic     string `json:"characteristic"`
-	Amount             string `json:"amount"`
+	Amount             int    `json:"amount"`
 }
 
 type ICellRepo interface {
