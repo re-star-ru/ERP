@@ -7,6 +7,9 @@ prep:
 dev:
 	CGO_ENABLED=0 go run ./cmd/proxy
 
+dent:
+	CGO_ENABLED=0 go run ./ent/start
+
 # rdocker: 
 #     docker run --rm \
 #         -p 8100:8100 \
