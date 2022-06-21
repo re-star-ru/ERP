@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/configs"
 	"net/http"
 	"os"
 	"time"
@@ -15,29 +16,9 @@ func main() {
 		With().Caller().
 		Logger().Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.StampMilli})
 
-	// - 1c авторизация
-	// s3 put get delete
-	endpoint := os.Getenv("MINIO_ENDPOINT")
-	accessKey := os.Getenv("MINIO_ACCESS_KEY")
-	secretAccessKey := os.Getenv("MINIO_SECRET_KEY")
-	onecHost := os.Getenv("ONEC_HOST")
-	onceToken := os.Getenv("ONEC_TOKEN")
+	cfg := configs.ReadConfig()
+	rest := Rest(cfg)
 
-	production := true
-	if _, ok := os.LookupEnv("DEVELOPMENT"); ok {
-		production = false
-	}
-
-	rest := Rest(cfg{
-		endpoint:        endpoint,
-		accessKey:       accessKey,
-		secretAccessKey: secretAccessKey,
-		onecHost:        onecHost,
-		onecToken:       onceToken,
-		production:      production,
-	})
-
-	addr := os.Getenv("ADDR")
-	log.Debug().Msg("listen at " + addr)
-	log.Fatal().Err(http.ListenAndServe(addr, rest)).Msg("server stopped")
+	log.Debug().Msg("listen at " + cfg.Addr)
+	log.Fatal().Err(http.ListenAndServe(cfg.Addr, rest)).Msg("server stopped")
 }
