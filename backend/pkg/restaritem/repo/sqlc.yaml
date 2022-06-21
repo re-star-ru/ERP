@@ -1,7 +1,0 @@
-version: "1"
-packages:
-  - path: "."
-    name: "repo"
-    engine: "postgresql"
-    schema: "schema.sql"
-    queries: "query.sql"

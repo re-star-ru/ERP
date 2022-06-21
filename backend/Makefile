@@ -4,6 +4,9 @@ export
 prep:
 	docker compose up
 
+gen:
+	go generate ./...
+
 dev:
 	CGO_ENABLED=0 go run ./cmd/proxy
 

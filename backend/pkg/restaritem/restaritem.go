@@ -30,22 +30,23 @@ import (
 //}
 
 type RestarItem struct {
-	ID       int    `json:"id"`       // этот ид идет в qr код
+	ID       string `json:"id"`       // этот ид идет в qr код
 	OnecGUID string `json:"onceGUID"` // ид в базе данных 1с, какой талон ремонта или еще что то создал
 	Name     string `json:"name"`
 	SKU      string `json:"sku"`
 	ItemGUID string `json:"itemGUID"` // ид товара в базе 1с
 	CharGUID string `json:"charGUID"` // ид характеристики в базе 1с
 
-	Description   string   `json:"description"` // текстовое описание дефектов (можно набрать голосом) GUID из 1с
-	InspectorGUID string   `json:"inspector"`   // тот кто проводил инспекцию (дефектовку) товара GUID из 1с
-	Inspection    []string `json:"inspection"`  // список обнаруженых дефектов GUID из 1с
+	Description string   `json:"description"` // текстовое описание дефектов (можно набрать голосом) GUID из 1с
+	Inspector   string   `json:"inspector"`   // тот кто проводил инспекцию (дефектовку) товара GUID из 1с
+	Inspection  []string `json:"inspection"`  // список обнаруженых дефектов GUID из 1с
 
-	Works []struct {
-		EmployeeGUID string `json:"employee"`
-		WorkGUID     string `json:"work"`
-		Price        int    `json:"price"`
-	}
-
+	Works  []Work        `json:"works"`
 	Photos []photo.Photo `json:"photos"`
+}
+
+type Work struct {
+	EmployeeGUID string `json:"employee"`
+	WorkGUID     string `json:"work"`
+	Price        int    `json:"price"`
 }

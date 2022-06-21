@@ -2,32 +2,33 @@ package usecase
 
 import (
 	"backend/pkg/restaritem"
-	pgrepo "backend/pkg/restaritem/repo"
 	"context"
-	"database/sql"
 )
 
-func NewRestaritemUsecase(db *sql.DB) *RestarItemUsecase {
+type IRestaritemRepo interface {
+	Create(ctx context.Context, item restaritem.RestarItem) (restaritem.RestarItem, error)
+	List() ([]restaritem.RestarItem, error)
+	GetByID(int) (restaritem.RestarItem, error)
+}
+
+func NewRestaritemUsecase(repo IRestaritemRepo) *RestarItemUsecase {
 	return &RestarItemUsecase{
-		repo: pgrepo.New(db),
+		repo: repo,
 	}
 }
 
 type RestarItemUsecase struct {
-	repo *pgrepo.Queries
+	repo IRestaritemRepo
 }
 
-func (r RestarItemUsecase) Create(ctx context.Context, restaritem *restaritem.RestarItem) (restaritem.RestarItem, error) {
-	return r.repo.CreateRestaritem(ctx, pgrepo.CreateRestaritemParams{
-		Name:     restaritem.Name,
-		Onceguid: restaritem.OnecGUID,
-	})
+func (r RestarItemUsecase) Create(ctx context.Context, restaritem restaritem.RestarItem) (restaritem.RestarItem, error) {
+	return r.repo.Create(ctx, restaritem)
 }
 
-func (r RestarItemUsecase) GetAll() ([]restaritem.RestarItem, error) {
-	return r.repo.GetAll()
+func (r RestarItemUsecase) GetAll(ctx context.Context) ([]restaritem.RestarItem, error) {
+	return r.repo.List()
 }
 
-func (r RestarItemUsecase) GetByID(id int) (*restaritem.RestarItem, error) {
+func (r RestarItemUsecase) GetByID(ctx context.Context, id int) (restaritem.RestarItem, error) {
 	return r.repo.GetByID(id)
 }

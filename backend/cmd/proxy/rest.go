@@ -2,10 +2,11 @@ package main
 
 import (
 	"backend/configs"
+	"backend/pkg/ent"
 	"backend/pkg/oneclient"
 	"backend/pkg/qr"
 	restaritemDelivery "backend/pkg/restaritem/delivery"
-	restaritemPG "backend/pkg/restaritem/repo"
+	restaritemRepo "backend/pkg/restaritem/repo"
 	restaritemUsecase "backend/pkg/restaritem/usecase"
 	"backend/pkg/warehouse/cell"
 	"context"
@@ -29,8 +30,6 @@ import (
 
 	"net/http"
 	_ "net/http/pprof"
-
-	"database/sql"
 
 	_ "github.com/lib/pq"
 )
@@ -85,9 +84,9 @@ func Rest(config configs.Config) *chi.Mux {
 
 	{
 		// restar item - инфа по товарам в ремонте или приемке
-		db := pgConn(config.PG)
+		client := initEnt(config.PG)
 
-		rirepo := restaritemPG.NewRestaritemPG(db)
+		rirepo := restaritemRepo.NewRestaritemRepo(client)
 		riUcase := restaritemUsecase.NewRestaritemUsecase(rirepo)
 		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase)
 
@@ -164,17 +163,15 @@ func newMinio(config configs.Config) *minio.Client {
 	return minioClient
 }
 
-func pgConn(path string) *sql.DB {
-	db, err := sql.Open("postgres", path)
+func initEnt(path string) *ent.Client {
+	client, err := ent.Open("postgres", path)
 	if err != nil {
-		log.Fatal().Err(err).Msg("pgx.Connect error")
+		log.Fatal().Err(err).Msg("ent init error")
 	}
 
-	if err = db.PingContext(context.Background()); err != nil {
-		log.Fatal().Err(err).Msg("pgx.Ping error")
+	if err = client.Schema.Create(context.Background()); err != nil {
+		log.Fatal().Err(err).Msg("failed to create schema")
 	}
 
-	log.Printf("Postgres OK")
-
-	return db
+	return client
 }

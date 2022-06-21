@@ -3,6 +3,7 @@ package delivery
 import (
 	"backend/pkg"
 	"backend/pkg/restaritem"
+	"context"
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
@@ -17,9 +18,9 @@ import (
 // список всех товаров на сайте так же
 
 type IHTTPRestaritemUsecase interface {
-	Create(restaritem *restaritem.RestarItem) error
-	GetAll() ([]restaritem.RestarItem, error) // pagination?
-	GetByID(id int) (*restaritem.RestarItem, error)
+	Create(ctx context.Context, restaritem restaritem.RestarItem) (restaritem.RestarItem, error)
+	GetAll(ctx context.Context) ([]restaritem.RestarItem, error) // pagination?
+	GetByID(ctx context.Context, id int) (restaritem.RestarItem, error)
 }
 
 func NewHTTPRestaritemDelivery(uc IHTTPRestaritemUsecase) *HTTPRestaritemDelivery {
@@ -41,18 +42,19 @@ func (h *HTTPRestaritemDelivery) Create(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := h.uc.Create(ritem); err != nil {
+	nitem, err := h.uc.Create(r.Context(), *ritem)
+	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant create restaritem")
 
 		return
 	}
 
-	render.JSON(w, r, ritem)
+	render.JSON(w, r, nitem)
 }
 
 // 2: получить все итемы
 func (h *HTTPRestaritemDelivery) GetAll(w http.ResponseWriter, r *http.Request) {
-	ritems, err := h.uc.GetAll()
+	ritems, err := h.uc.GetAll(r.Context())
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant get restaritems")
 
@@ -78,7 +80,7 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	ritem, err := h.uc.GetByID(id)
+	ritem, err := h.uc.GetByID(r.Context(), id)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get restaritem")
 
