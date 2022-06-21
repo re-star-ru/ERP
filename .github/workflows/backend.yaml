@@ -1,6 +1,8 @@
 name: Backend deploy
 on:
   push:
+    branches:
+      - 'master'
     paths:
       - 'backend/**'
       - '.github/workflows/backend.yaml'
