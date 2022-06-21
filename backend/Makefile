@@ -1,6 +1,9 @@
 include ../.dev.env
 export
 
+prep:
+	docker compose up
+
 dev:
 	CGO_ENABLED=0 go run ./cmd/proxy
 
