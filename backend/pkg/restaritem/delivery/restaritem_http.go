@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"backend/pkg/restaritem"
+	"github.com/go-chi/render"
 	"net/http"
 )
 
@@ -28,7 +29,7 @@ type HTTPRestaritemDelivery struct {
 
 // 1: создать новый итем, возвращает id итема, который потом надо перенаправить в qr код
 func (h *HTTPRestaritemDelivery) Create(w http.ResponseWriter, r *http.Request) {
-
+	render.JSON(w, r, map[string]string{"message": "not implemented"})
 }
 
 // 2: получить все итемы
