@@ -2,6 +2,7 @@ package restaritem
 
 import (
 	"backend/pkg/photo"
+	"errors"
 )
 
 // создаем restoreitem
@@ -50,3 +51,6 @@ type Work struct {
 	WorkGUID     string `json:"work"`
 	Price        int    `json:"price"`
 }
+
+var ErrNotFound = errors.New("not found")
+var ErrValidation = errors.New("validation error")

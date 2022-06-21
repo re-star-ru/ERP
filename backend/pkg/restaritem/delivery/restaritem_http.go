@@ -44,7 +44,7 @@ func (h *HTTPRestaritemDelivery) Create(w http.ResponseWriter, r *http.Request) 
 
 	nitem, err := h.uc.Create(r.Context(), *ritem)
 	if err != nil {
-		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant create restaritem")
+		pkg.SendErrorJSON(w, r, pkg.StatuscodeByError(err), err, "cant create restaritem")
 
 		return
 	}

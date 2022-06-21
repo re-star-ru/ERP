@@ -17,6 +17,11 @@ type RestaritemRepo struct {
 
 func (r RestaritemRepo) Create(ctx context.Context, item restaritem.RestarItem) (restaritem.RestarItem, error) {
 	rit, err := r.client.Restaritem.Create().Save(ctx)
+
+	if ent.IsValidationError(err) {
+		return restaritem.RestarItem{}, fmt.Errorf("%w: %v", restaritem.ErrValidation, err)
+	}
+
 	if err != nil {
 		return restaritem.RestarItem{}, fmt.Errorf("create item error: %w", err)
 	}
