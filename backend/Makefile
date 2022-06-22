@@ -10,6 +10,13 @@ gen:
 dev:
 	CGO_ENABLED=0 go run ./cmd/proxy
 
+
+include ../.env
+export
+prod:
+	CGO_ENABLED=0 go run ./cmd/proxy
+
+
 dent:
 	CGO_ENABLED=0 go run ./ent/start
 
