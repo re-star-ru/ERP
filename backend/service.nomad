@@ -1,6 +1,6 @@
 job "oprox" {
   datacenters = ["dc1"]
-  type = "service"
+  type        = "service"
 
   group "default" {
     network {
@@ -40,10 +40,11 @@ job "oprox" {
       }
 
       env {
-        ADDR = "${NOMAD_ADDR_oprox_port}"
+        ADDR    = "${NOMAD_ADDR_oprox_port}"
         API_KEY = "${API_KEY}"
-        
-        ONEC_TOKEN = "${ONEC_TOKEN}"
+        PG_ADDR = "${PG_ADDR}"
+
+        ONEC_TOKEN       = "${ONEC_TOKEN}"
         MINIO_ACCESS_KEY = "${MINIO_ACCESS_KEY}"
         MINIO_SECRET_KEY = "${MINIO_SECRET_KEY}"
       }

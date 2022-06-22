@@ -84,8 +84,8 @@ func (rq *RestaritemQuery) FirstX(ctx context.Context) *Restaritem {
 
 // FirstID returns the first Restaritem ID from the query.
 // Returns a *NotFoundError when no Restaritem ID was found.
-func (rq *RestaritemQuery) FirstID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rq *RestaritemQuery) FirstID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = rq.Limit(1).IDs(ctx); err != nil {
 		return
 	}
@@ -97,7 +97,7 @@ func (rq *RestaritemQuery) FirstID(ctx context.Context) (id string, err error) {
 }
 
 // FirstIDX is like FirstID, but panics if an error occurs.
-func (rq *RestaritemQuery) FirstIDX(ctx context.Context) string {
+func (rq *RestaritemQuery) FirstIDX(ctx context.Context) int {
 	id, err := rq.FirstID(ctx)
 	if err != nil && !IsNotFound(err) {
 		panic(err)
@@ -135,8 +135,8 @@ func (rq *RestaritemQuery) OnlyX(ctx context.Context) *Restaritem {
 // OnlyID is like Only, but returns the only Restaritem ID in the query.
 // Returns a *NotSingularError when more than one Restaritem ID is found.
 // Returns a *NotFoundError when no entities are found.
-func (rq *RestaritemQuery) OnlyID(ctx context.Context) (id string, err error) {
-	var ids []string
+func (rq *RestaritemQuery) OnlyID(ctx context.Context) (id int, err error) {
+	var ids []int
 	if ids, err = rq.Limit(2).IDs(ctx); err != nil {
 		return
 	}
@@ -152,7 +152,7 @@ func (rq *RestaritemQuery) OnlyID(ctx context.Context) (id string, err error) {
 }
 
 // OnlyIDX is like OnlyID, but panics if an error occurs.
-func (rq *RestaritemQuery) OnlyIDX(ctx context.Context) string {
+func (rq *RestaritemQuery) OnlyIDX(ctx context.Context) int {
 	id, err := rq.OnlyID(ctx)
 	if err != nil {
 		panic(err)
@@ -178,8 +178,8 @@ func (rq *RestaritemQuery) AllX(ctx context.Context) []*Restaritem {
 }
 
 // IDs executes the query and returns a list of Restaritem IDs.
-func (rq *RestaritemQuery) IDs(ctx context.Context) ([]string, error) {
-	var ids []string
+func (rq *RestaritemQuery) IDs(ctx context.Context) ([]int, error) {
+	var ids []int
 	if err := rq.Select(restaritem.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -187,7 +187,7 @@ func (rq *RestaritemQuery) IDs(ctx context.Context) ([]string, error) {
 }
 
 // IDsX is like IDs, but panics if an error occurs.
-func (rq *RestaritemQuery) IDsX(ctx context.Context) []string {
+func (rq *RestaritemQuery) IDsX(ctx context.Context) []int {
 	ids, err := rq.IDs(ctx)
 	if err != nil {
 		panic(err)
@@ -358,7 +358,7 @@ func (rq *RestaritemQuery) querySpec() *sqlgraph.QuerySpec {
 			Table:   restaritem.Table,
 			Columns: restaritem.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeString,
+				Type:   field.TypeInt,
 				Column: restaritem.FieldID,
 			},
 		},

@@ -8,7 +8,7 @@ import (
 type IRestaritemRepo interface {
 	Create(ctx context.Context, item restaritem.RestarItem) (*restaritem.RestarItem, error)
 	List(context.Context) ([]*restaritem.RestarItem, error)
-	Get(ctx context.Context, id string) (*restaritem.RestarItem, error)
+	Get(ctx context.Context, id int) (*restaritem.RestarItem, error)
 }
 
 func NewRestaritemUsecase(repo IRestaritemRepo) *RestarItemUsecase {
@@ -29,6 +29,6 @@ func (r RestarItemUsecase) GetAll(ctx context.Context) ([]*restaritem.RestarItem
 	return r.repo.List(ctx)
 }
 
-func (r RestarItemUsecase) GetByID(ctx context.Context, id string) (*restaritem.RestarItem, error) {
+func (r RestarItemUsecase) GetByID(ctx context.Context, id int) (*restaritem.RestarItem, error) {
 	return r.repo.Get(ctx, id)
 }

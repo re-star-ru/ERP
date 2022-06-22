@@ -30,7 +30,7 @@ type RestaritemMutation struct {
 	config
 	op            Op
 	typ           string
-	id            *string
+	id            *int
 	onecGUID      *string
 	name          *string
 	sku           *string
@@ -65,7 +65,7 @@ func newRestaritemMutation(c config, op Op, opts ...restaritemOption) *Restarite
 }
 
 // withRestaritemID sets the ID field of the mutation.
-func withRestaritemID(id string) restaritemOption {
+func withRestaritemID(id int) restaritemOption {
 	return func(m *RestaritemMutation) {
 		var (
 			err   error
@@ -115,15 +115,9 @@ func (m RestaritemMutation) Tx() (*Tx, error) {
 	return tx, nil
 }
 
-// SetID sets the value of the id field. Note that this
-// operation is only accepted on creation of Restaritem entities.
-func (m *RestaritemMutation) SetID(id string) {
-	m.id = &id
-}
-
 // ID returns the ID value in the mutation. Note that the ID is only available
 // if it was provided to the builder or after it was returned from the database.
-func (m *RestaritemMutation) ID() (id string, exists bool) {
+func (m *RestaritemMutation) ID() (id int, exists bool) {
 	if m.id == nil {
 		return
 	}
@@ -134,12 +128,12 @@ func (m *RestaritemMutation) ID() (id string, exists bool) {
 // That means, if the mutation is applied within a transaction with an isolation level such
 // as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
 // or updated by the mutation.
-func (m *RestaritemMutation) IDs(ctx context.Context) ([]string, error) {
+func (m *RestaritemMutation) IDs(ctx context.Context) ([]int, error) {
 	switch {
 	case m.op.Is(OpUpdateOne | OpDeleteOne):
 		id, exists := m.ID()
 		if exists {
-			return []string{id}, nil
+			return []int{id}, nil
 		}
 		fallthrough
 	case m.op.Is(OpUpdate | OpDelete):
@@ -216,9 +210,22 @@ func (m *RestaritemMutation) OldName(ctx context.Context) (v string, err error) 
 	return oldValue.Name, nil
 }
 
+// ClearName clears the value of the "name" field.
+func (m *RestaritemMutation) ClearName() {
+	m.name = nil
+	m.clearedFields[restaritem.FieldName] = struct{}{}
+}
+
+// NameCleared returns if the "name" field was cleared in this mutation.
+func (m *RestaritemMutation) NameCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldName]
+	return ok
+}
+
 // ResetName resets all changes to the "name" field.
 func (m *RestaritemMutation) ResetName() {
 	m.name = nil
+	delete(m.clearedFields, restaritem.FieldName)
 }
 
 // SetSku sets the "sku" field.
@@ -252,9 +259,22 @@ func (m *RestaritemMutation) OldSku(ctx context.Context) (v string, err error) {
 	return oldValue.Sku, nil
 }
 
+// ClearSku clears the value of the "sku" field.
+func (m *RestaritemMutation) ClearSku() {
+	m.sku = nil
+	m.clearedFields[restaritem.FieldSku] = struct{}{}
+}
+
+// SkuCleared returns if the "sku" field was cleared in this mutation.
+func (m *RestaritemMutation) SkuCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldSku]
+	return ok
+}
+
 // ResetSku resets all changes to the "sku" field.
 func (m *RestaritemMutation) ResetSku() {
 	m.sku = nil
+	delete(m.clearedFields, restaritem.FieldSku)
 }
 
 // SetItemGUID sets the "itemGUID" field.
@@ -288,9 +308,22 @@ func (m *RestaritemMutation) OldItemGUID(ctx context.Context) (v string, err err
 	return oldValue.ItemGUID, nil
 }
 
+// ClearItemGUID clears the value of the "itemGUID" field.
+func (m *RestaritemMutation) ClearItemGUID() {
+	m.itemGUID = nil
+	m.clearedFields[restaritem.FieldItemGUID] = struct{}{}
+}
+
+// ItemGUIDCleared returns if the "itemGUID" field was cleared in this mutation.
+func (m *RestaritemMutation) ItemGUIDCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldItemGUID]
+	return ok
+}
+
 // ResetItemGUID resets all changes to the "itemGUID" field.
 func (m *RestaritemMutation) ResetItemGUID() {
 	m.itemGUID = nil
+	delete(m.clearedFields, restaritem.FieldItemGUID)
 }
 
 // SetCharGUID sets the "charGUID" field.
@@ -324,9 +357,22 @@ func (m *RestaritemMutation) OldCharGUID(ctx context.Context) (v string, err err
 	return oldValue.CharGUID, nil
 }
 
+// ClearCharGUID clears the value of the "charGUID" field.
+func (m *RestaritemMutation) ClearCharGUID() {
+	m.charGUID = nil
+	m.clearedFields[restaritem.FieldCharGUID] = struct{}{}
+}
+
+// CharGUIDCleared returns if the "charGUID" field was cleared in this mutation.
+func (m *RestaritemMutation) CharGUIDCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldCharGUID]
+	return ok
+}
+
 // ResetCharGUID resets all changes to the "charGUID" field.
 func (m *RestaritemMutation) ResetCharGUID() {
 	m.charGUID = nil
+	delete(m.clearedFields, restaritem.FieldCharGUID)
 }
 
 // SetDescription sets the "description" field.
@@ -360,9 +406,22 @@ func (m *RestaritemMutation) OldDescription(ctx context.Context) (v string, err 
 	return oldValue.Description, nil
 }
 
+// ClearDescription clears the value of the "description" field.
+func (m *RestaritemMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[restaritem.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *RestaritemMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldDescription]
+	return ok
+}
+
 // ResetDescription resets all changes to the "description" field.
 func (m *RestaritemMutation) ResetDescription() {
 	m.description = nil
+	delete(m.clearedFields, restaritem.FieldDescription)
 }
 
 // SetInspector sets the "inspector" field.
@@ -396,9 +455,22 @@ func (m *RestaritemMutation) OldInspector(ctx context.Context) (v string, err er
 	return oldValue.Inspector, nil
 }
 
+// ClearInspector clears the value of the "inspector" field.
+func (m *RestaritemMutation) ClearInspector() {
+	m.inspector = nil
+	m.clearedFields[restaritem.FieldInspector] = struct{}{}
+}
+
+// InspectorCleared returns if the "inspector" field was cleared in this mutation.
+func (m *RestaritemMutation) InspectorCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldInspector]
+	return ok
+}
+
 // ResetInspector resets all changes to the "inspector" field.
 func (m *RestaritemMutation) ResetInspector() {
 	m.inspector = nil
+	delete(m.clearedFields, restaritem.FieldInspector)
 }
 
 // SetInspection sets the "inspection" field.
@@ -432,9 +504,22 @@ func (m *RestaritemMutation) OldInspection(ctx context.Context) (v []string, err
 	return oldValue.Inspection, nil
 }
 
+// ClearInspection clears the value of the "inspection" field.
+func (m *RestaritemMutation) ClearInspection() {
+	m.inspection = nil
+	m.clearedFields[restaritem.FieldInspection] = struct{}{}
+}
+
+// InspectionCleared returns if the "inspection" field was cleared in this mutation.
+func (m *RestaritemMutation) InspectionCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldInspection]
+	return ok
+}
+
 // ResetInspection resets all changes to the "inspection" field.
 func (m *RestaritemMutation) ResetInspection() {
 	m.inspection = nil
+	delete(m.clearedFields, restaritem.FieldInspection)
 }
 
 // Where appends a list predicates to the RestaritemMutation builder.
@@ -624,7 +709,29 @@ func (m *RestaritemMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *RestaritemMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(restaritem.FieldName) {
+		fields = append(fields, restaritem.FieldName)
+	}
+	if m.FieldCleared(restaritem.FieldSku) {
+		fields = append(fields, restaritem.FieldSku)
+	}
+	if m.FieldCleared(restaritem.FieldItemGUID) {
+		fields = append(fields, restaritem.FieldItemGUID)
+	}
+	if m.FieldCleared(restaritem.FieldCharGUID) {
+		fields = append(fields, restaritem.FieldCharGUID)
+	}
+	if m.FieldCleared(restaritem.FieldDescription) {
+		fields = append(fields, restaritem.FieldDescription)
+	}
+	if m.FieldCleared(restaritem.FieldInspector) {
+		fields = append(fields, restaritem.FieldInspector)
+	}
+	if m.FieldCleared(restaritem.FieldInspection) {
+		fields = append(fields, restaritem.FieldInspection)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -637,6 +744,29 @@ func (m *RestaritemMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *RestaritemMutation) ClearField(name string) error {
+	switch name {
+	case restaritem.FieldName:
+		m.ClearName()
+		return nil
+	case restaritem.FieldSku:
+		m.ClearSku()
+		return nil
+	case restaritem.FieldItemGUID:
+		m.ClearItemGUID()
+		return nil
+	case restaritem.FieldCharGUID:
+		m.ClearCharGUID()
+		return nil
+	case restaritem.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case restaritem.FieldInspector:
+		m.ClearInspector()
+		return nil
+	case restaritem.FieldInspection:
+		m.ClearInspection()
+		return nil
+	}
 	return fmt.Errorf("unknown Restaritem nullable field %s", name)
 }
 

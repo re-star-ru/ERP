@@ -13,15 +13,14 @@ type Restaritem struct {
 // Fields of the Restaritem.
 func (Restaritem) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("id"),
 		field.String("onecGUID"),
-		field.String("name"),
-		field.String("sku"),
-		field.String("itemGUID"),
-		field.String("charGUID"),
-		field.String("description"),
-		field.String("inspector"),
-		field.Strings("inspection"),
+		field.String("name").Optional(),
+		field.String("sku").Optional(),
+		field.String("itemGUID").Optional(),
+		field.String("charGUID").Optional(),
+		field.String("description").Optional(),
+		field.String("inspector").Optional(),
+		field.Strings("inspection").Optional(),
 
 		//field.JSON("photos", []photo.Photo{}),
 		//field.JSON("works", []restaritem.Work{}),

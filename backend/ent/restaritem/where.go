@@ -9,28 +9,28 @@ import (
 )
 
 // ID filters vertices based on their ID field.
-func ID(id string) predicate.Restaritem {
+func ID(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDEQ applies the EQ predicate on the ID field.
-func IDEQ(id string) predicate.Restaritem {
+func IDEQ(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldID), id))
 	})
 }
 
 // IDNEQ applies the NEQ predicate on the ID field.
-func IDNEQ(id string) predicate.Restaritem {
+func IDNEQ(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldID), id))
 	})
 }
 
 // IDIn applies the In predicate on the ID field.
-func IDIn(ids ...string) predicate.Restaritem {
+func IDIn(ids ...int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -47,7 +47,7 @@ func IDIn(ids ...string) predicate.Restaritem {
 }
 
 // IDNotIn applies the NotIn predicate on the ID field.
-func IDNotIn(ids ...string) predicate.Restaritem {
+func IDNotIn(ids ...int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		// if not arguments were provided, append the FALSE constants,
 		// since we can't apply "IN ()". This will make this predicate falsy.
@@ -64,28 +64,28 @@ func IDNotIn(ids ...string) predicate.Restaritem {
 }
 
 // IDGT applies the GT predicate on the ID field.
-func IDGT(id string) predicate.Restaritem {
+func IDGT(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldID), id))
 	})
 }
 
 // IDGTE applies the GTE predicate on the ID field.
-func IDGTE(id string) predicate.Restaritem {
+func IDGTE(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldID), id))
 	})
 }
 
 // IDLT applies the LT predicate on the ID field.
-func IDLT(id string) predicate.Restaritem {
+func IDLT(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldID), id))
 	})
 }
 
 // IDLTE applies the LTE predicate on the ID field.
-func IDLTE(id string) predicate.Restaritem {
+func IDLTE(id int) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldID), id))
 	})
@@ -348,6 +348,20 @@ func NameHasSuffix(v string) predicate.Restaritem {
 	})
 }
 
+// NameIsNil applies the IsNil predicate on the "name" field.
+func NameIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldName)))
+	})
+}
+
+// NameNotNil applies the NotNil predicate on the "name" field.
+func NameNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldName)))
+	})
+}
+
 // NameEqualFold applies the EqualFold predicate on the "name" field.
 func NameEqualFold(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
@@ -456,6 +470,20 @@ func SkuHasPrefix(v string) predicate.Restaritem {
 func SkuHasSuffix(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldSku), v))
+	})
+}
+
+// SkuIsNil applies the IsNil predicate on the "sku" field.
+func SkuIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldSku)))
+	})
+}
+
+// SkuNotNil applies the NotNil predicate on the "sku" field.
+func SkuNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldSku)))
 	})
 }
 
@@ -570,6 +598,20 @@ func ItemGUIDHasSuffix(v string) predicate.Restaritem {
 	})
 }
 
+// ItemGUIDIsNil applies the IsNil predicate on the "itemGUID" field.
+func ItemGUIDIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldItemGUID)))
+	})
+}
+
+// ItemGUIDNotNil applies the NotNil predicate on the "itemGUID" field.
+func ItemGUIDNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldItemGUID)))
+	})
+}
+
 // ItemGUIDEqualFold applies the EqualFold predicate on the "itemGUID" field.
 func ItemGUIDEqualFold(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
@@ -678,6 +720,20 @@ func CharGUIDHasPrefix(v string) predicate.Restaritem {
 func CharGUIDHasSuffix(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.HasSuffix(s.C(FieldCharGUID), v))
+	})
+}
+
+// CharGUIDIsNil applies the IsNil predicate on the "charGUID" field.
+func CharGUIDIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldCharGUID)))
+	})
+}
+
+// CharGUIDNotNil applies the NotNil predicate on the "charGUID" field.
+func CharGUIDNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldCharGUID)))
 	})
 }
 
@@ -792,6 +848,20 @@ func DescriptionHasSuffix(v string) predicate.Restaritem {
 	})
 }
 
+// DescriptionIsNil applies the IsNil predicate on the "description" field.
+func DescriptionIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldDescription)))
+	})
+}
+
+// DescriptionNotNil applies the NotNil predicate on the "description" field.
+func DescriptionNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldDescription)))
+	})
+}
+
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
 func DescriptionEqualFold(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
@@ -903,6 +973,20 @@ func InspectorHasSuffix(v string) predicate.Restaritem {
 	})
 }
 
+// InspectorIsNil applies the IsNil predicate on the "inspector" field.
+func InspectorIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldInspector)))
+	})
+}
+
+// InspectorNotNil applies the NotNil predicate on the "inspector" field.
+func InspectorNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldInspector)))
+	})
+}
+
 // InspectorEqualFold applies the EqualFold predicate on the "inspector" field.
 func InspectorEqualFold(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
@@ -914,6 +998,20 @@ func InspectorEqualFold(v string) predicate.Restaritem {
 func InspectorContainsFold(v string) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldInspector), v))
+	})
+}
+
+// InspectionIsNil applies the IsNil predicate on the "inspection" field.
+func InspectionIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldInspection)))
+	})
+}
+
+// InspectionNotNil applies the NotNil predicate on the "inspection" field.
+func InspectionNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldInspection)))
 	})
 }
 

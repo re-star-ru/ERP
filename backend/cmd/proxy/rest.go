@@ -3,6 +3,7 @@ package main
 import (
 	"backend/configs"
 	"backend/ent"
+	"backend/ent/migrate"
 	"backend/pkg/oneclient"
 	"backend/pkg/qr"
 	restaritemDelivery "backend/pkg/restaritem/delivery"
@@ -169,7 +170,8 @@ func initEnt(path string) *ent.Client {
 		log.Fatal().Err(err).Msg("ent init error")
 	}
 
-	if err = client.Schema.Create(context.Background()); err != nil {
+	if err = client.Schema.Create(
+		context.Background(), migrate.WithGlobalUniqueID(true)); err != nil {
 		log.Fatal().Err(err).Msg("failed to create schema")
 	}
 

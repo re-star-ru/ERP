@@ -162,7 +162,7 @@ func (c *RestaritemClient) UpdateOne(r *Restaritem) *RestaritemUpdateOne {
 }
 
 // UpdateOneID returns an update builder for the given id.
-func (c *RestaritemClient) UpdateOneID(id string) *RestaritemUpdateOne {
+func (c *RestaritemClient) UpdateOneID(id int) *RestaritemUpdateOne {
 	mutation := newRestaritemMutation(c.config, OpUpdateOne, withRestaritemID(id))
 	return &RestaritemUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
@@ -179,7 +179,7 @@ func (c *RestaritemClient) DeleteOne(r *Restaritem) *RestaritemDeleteOne {
 }
 
 // DeleteOneID returns a delete builder for the given id.
-func (c *RestaritemClient) DeleteOneID(id string) *RestaritemDeleteOne {
+func (c *RestaritemClient) DeleteOneID(id int) *RestaritemDeleteOne {
 	builder := c.Delete().Where(restaritem.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
@@ -194,12 +194,12 @@ func (c *RestaritemClient) Query() *RestaritemQuery {
 }
 
 // Get returns a Restaritem entity by its id.
-func (c *RestaritemClient) Get(ctx context.Context, id string) (*Restaritem, error) {
+func (c *RestaritemClient) Get(ctx context.Context, id int) (*Restaritem, error) {
 	return c.Query().Where(restaritem.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.
-func (c *RestaritemClient) GetX(ctx context.Context, id string) *Restaritem {
+func (c *RestaritemClient) GetX(ctx context.Context, id int) *Restaritem {
 	obj, err := c.Get(ctx, id)
 	if err != nil {
 		panic(err)

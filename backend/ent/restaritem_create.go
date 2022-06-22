@@ -31,9 +31,25 @@ func (rc *RestaritemCreate) SetName(s string) *RestaritemCreate {
 	return rc
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (rc *RestaritemCreate) SetNillableName(s *string) *RestaritemCreate {
+	if s != nil {
+		rc.SetName(*s)
+	}
+	return rc
+}
+
 // SetSku sets the "sku" field.
 func (rc *RestaritemCreate) SetSku(s string) *RestaritemCreate {
 	rc.mutation.SetSku(s)
+	return rc
+}
+
+// SetNillableSku sets the "sku" field if the given value is not nil.
+func (rc *RestaritemCreate) SetNillableSku(s *string) *RestaritemCreate {
+	if s != nil {
+		rc.SetSku(*s)
+	}
 	return rc
 }
 
@@ -43,9 +59,25 @@ func (rc *RestaritemCreate) SetItemGUID(s string) *RestaritemCreate {
 	return rc
 }
 
+// SetNillableItemGUID sets the "itemGUID" field if the given value is not nil.
+func (rc *RestaritemCreate) SetNillableItemGUID(s *string) *RestaritemCreate {
+	if s != nil {
+		rc.SetItemGUID(*s)
+	}
+	return rc
+}
+
 // SetCharGUID sets the "charGUID" field.
 func (rc *RestaritemCreate) SetCharGUID(s string) *RestaritemCreate {
 	rc.mutation.SetCharGUID(s)
+	return rc
+}
+
+// SetNillableCharGUID sets the "charGUID" field if the given value is not nil.
+func (rc *RestaritemCreate) SetNillableCharGUID(s *string) *RestaritemCreate {
+	if s != nil {
+		rc.SetCharGUID(*s)
+	}
 	return rc
 }
 
@@ -55,21 +87,31 @@ func (rc *RestaritemCreate) SetDescription(s string) *RestaritemCreate {
 	return rc
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (rc *RestaritemCreate) SetNillableDescription(s *string) *RestaritemCreate {
+	if s != nil {
+		rc.SetDescription(*s)
+	}
+	return rc
+}
+
 // SetInspector sets the "inspector" field.
 func (rc *RestaritemCreate) SetInspector(s string) *RestaritemCreate {
 	rc.mutation.SetInspector(s)
 	return rc
 }
 
-// SetInspection sets the "inspection" field.
-func (rc *RestaritemCreate) SetInspection(s []string) *RestaritemCreate {
-	rc.mutation.SetInspection(s)
+// SetNillableInspector sets the "inspector" field if the given value is not nil.
+func (rc *RestaritemCreate) SetNillableInspector(s *string) *RestaritemCreate {
+	if s != nil {
+		rc.SetInspector(*s)
+	}
 	return rc
 }
 
-// SetID sets the "id" field.
-func (rc *RestaritemCreate) SetID(s string) *RestaritemCreate {
-	rc.mutation.SetID(s)
+// SetInspection sets the "inspection" field.
+func (rc *RestaritemCreate) SetInspection(s []string) *RestaritemCreate {
+	rc.mutation.SetInspection(s)
 	return rc
 }
 
@@ -146,27 +188,6 @@ func (rc *RestaritemCreate) check() error {
 	if _, ok := rc.mutation.OnecGUID(); !ok {
 		return &ValidationError{Name: "onecGUID", err: errors.New(`ent: missing required field "Restaritem.onecGUID"`)}
 	}
-	if _, ok := rc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Restaritem.name"`)}
-	}
-	if _, ok := rc.mutation.Sku(); !ok {
-		return &ValidationError{Name: "sku", err: errors.New(`ent: missing required field "Restaritem.sku"`)}
-	}
-	if _, ok := rc.mutation.ItemGUID(); !ok {
-		return &ValidationError{Name: "itemGUID", err: errors.New(`ent: missing required field "Restaritem.itemGUID"`)}
-	}
-	if _, ok := rc.mutation.CharGUID(); !ok {
-		return &ValidationError{Name: "charGUID", err: errors.New(`ent: missing required field "Restaritem.charGUID"`)}
-	}
-	if _, ok := rc.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Restaritem.description"`)}
-	}
-	if _, ok := rc.mutation.Inspector(); !ok {
-		return &ValidationError{Name: "inspector", err: errors.New(`ent: missing required field "Restaritem.inspector"`)}
-	}
-	if _, ok := rc.mutation.Inspection(); !ok {
-		return &ValidationError{Name: "inspection", err: errors.New(`ent: missing required field "Restaritem.inspection"`)}
-	}
 	return nil
 }
 
@@ -178,13 +199,8 @@ func (rc *RestaritemCreate) sqlSave(ctx context.Context) (*Restaritem, error) {
 		}
 		return nil, err
 	}
-	if _spec.ID.Value != nil {
-		if id, ok := _spec.ID.Value.(string); ok {
-			_node.ID = id
-		} else {
-			return nil, fmt.Errorf("unexpected Restaritem.ID type: %T", _spec.ID.Value)
-		}
-	}
+	id := _spec.ID.Value.(int64)
+	_node.ID = int(id)
 	return _node, nil
 }
 
@@ -194,15 +210,11 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: restaritem.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeString,
+				Type:   field.TypeInt,
 				Column: restaritem.FieldID,
 			},
 		}
 	)
-	if id, ok := rc.mutation.ID(); ok {
-		_node.ID = id
-		_spec.ID.Value = id
-	}
 	if value, ok := rc.mutation.OnecGUID(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -311,6 +323,10 @@ func (rcb *RestaritemCreateBulk) Save(ctx context.Context) ([]*Restaritem, error
 				}
 				mutation.id = &nodes[i].ID
 				mutation.done = true
+				if specs[i].ID.Value != nil {
+					id := specs[i].ID.Value.(int64)
+					nodes[i].ID = int(id)
+				}
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {

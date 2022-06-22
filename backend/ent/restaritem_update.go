@@ -39,9 +39,37 @@ func (ru *RestaritemUpdate) SetName(s string) *RestaritemUpdate {
 	return ru
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ru *RestaritemUpdate) SetNillableName(s *string) *RestaritemUpdate {
+	if s != nil {
+		ru.SetName(*s)
+	}
+	return ru
+}
+
+// ClearName clears the value of the "name" field.
+func (ru *RestaritemUpdate) ClearName() *RestaritemUpdate {
+	ru.mutation.ClearName()
+	return ru
+}
+
 // SetSku sets the "sku" field.
 func (ru *RestaritemUpdate) SetSku(s string) *RestaritemUpdate {
 	ru.mutation.SetSku(s)
+	return ru
+}
+
+// SetNillableSku sets the "sku" field if the given value is not nil.
+func (ru *RestaritemUpdate) SetNillableSku(s *string) *RestaritemUpdate {
+	if s != nil {
+		ru.SetSku(*s)
+	}
+	return ru
+}
+
+// ClearSku clears the value of the "sku" field.
+func (ru *RestaritemUpdate) ClearSku() *RestaritemUpdate {
+	ru.mutation.ClearSku()
 	return ru
 }
 
@@ -51,9 +79,37 @@ func (ru *RestaritemUpdate) SetItemGUID(s string) *RestaritemUpdate {
 	return ru
 }
 
+// SetNillableItemGUID sets the "itemGUID" field if the given value is not nil.
+func (ru *RestaritemUpdate) SetNillableItemGUID(s *string) *RestaritemUpdate {
+	if s != nil {
+		ru.SetItemGUID(*s)
+	}
+	return ru
+}
+
+// ClearItemGUID clears the value of the "itemGUID" field.
+func (ru *RestaritemUpdate) ClearItemGUID() *RestaritemUpdate {
+	ru.mutation.ClearItemGUID()
+	return ru
+}
+
 // SetCharGUID sets the "charGUID" field.
 func (ru *RestaritemUpdate) SetCharGUID(s string) *RestaritemUpdate {
 	ru.mutation.SetCharGUID(s)
+	return ru
+}
+
+// SetNillableCharGUID sets the "charGUID" field if the given value is not nil.
+func (ru *RestaritemUpdate) SetNillableCharGUID(s *string) *RestaritemUpdate {
+	if s != nil {
+		ru.SetCharGUID(*s)
+	}
+	return ru
+}
+
+// ClearCharGUID clears the value of the "charGUID" field.
+func (ru *RestaritemUpdate) ClearCharGUID() *RestaritemUpdate {
+	ru.mutation.ClearCharGUID()
 	return ru
 }
 
@@ -63,15 +119,49 @@ func (ru *RestaritemUpdate) SetDescription(s string) *RestaritemUpdate {
 	return ru
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (ru *RestaritemUpdate) SetNillableDescription(s *string) *RestaritemUpdate {
+	if s != nil {
+		ru.SetDescription(*s)
+	}
+	return ru
+}
+
+// ClearDescription clears the value of the "description" field.
+func (ru *RestaritemUpdate) ClearDescription() *RestaritemUpdate {
+	ru.mutation.ClearDescription()
+	return ru
+}
+
 // SetInspector sets the "inspector" field.
 func (ru *RestaritemUpdate) SetInspector(s string) *RestaritemUpdate {
 	ru.mutation.SetInspector(s)
 	return ru
 }
 
+// SetNillableInspector sets the "inspector" field if the given value is not nil.
+func (ru *RestaritemUpdate) SetNillableInspector(s *string) *RestaritemUpdate {
+	if s != nil {
+		ru.SetInspector(*s)
+	}
+	return ru
+}
+
+// ClearInspector clears the value of the "inspector" field.
+func (ru *RestaritemUpdate) ClearInspector() *RestaritemUpdate {
+	ru.mutation.ClearInspector()
+	return ru
+}
+
 // SetInspection sets the "inspection" field.
 func (ru *RestaritemUpdate) SetInspection(s []string) *RestaritemUpdate {
 	ru.mutation.SetInspection(s)
+	return ru
+}
+
+// ClearInspection clears the value of the "inspection" field.
+func (ru *RestaritemUpdate) ClearInspection() *RestaritemUpdate {
+	ru.mutation.ClearInspection()
 	return ru
 }
 
@@ -140,7 +230,7 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   restaritem.Table,
 			Columns: restaritem.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeString,
+				Type:   field.TypeInt,
 				Column: restaritem.FieldID,
 			},
 		},
@@ -166,10 +256,22 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: restaritem.FieldName,
 		})
 	}
+	if ru.mutation.NameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldName,
+		})
+	}
 	if value, ok := ru.mutation.Sku(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: restaritem.FieldSku,
+		})
+	}
+	if ru.mutation.SkuCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: restaritem.FieldSku,
 		})
 	}
@@ -180,10 +282,22 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: restaritem.FieldItemGUID,
 		})
 	}
+	if ru.mutation.ItemGUIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldItemGUID,
+		})
+	}
 	if value, ok := ru.mutation.CharGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: restaritem.FieldCharGUID,
+		})
+	}
+	if ru.mutation.CharGUIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: restaritem.FieldCharGUID,
 		})
 	}
@@ -194,6 +308,12 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: restaritem.FieldDescription,
 		})
 	}
+	if ru.mutation.DescriptionCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldDescription,
+		})
+	}
 	if value, ok := ru.mutation.Inspector(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -201,10 +321,22 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: restaritem.FieldInspector,
 		})
 	}
+	if ru.mutation.InspectorCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldInspector,
+		})
+	}
 	if value, ok := ru.mutation.Inspection(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
+			Column: restaritem.FieldInspection,
+		})
+	}
+	if ru.mutation.InspectionCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
 			Column: restaritem.FieldInspection,
 		})
 	}
@@ -239,9 +371,37 @@ func (ruo *RestaritemUpdateOne) SetName(s string) *RestaritemUpdateOne {
 	return ruo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ruo *RestaritemUpdateOne) SetNillableName(s *string) *RestaritemUpdateOne {
+	if s != nil {
+		ruo.SetName(*s)
+	}
+	return ruo
+}
+
+// ClearName clears the value of the "name" field.
+func (ruo *RestaritemUpdateOne) ClearName() *RestaritemUpdateOne {
+	ruo.mutation.ClearName()
+	return ruo
+}
+
 // SetSku sets the "sku" field.
 func (ruo *RestaritemUpdateOne) SetSku(s string) *RestaritemUpdateOne {
 	ruo.mutation.SetSku(s)
+	return ruo
+}
+
+// SetNillableSku sets the "sku" field if the given value is not nil.
+func (ruo *RestaritemUpdateOne) SetNillableSku(s *string) *RestaritemUpdateOne {
+	if s != nil {
+		ruo.SetSku(*s)
+	}
+	return ruo
+}
+
+// ClearSku clears the value of the "sku" field.
+func (ruo *RestaritemUpdateOne) ClearSku() *RestaritemUpdateOne {
+	ruo.mutation.ClearSku()
 	return ruo
 }
 
@@ -251,9 +411,37 @@ func (ruo *RestaritemUpdateOne) SetItemGUID(s string) *RestaritemUpdateOne {
 	return ruo
 }
 
+// SetNillableItemGUID sets the "itemGUID" field if the given value is not nil.
+func (ruo *RestaritemUpdateOne) SetNillableItemGUID(s *string) *RestaritemUpdateOne {
+	if s != nil {
+		ruo.SetItemGUID(*s)
+	}
+	return ruo
+}
+
+// ClearItemGUID clears the value of the "itemGUID" field.
+func (ruo *RestaritemUpdateOne) ClearItemGUID() *RestaritemUpdateOne {
+	ruo.mutation.ClearItemGUID()
+	return ruo
+}
+
 // SetCharGUID sets the "charGUID" field.
 func (ruo *RestaritemUpdateOne) SetCharGUID(s string) *RestaritemUpdateOne {
 	ruo.mutation.SetCharGUID(s)
+	return ruo
+}
+
+// SetNillableCharGUID sets the "charGUID" field if the given value is not nil.
+func (ruo *RestaritemUpdateOne) SetNillableCharGUID(s *string) *RestaritemUpdateOne {
+	if s != nil {
+		ruo.SetCharGUID(*s)
+	}
+	return ruo
+}
+
+// ClearCharGUID clears the value of the "charGUID" field.
+func (ruo *RestaritemUpdateOne) ClearCharGUID() *RestaritemUpdateOne {
+	ruo.mutation.ClearCharGUID()
 	return ruo
 }
 
@@ -263,15 +451,49 @@ func (ruo *RestaritemUpdateOne) SetDescription(s string) *RestaritemUpdateOne {
 	return ruo
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (ruo *RestaritemUpdateOne) SetNillableDescription(s *string) *RestaritemUpdateOne {
+	if s != nil {
+		ruo.SetDescription(*s)
+	}
+	return ruo
+}
+
+// ClearDescription clears the value of the "description" field.
+func (ruo *RestaritemUpdateOne) ClearDescription() *RestaritemUpdateOne {
+	ruo.mutation.ClearDescription()
+	return ruo
+}
+
 // SetInspector sets the "inspector" field.
 func (ruo *RestaritemUpdateOne) SetInspector(s string) *RestaritemUpdateOne {
 	ruo.mutation.SetInspector(s)
 	return ruo
 }
 
+// SetNillableInspector sets the "inspector" field if the given value is not nil.
+func (ruo *RestaritemUpdateOne) SetNillableInspector(s *string) *RestaritemUpdateOne {
+	if s != nil {
+		ruo.SetInspector(*s)
+	}
+	return ruo
+}
+
+// ClearInspector clears the value of the "inspector" field.
+func (ruo *RestaritemUpdateOne) ClearInspector() *RestaritemUpdateOne {
+	ruo.mutation.ClearInspector()
+	return ruo
+}
+
 // SetInspection sets the "inspection" field.
 func (ruo *RestaritemUpdateOne) SetInspection(s []string) *RestaritemUpdateOne {
 	ruo.mutation.SetInspection(s)
+	return ruo
+}
+
+// ClearInspection clears the value of the "inspection" field.
+func (ruo *RestaritemUpdateOne) ClearInspection() *RestaritemUpdateOne {
+	ruo.mutation.ClearInspection()
 	return ruo
 }
 
@@ -347,7 +569,7 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 			Table:   restaritem.Table,
 			Columns: restaritem.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeString,
+				Type:   field.TypeInt,
 				Column: restaritem.FieldID,
 			},
 		},
@@ -390,10 +612,22 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 			Column: restaritem.FieldName,
 		})
 	}
+	if ruo.mutation.NameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldName,
+		})
+	}
 	if value, ok := ruo.mutation.Sku(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: restaritem.FieldSku,
+		})
+	}
+	if ruo.mutation.SkuCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: restaritem.FieldSku,
 		})
 	}
@@ -404,10 +638,22 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 			Column: restaritem.FieldItemGUID,
 		})
 	}
+	if ruo.mutation.ItemGUIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldItemGUID,
+		})
+	}
 	if value, ok := ruo.mutation.CharGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: restaritem.FieldCharGUID,
+		})
+	}
+	if ruo.mutation.CharGUIDCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: restaritem.FieldCharGUID,
 		})
 	}
@@ -418,6 +664,12 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 			Column: restaritem.FieldDescription,
 		})
 	}
+	if ruo.mutation.DescriptionCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldDescription,
+		})
+	}
 	if value, ok := ruo.mutation.Inspector(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -425,10 +677,22 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 			Column: restaritem.FieldInspector,
 		})
 	}
+	if ruo.mutation.InspectorCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: restaritem.FieldInspector,
+		})
+	}
 	if value, ok := ruo.mutation.Inspection(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
+			Column: restaritem.FieldInspection,
+		})
+	}
+	if ruo.mutation.InspectionCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
 			Column: restaritem.FieldInspection,
 		})
 	}

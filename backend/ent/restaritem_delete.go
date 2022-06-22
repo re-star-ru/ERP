@@ -72,7 +72,7 @@ func (rd *RestaritemDelete) sqlExec(ctx context.Context) (int, error) {
 		Node: &sqlgraph.NodeSpec{
 			Table: restaritem.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeString,
+				Type:   field.TypeInt,
 				Column: restaritem.FieldID,
 			},
 		},

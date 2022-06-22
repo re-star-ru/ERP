@@ -10,15 +10,15 @@ import (
 var (
 	// RestaritemsColumns holds the columns for the "restaritems" table.
 	RestaritemsColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeString},
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "onec_guid", Type: field.TypeString},
-		{Name: "name", Type: field.TypeString},
-		{Name: "sku", Type: field.TypeString},
-		{Name: "item_guid", Type: field.TypeString},
-		{Name: "char_guid", Type: field.TypeString},
-		{Name: "description", Type: field.TypeString},
-		{Name: "inspector", Type: field.TypeString},
-		{Name: "inspection", Type: field.TypeJSON},
+		{Name: "name", Type: field.TypeString, Nullable: true},
+		{Name: "sku", Type: field.TypeString, Nullable: true},
+		{Name: "item_guid", Type: field.TypeString, Nullable: true},
+		{Name: "char_guid", Type: field.TypeString, Nullable: true},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "inspector", Type: field.TypeString, Nullable: true},
+		{Name: "inspection", Type: field.TypeJSON, Nullable: true},
 	}
 	// RestaritemsTable holds the schema information for the "restaritems" table.
 	RestaritemsTable = &schema.Table{

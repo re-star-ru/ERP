@@ -15,7 +15,7 @@ import (
 type Restaritem struct {
 	config `json:"-"`
 	// ID of the ent.
-	ID string `json:"id,omitempty"`
+	ID int `json:"id,omitempty"`
 	// OnecGUID holds the value of the "onecGUID" field.
 	OnecGUID string `json:"onecGUID,omitempty"`
 	// Name holds the value of the "name" field.
@@ -41,7 +41,9 @@ func (*Restaritem) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case restaritem.FieldInspection:
 			values[i] = new([]byte)
-		case restaritem.FieldID, restaritem.FieldOnecGUID, restaritem.FieldName, restaritem.FieldSku, restaritem.FieldItemGUID, restaritem.FieldCharGUID, restaritem.FieldDescription, restaritem.FieldInspector:
+		case restaritem.FieldID:
+			values[i] = new(sql.NullInt64)
+		case restaritem.FieldOnecGUID, restaritem.FieldName, restaritem.FieldSku, restaritem.FieldItemGUID, restaritem.FieldCharGUID, restaritem.FieldDescription, restaritem.FieldInspector:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Restaritem", columns[i])
@@ -59,11 +61,11 @@ func (r *Restaritem) assignValues(columns []string, values []interface{}) error 
 	for i := range columns {
 		switch columns[i] {
 		case restaritem.FieldID:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field id", values[i])
-			} else if value.Valid {
-				r.ID = value.String
+			value, ok := values[i].(*sql.NullInt64)
+			if !ok {
+				return fmt.Errorf("unexpected type %T for field id", value)
 			}
+			r.ID = int(value.Int64)
 		case restaritem.FieldOnecGUID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field onecGUID", values[i])

@@ -39,6 +39,7 @@ Content-Type: application/json
 
 {
   "name": "Продукт",
+  "onecGUID": "asdf-asdf-asdf-asdf",
   "price": 100,
   "quantity": 10,
   "category": "Категория",
@@ -54,4 +55,4 @@ GET {{host}}/restaritem
 GET {{host}}/restaritem/1
 
 ### restaritem view one json
-GET {{host}}/restaritem/1?json
+GET {{host}}/restaritem/2?json

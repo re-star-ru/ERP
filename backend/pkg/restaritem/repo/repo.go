@@ -17,7 +17,13 @@ type RestaritemRepo struct {
 }
 
 func (r RestaritemRepo) Create(ctx context.Context, item restaritem.RestarItem) (*restaritem.RestarItem, error) {
-	rit, err := r.client.Restaritem.Create().Save(ctx)
+	rit, err := r.client.Restaritem.Create().
+		SetName(item.Name).
+		SetOnecGUID(item.OnecGUID).
+		SetSku(item.Sku).
+		SetItemGUID(item.ItemGUID).
+		SetCharGUID(item.CharGUID).
+		Save(ctx)
 
 	if ent.IsValidationError(err) {
 		return nil, fmt.Errorf("%w: %v", restaritem.ErrValidation, err)
@@ -39,7 +45,8 @@ func (r *RestaritemRepo) List(ctx context.Context) ([]*restaritem.RestarItem, er
 	return us, nil
 }
 
-func (r *RestaritemRepo) Get(ctx context.Context, id string) (*restaritem.RestarItem, error) {
+func (r *RestaritemRepo) Get(ctx context.Context, id int) (*restaritem.RestarItem, error) {
+
 	u, err := r.client.Restaritem.Query().Where(entrestaritem.IDEQ(id)).Only(ctx)
 	if err != nil {
 		return nil, err
