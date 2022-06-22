@@ -62,5 +62,5 @@ jobs:
           PG_ADDR: ${{ secrets.PG_ADDR }}
 
         run: |
-          envsubst \${IMAGE_NAME},\${TAG},\${ONEC_TOKEN},\${MINIO_ACCESS_KEY},\${MINIO_SECRET_KEY},\${API_KEY} < service.nomad > job.nomad
+          envsubst \${PG_ADDR},\${IMAGE_NAME},\${TAG},\${ONEC_TOKEN},\${MINIO_ACCESS_KEY},\${MINIO_SECRET_KEY},\${API_KEY} < service.nomad > job.nomad
           nomad job run job.nomad
