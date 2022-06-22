@@ -10,24 +10,8 @@ gen:
 dev:
 	CGO_ENABLED=0 go run ./cmd/proxy
 
-
-include ../.env
-export
-prod:
-	CGO_ENABLED=0 go run ./cmd/proxy
-
-
 dent:
 	CGO_ENABLED=0 go run ./ent/start
-
-# rdocker: 
-#     docker run --rm \
-#         -p 8100:8100 \
-#         -e MINIO_ACCESS_KEY=ryR3bGLYsGXV \
-#         -e MINIO_SECRET_KEY=AoRqxFTVWs3U \
-#         -e ADDR=0.0.0.0:8100 \
-
-
 
 meili:
 	docker run -d -it --rm \

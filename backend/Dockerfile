@@ -21,6 +21,7 @@ ARG ONEC_TOKEN
 
 COPY --from=build /build/app /srv/app
 COPY --from=build /build/assets/fonts /srv/assets/fonts
+COPY --from=build /build/web /srv/web
 
 WORKDIR /srv
 CMD ["/srv/app"]
