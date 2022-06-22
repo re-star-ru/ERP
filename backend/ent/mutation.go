@@ -5,6 +5,8 @@ package ent
 import (
 	"backend/ent/predicate"
 	"backend/ent/restaritem"
+	"backend/pkg/photo"
+	"backend/pkg/work"
 	"context"
 	"errors"
 	"fmt"
@@ -39,6 +41,8 @@ type RestaritemMutation struct {
 	description   *string
 	inspector     *string
 	inspection    *[]string
+	photos        *[]photo.Photo
+	works         *[]work.Work
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Restaritem, error)
@@ -522,6 +526,104 @@ func (m *RestaritemMutation) ResetInspection() {
 	delete(m.clearedFields, restaritem.FieldInspection)
 }
 
+// SetPhotos sets the "photos" field.
+func (m *RestaritemMutation) SetPhotos(ph []photo.Photo) {
+	m.photos = &ph
+}
+
+// Photos returns the value of the "photos" field in the mutation.
+func (m *RestaritemMutation) Photos() (r []photo.Photo, exists bool) {
+	v := m.photos
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhotos returns the old "photos" field's value of the Restaritem entity.
+// If the Restaritem object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RestaritemMutation) OldPhotos(ctx context.Context) (v []photo.Photo, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPhotos is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPhotos requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhotos: %w", err)
+	}
+	return oldValue.Photos, nil
+}
+
+// ClearPhotos clears the value of the "photos" field.
+func (m *RestaritemMutation) ClearPhotos() {
+	m.photos = nil
+	m.clearedFields[restaritem.FieldPhotos] = struct{}{}
+}
+
+// PhotosCleared returns if the "photos" field was cleared in this mutation.
+func (m *RestaritemMutation) PhotosCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldPhotos]
+	return ok
+}
+
+// ResetPhotos resets all changes to the "photos" field.
+func (m *RestaritemMutation) ResetPhotos() {
+	m.photos = nil
+	delete(m.clearedFields, restaritem.FieldPhotos)
+}
+
+// SetWorks sets the "works" field.
+func (m *RestaritemMutation) SetWorks(w []work.Work) {
+	m.works = &w
+}
+
+// Works returns the value of the "works" field in the mutation.
+func (m *RestaritemMutation) Works() (r []work.Work, exists bool) {
+	v := m.works
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldWorks returns the old "works" field's value of the Restaritem entity.
+// If the Restaritem object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *RestaritemMutation) OldWorks(ctx context.Context) (v []work.Work, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldWorks is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldWorks requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldWorks: %w", err)
+	}
+	return oldValue.Works, nil
+}
+
+// ClearWorks clears the value of the "works" field.
+func (m *RestaritemMutation) ClearWorks() {
+	m.works = nil
+	m.clearedFields[restaritem.FieldWorks] = struct{}{}
+}
+
+// WorksCleared returns if the "works" field was cleared in this mutation.
+func (m *RestaritemMutation) WorksCleared() bool {
+	_, ok := m.clearedFields[restaritem.FieldWorks]
+	return ok
+}
+
+// ResetWorks resets all changes to the "works" field.
+func (m *RestaritemMutation) ResetWorks() {
+	m.works = nil
+	delete(m.clearedFields, restaritem.FieldWorks)
+}
+
 // Where appends a list predicates to the RestaritemMutation builder.
 func (m *RestaritemMutation) Where(ps ...predicate.Restaritem) {
 	m.predicates = append(m.predicates, ps...)
@@ -541,7 +643,7 @@ func (m *RestaritemMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RestaritemMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 10)
 	if m.onecGUID != nil {
 		fields = append(fields, restaritem.FieldOnecGUID)
 	}
@@ -565,6 +667,12 @@ func (m *RestaritemMutation) Fields() []string {
 	}
 	if m.inspection != nil {
 		fields = append(fields, restaritem.FieldInspection)
+	}
+	if m.photos != nil {
+		fields = append(fields, restaritem.FieldPhotos)
+	}
+	if m.works != nil {
+		fields = append(fields, restaritem.FieldWorks)
 	}
 	return fields
 }
@@ -590,6 +698,10 @@ func (m *RestaritemMutation) Field(name string) (ent.Value, bool) {
 		return m.Inspector()
 	case restaritem.FieldInspection:
 		return m.Inspection()
+	case restaritem.FieldPhotos:
+		return m.Photos()
+	case restaritem.FieldWorks:
+		return m.Works()
 	}
 	return nil, false
 }
@@ -615,6 +727,10 @@ func (m *RestaritemMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldInspector(ctx)
 	case restaritem.FieldInspection:
 		return m.OldInspection(ctx)
+	case restaritem.FieldPhotos:
+		return m.OldPhotos(ctx)
+	case restaritem.FieldWorks:
+		return m.OldWorks(ctx)
 	}
 	return nil, fmt.Errorf("unknown Restaritem field %s", name)
 }
@@ -680,6 +796,20 @@ func (m *RestaritemMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetInspection(v)
 		return nil
+	case restaritem.FieldPhotos:
+		v, ok := value.([]photo.Photo)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhotos(v)
+		return nil
+	case restaritem.FieldWorks:
+		v, ok := value.([]work.Work)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetWorks(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Restaritem field %s", name)
 }
@@ -731,6 +861,12 @@ func (m *RestaritemMutation) ClearedFields() []string {
 	if m.FieldCleared(restaritem.FieldInspection) {
 		fields = append(fields, restaritem.FieldInspection)
 	}
+	if m.FieldCleared(restaritem.FieldPhotos) {
+		fields = append(fields, restaritem.FieldPhotos)
+	}
+	if m.FieldCleared(restaritem.FieldWorks) {
+		fields = append(fields, restaritem.FieldWorks)
+	}
 	return fields
 }
 
@@ -766,6 +902,12 @@ func (m *RestaritemMutation) ClearField(name string) error {
 	case restaritem.FieldInspection:
 		m.ClearInspection()
 		return nil
+	case restaritem.FieldPhotos:
+		m.ClearPhotos()
+		return nil
+	case restaritem.FieldWorks:
+		m.ClearWorks()
+		return nil
 	}
 	return fmt.Errorf("unknown Restaritem nullable field %s", name)
 }
@@ -797,6 +939,12 @@ func (m *RestaritemMutation) ResetField(name string) error {
 		return nil
 	case restaritem.FieldInspection:
 		m.ResetInspection()
+		return nil
+	case restaritem.FieldPhotos:
+		m.ResetPhotos()
+		return nil
+	case restaritem.FieldWorks:
+		m.ResetWorks()
 		return nil
 	}
 	return fmt.Errorf("unknown Restaritem field %s", name)

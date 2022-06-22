@@ -21,6 +21,12 @@ type RestarItemUsecase struct {
 	repo IRestaritemRepo
 }
 
+func (r RestarItemUsecase) AddPhoto(ctx context.Context, id int, photo []byte) error {
+
+	//TODO implement me
+	panic("implement me")
+}
+
 func (r RestarItemUsecase) Create(ctx context.Context, restaritem restaritem.RestarItem) (*restaritem.RestarItem, error) {
 	return r.repo.Create(ctx, restaritem)
 }

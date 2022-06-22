@@ -49,13 +49,5 @@ type RestarItem = ent.Restaritem
 //}
 //
 
-type Work struct {
-	EmployeeGUID string `json:"employee"`
-	WorkGUID     string `json:"work"`
-	Price        int    `json:"price"`
-}
-
-//
-
 var ErrNotFound = errors.New("not found")
 var ErrValidation = errors.New("validation error")

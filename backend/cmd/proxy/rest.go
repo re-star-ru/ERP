@@ -12,14 +12,13 @@ import (
 	"backend/pkg/warehouse/cell"
 	"context"
 	"errors"
-	"os"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/zerolog/log"
+	"os"
 
 	"backend/pkg"
 	"backend/pkg/img"
@@ -94,6 +93,7 @@ func Rest(config configs.Config) *chi.Mux {
 		router.Post("/restaritem", riDelivery.Create)
 		router.Get("/restaritem", riDelivery.GetAll)
 		router.Get("/restaritem/{id}", riDelivery.RestaritemView)
+		router.Post("/restaritem/{id}/addPhoto", riDelivery.AddPhoto)
 	}
 
 	{

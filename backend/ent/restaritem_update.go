@@ -5,6 +5,8 @@ package ent
 import (
 	"backend/ent/predicate"
 	"backend/ent/restaritem"
+	"backend/pkg/photo"
+	"backend/pkg/work"
 	"context"
 	"errors"
 	"fmt"
@@ -162,6 +164,30 @@ func (ru *RestaritemUpdate) SetInspection(s []string) *RestaritemUpdate {
 // ClearInspection clears the value of the "inspection" field.
 func (ru *RestaritemUpdate) ClearInspection() *RestaritemUpdate {
 	ru.mutation.ClearInspection()
+	return ru
+}
+
+// SetPhotos sets the "photos" field.
+func (ru *RestaritemUpdate) SetPhotos(ph []photo.Photo) *RestaritemUpdate {
+	ru.mutation.SetPhotos(ph)
+	return ru
+}
+
+// ClearPhotos clears the value of the "photos" field.
+func (ru *RestaritemUpdate) ClearPhotos() *RestaritemUpdate {
+	ru.mutation.ClearPhotos()
+	return ru
+}
+
+// SetWorks sets the "works" field.
+func (ru *RestaritemUpdate) SetWorks(w []work.Work) *RestaritemUpdate {
+	ru.mutation.SetWorks(w)
+	return ru
+}
+
+// ClearWorks clears the value of the "works" field.
+func (ru *RestaritemUpdate) ClearWorks() *RestaritemUpdate {
+	ru.mutation.ClearWorks()
 	return ru
 }
 
@@ -340,6 +366,32 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: restaritem.FieldInspection,
 		})
 	}
+	if value, ok := ru.mutation.Photos(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: restaritem.FieldPhotos,
+		})
+	}
+	if ru.mutation.PhotosCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: restaritem.FieldPhotos,
+		})
+	}
+	if value, ok := ru.mutation.Works(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: restaritem.FieldWorks,
+		})
+	}
+	if ru.mutation.WorksCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: restaritem.FieldWorks,
+		})
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{restaritem.Label}
@@ -494,6 +546,30 @@ func (ruo *RestaritemUpdateOne) SetInspection(s []string) *RestaritemUpdateOne {
 // ClearInspection clears the value of the "inspection" field.
 func (ruo *RestaritemUpdateOne) ClearInspection() *RestaritemUpdateOne {
 	ruo.mutation.ClearInspection()
+	return ruo
+}
+
+// SetPhotos sets the "photos" field.
+func (ruo *RestaritemUpdateOne) SetPhotos(ph []photo.Photo) *RestaritemUpdateOne {
+	ruo.mutation.SetPhotos(ph)
+	return ruo
+}
+
+// ClearPhotos clears the value of the "photos" field.
+func (ruo *RestaritemUpdateOne) ClearPhotos() *RestaritemUpdateOne {
+	ruo.mutation.ClearPhotos()
+	return ruo
+}
+
+// SetWorks sets the "works" field.
+func (ruo *RestaritemUpdateOne) SetWorks(w []work.Work) *RestaritemUpdateOne {
+	ruo.mutation.SetWorks(w)
+	return ruo
+}
+
+// ClearWorks clears the value of the "works" field.
+func (ruo *RestaritemUpdateOne) ClearWorks() *RestaritemUpdateOne {
+	ruo.mutation.ClearWorks()
 	return ruo
 }
 
@@ -694,6 +770,32 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Column: restaritem.FieldInspection,
+		})
+	}
+	if value, ok := ruo.mutation.Photos(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: restaritem.FieldPhotos,
+		})
+	}
+	if ruo.mutation.PhotosCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: restaritem.FieldPhotos,
+		})
+	}
+	if value, ok := ruo.mutation.Works(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: restaritem.FieldWorks,
+		})
+	}
+	if ruo.mutation.WorksCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Column: restaritem.FieldWorks,
 		})
 	}
 	_node = &Restaritem{config: ruo.config}

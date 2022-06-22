@@ -1,6 +1,7 @@
 package work
 
 type Work struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	EmployeeGUID string `json:"employee"`
+	WorkGUID     string `json:"work"`
+	Price        int    `json:"price"`
 }

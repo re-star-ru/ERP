@@ -1015,6 +1015,34 @@ func InspectionNotNil() predicate.Restaritem {
 	})
 }
 
+// PhotosIsNil applies the IsNil predicate on the "photos" field.
+func PhotosIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldPhotos)))
+	})
+}
+
+// PhotosNotNil applies the NotNil predicate on the "photos" field.
+func PhotosNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldPhotos)))
+	})
+}
+
+// WorksIsNil applies the IsNil predicate on the "works" field.
+func WorksIsNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldWorks)))
+	})
+}
+
+// WorksNotNil applies the NotNil predicate on the "works" field.
+func WorksNotNil() predicate.Restaritem {
+	return predicate.Restaritem(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldWorks)))
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Restaritem) predicate.Restaritem {
 	return predicate.Restaritem(func(s *sql.Selector) {

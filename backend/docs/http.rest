@@ -44,6 +44,7 @@ Content-Type: application/json
   "quantity": 10,
   "category": "Категория",
   "description": "Описание",
+  "photos": "",
   "image": "https://re-star.ru/oprox/warehouse/cell/N2_15-G-06"
 }
 
