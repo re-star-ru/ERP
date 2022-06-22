@@ -3,10 +3,10 @@
 package enttest
 
 import (
-	"backend/pkg/ent"
+	"backend/ent"
 	"context"
 	// required by schema hooks.
-	_ "backend/pkg/ent/runtime"
+	_ "backend/ent/runtime"
 
 	"entgo.io/ent/dialect/sql/schema"
 )

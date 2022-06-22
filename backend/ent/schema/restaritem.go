@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"backend/pkg/photo"
-	"backend/pkg/restaritem"
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 )
@@ -25,8 +23,8 @@ func (Restaritem) Fields() []ent.Field {
 		field.String("inspector"),
 		field.Strings("inspection"),
 
-		field.JSON("photos", []photo.Photo{}),
-		field.JSON("works", []restaritem.Work{}),
+		//field.JSON("photos", []photo.Photo{}),
+		//field.JSON("works", []restaritem.Work{}),
 	}
 }
 

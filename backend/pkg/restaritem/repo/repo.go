@@ -1,7 +1,8 @@
 package repo
 
 import (
-	"backend/pkg/ent"
+	"backend/ent"
+	entrestaritem "backend/ent/restaritem"
 	"backend/pkg/restaritem"
 	"context"
 	"fmt"
@@ -15,51 +16,34 @@ type RestaritemRepo struct {
 	client *ent.Client
 }
 
-func (r RestaritemRepo) Create(ctx context.Context, item restaritem.RestarItem) (restaritem.RestarItem, error) {
+func (r RestaritemRepo) Create(ctx context.Context, item restaritem.RestarItem) (*restaritem.RestarItem, error) {
 	rit, err := r.client.Restaritem.Create().Save(ctx)
 
 	if ent.IsValidationError(err) {
-		return restaritem.RestarItem{}, fmt.Errorf("%w: %v", restaritem.ErrValidation, err)
+		return nil, fmt.Errorf("%w: %v", restaritem.ErrValidation, err)
 	}
 
 	if err != nil {
-		return restaritem.RestarItem{}, fmt.Errorf("create item error: %w", err)
+		return nil, fmt.Errorf("create item error: %w", err)
 	}
 
-	return toRestaritem(rit), nil
+	return rit, nil
 }
 
-func toRestaritem(rit *ent.Restaritem) restaritem.RestarItem {
-	ritem := restaritem.RestarItem{
-		ID:          rit.ID,
-		OnecGUID:    rit.OnecGUID,
-		Name:        rit.Name,
-		SKU:         rit.Sku,
-		ItemGUID:    rit.ItemGUID,
-		CharGUID:    rit.CharGUID,
-		Description: rit.Description,
-		Inspector:   rit.Inspector,
-		Inspection:  rit.Inspection,
-		Photos:      rit.Photos,
+func (r *RestaritemRepo) List(ctx context.Context) ([]*restaritem.RestarItem, error) {
+	us, err := r.client.Restaritem.Query().All(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	for _, w := range rit.Works {
-		ritem.Works = append(ritem.Works, restaritem.Work{
-			WorkGUID:     w.WorkGUID,
-			EmployeeGUID: w.EmployeeGUID,
-			Price:        w.Price,
-		})
+	return us, nil
+}
+
+func (r *RestaritemRepo) Get(ctx context.Context, id string) (*restaritem.RestarItem, error) {
+	u, err := r.client.Restaritem.Query().Where(entrestaritem.IDEQ(id)).Only(ctx)
+	if err != nil {
+		return nil, err
 	}
 
-	return ritem
-}
-
-func (r RestaritemRepo) List() ([]restaritem.RestarItem, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (r RestaritemRepo) GetByID(i int) (restaritem.RestarItem, error) {
-	//TODO implement me
-	panic("implement me")
+	return u, nil
 }

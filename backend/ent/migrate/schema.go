@@ -19,8 +19,6 @@ var (
 		{Name: "description", Type: field.TypeString},
 		{Name: "inspector", Type: field.TypeString},
 		{Name: "inspection", Type: field.TypeJSON},
-		{Name: "photos", Type: field.TypeJSON},
-		{Name: "works", Type: field.TypeJSON},
 	}
 	// RestaritemsTable holds the schema information for the "restaritems" table.
 	RestaritemsTable = &schema.Table{

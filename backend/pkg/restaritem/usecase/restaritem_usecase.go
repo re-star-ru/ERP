@@ -6,9 +6,9 @@ import (
 )
 
 type IRestaritemRepo interface {
-	Create(ctx context.Context, item restaritem.RestarItem) (restaritem.RestarItem, error)
-	List() ([]restaritem.RestarItem, error)
-	GetByID(int) (restaritem.RestarItem, error)
+	Create(ctx context.Context, item restaritem.RestarItem) (*restaritem.RestarItem, error)
+	List(context.Context) ([]*restaritem.RestarItem, error)
+	Get(ctx context.Context, id string) (*restaritem.RestarItem, error)
 }
 
 func NewRestaritemUsecase(repo IRestaritemRepo) *RestarItemUsecase {
@@ -21,14 +21,14 @@ type RestarItemUsecase struct {
 	repo IRestaritemRepo
 }
 
-func (r RestarItemUsecase) Create(ctx context.Context, restaritem restaritem.RestarItem) (restaritem.RestarItem, error) {
+func (r RestarItemUsecase) Create(ctx context.Context, restaritem restaritem.RestarItem) (*restaritem.RestarItem, error) {
 	return r.repo.Create(ctx, restaritem)
 }
 
-func (r RestarItemUsecase) GetAll(ctx context.Context) ([]restaritem.RestarItem, error) {
-	return r.repo.List()
+func (r RestarItemUsecase) GetAll(ctx context.Context) ([]*restaritem.RestarItem, error) {
+	return r.repo.List(ctx)
 }
 
-func (r RestarItemUsecase) GetByID(ctx context.Context, id int) (restaritem.RestarItem, error) {
-	return r.repo.GetByID(id)
+func (r RestarItemUsecase) GetByID(ctx context.Context, id string) (*restaritem.RestarItem, error) {
+	return r.repo.Get(ctx, id)
 }

@@ -3,7 +3,8 @@
 package ent
 
 import (
-	"backend/pkg/ent/predicate"
+	"backend/ent/predicate"
+	"backend/ent/restaritem"
 	"context"
 	"errors"
 	"fmt"
@@ -12,8 +13,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-
-	entrestaritem "backend/pkg/ent/restaritem"
 )
 
 // RestaritemQuery is the builder for querying Restaritem entities.
@@ -69,7 +68,7 @@ func (rq *RestaritemQuery) First(ctx context.Context) (*Restaritem, error) {
 		return nil, err
 	}
 	if len(nodes) == 0 {
-		return nil, &NotFoundError{entrestaritem.Label}
+		return nil, &NotFoundError{restaritem.Label}
 	}
 	return nodes[0], nil
 }
@@ -91,7 +90,7 @@ func (rq *RestaritemQuery) FirstID(ctx context.Context) (id string, err error) {
 		return
 	}
 	if len(ids) == 0 {
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 		return
 	}
 	return ids[0], nil
@@ -118,9 +117,9 @@ func (rq *RestaritemQuery) Only(ctx context.Context) (*Restaritem, error) {
 	case 1:
 		return nodes[0], nil
 	case 0:
-		return nil, &NotFoundError{entrestaritem.Label}
+		return nil, &NotFoundError{restaritem.Label}
 	default:
-		return nil, &NotSingularError{entrestaritem.Label}
+		return nil, &NotSingularError{restaritem.Label}
 	}
 }
 
@@ -145,9 +144,9 @@ func (rq *RestaritemQuery) OnlyID(ctx context.Context) (id string, err error) {
 	case 1:
 		id = ids[0]
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
-		err = &NotSingularError{entrestaritem.Label}
+		err = &NotSingularError{restaritem.Label}
 	}
 	return
 }
@@ -181,7 +180,7 @@ func (rq *RestaritemQuery) AllX(ctx context.Context) []*Restaritem {
 // IDs executes the query and returns a list of Restaritem IDs.
 func (rq *RestaritemQuery) IDs(ctx context.Context) ([]string, error) {
 	var ids []string
-	if err := rq.Select(entrestaritem.FieldID).Scan(ctx, &ids); err != nil {
+	if err := rq.Select(restaritem.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -260,7 +259,7 @@ func (rq *RestaritemQuery) Clone() *RestaritemQuery {
 //	}
 //
 //	client.Restaritem.Query().
-//		GroupBy(entrestaritem.FieldOnecGUID).
+//		GroupBy(restaritem.FieldOnecGUID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -286,7 +285,7 @@ func (rq *RestaritemQuery) GroupBy(field string, fields ...string) *RestaritemGr
 //	}
 //
 //	client.Restaritem.Query().
-//		Select(entrestaritem.FieldOnecGUID).
+//		Select(restaritem.FieldOnecGUID).
 //		Scan(ctx, &v)
 //
 func (rq *RestaritemQuery) Select(fields ...string) *RestaritemSelect {
@@ -296,7 +295,7 @@ func (rq *RestaritemQuery) Select(fields ...string) *RestaritemSelect {
 
 func (rq *RestaritemQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range rq.fields {
-		if !entrestaritem.ValidColumn(f) {
+		if !restaritem.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
 	}
@@ -356,11 +355,11 @@ func (rq *RestaritemQuery) sqlExist(ctx context.Context) (bool, error) {
 func (rq *RestaritemQuery) querySpec() *sqlgraph.QuerySpec {
 	_spec := &sqlgraph.QuerySpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   entrestaritem.Table,
-			Columns: entrestaritem.Columns,
+			Table:   restaritem.Table,
+			Columns: restaritem.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeString,
-				Column: entrestaritem.FieldID,
+				Column: restaritem.FieldID,
 			},
 		},
 		From:   rq.sql,
@@ -371,9 +370,9 @@ func (rq *RestaritemQuery) querySpec() *sqlgraph.QuerySpec {
 	}
 	if fields := rq.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, entrestaritem.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, restaritem.FieldID)
 		for i := range fields {
-			if fields[i] != entrestaritem.FieldID {
+			if fields[i] != restaritem.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
@@ -403,10 +402,10 @@ func (rq *RestaritemQuery) querySpec() *sqlgraph.QuerySpec {
 
 func (rq *RestaritemQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(rq.driver.Dialect())
-	t1 := builder.Table(entrestaritem.Table)
+	t1 := builder.Table(restaritem.Table)
 	columns := rq.fields
 	if len(columns) == 0 {
-		columns = entrestaritem.Columns
+		columns = restaritem.Columns
 	}
 	selector := builder.Select(t1.Columns(columns...)...).From(t1)
 	if rq.sql != nil {
@@ -499,7 +498,7 @@ func (rgb *RestaritemGroupBy) String(ctx context.Context) (_ string, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemGroupBy.Strings returned %d results when one was expected", len(v))
 	}
@@ -548,7 +547,7 @@ func (rgb *RestaritemGroupBy) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemGroupBy.Ints returned %d results when one was expected", len(v))
 	}
@@ -597,7 +596,7 @@ func (rgb *RestaritemGroupBy) Float64(ctx context.Context) (_ float64, err error
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemGroupBy.Float64s returned %d results when one was expected", len(v))
 	}
@@ -646,7 +645,7 @@ func (rgb *RestaritemGroupBy) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemGroupBy.Bools returned %d results when one was expected", len(v))
 	}
@@ -664,7 +663,7 @@ func (rgb *RestaritemGroupBy) BoolX(ctx context.Context) bool {
 
 func (rgb *RestaritemGroupBy) sqlScan(ctx context.Context, v interface{}) error {
 	for _, f := range rgb.fields {
-		if !entrestaritem.ValidColumn(f) {
+		if !restaritem.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
 		}
 	}
@@ -754,7 +753,7 @@ func (rs *RestaritemSelect) String(ctx context.Context) (_ string, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemSelect.Strings returned %d results when one was expected", len(v))
 	}
@@ -801,7 +800,7 @@ func (rs *RestaritemSelect) Int(ctx context.Context) (_ int, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemSelect.Ints returned %d results when one was expected", len(v))
 	}
@@ -848,7 +847,7 @@ func (rs *RestaritemSelect) Float64(ctx context.Context) (_ float64, err error) 
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemSelect.Float64s returned %d results when one was expected", len(v))
 	}
@@ -895,7 +894,7 @@ func (rs *RestaritemSelect) Bool(ctx context.Context) (_ bool, err error) {
 	case 1:
 		return v[0], nil
 	case 0:
-		err = &NotFoundError{entrestaritem.Label}
+		err = &NotFoundError{restaritem.Label}
 	default:
 		err = fmt.Errorf("ent: RestaritemSelect.Bools returned %d results when one was expected", len(v))
 	}

@@ -3,9 +3,8 @@
 package ent
 
 import (
-	"backend/pkg/ent/predicate"
-	"backend/pkg/photo"
-	"backend/pkg/restaritem"
+	"backend/ent/predicate"
+	"backend/ent/restaritem"
 	"context"
 	"errors"
 	"fmt"
@@ -13,8 +12,6 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-
-	entrestaritem "backend/pkg/ent/restaritem"
 )
 
 // RestaritemUpdate is the builder for updating Restaritem entities.
@@ -75,18 +72,6 @@ func (ru *RestaritemUpdate) SetInspector(s string) *RestaritemUpdate {
 // SetInspection sets the "inspection" field.
 func (ru *RestaritemUpdate) SetInspection(s []string) *RestaritemUpdate {
 	ru.mutation.SetInspection(s)
-	return ru
-}
-
-// SetPhotos sets the "photos" field.
-func (ru *RestaritemUpdate) SetPhotos(ph []photo.Photo) *RestaritemUpdate {
-	ru.mutation.SetPhotos(ph)
-	return ru
-}
-
-// SetWorks sets the "works" field.
-func (ru *RestaritemUpdate) SetWorks(r []restaritem.Work) *RestaritemUpdate {
-	ru.mutation.SetWorks(r)
 	return ru
 }
 
@@ -152,11 +137,11 @@ func (ru *RestaritemUpdate) ExecX(ctx context.Context) {
 func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   entrestaritem.Table,
-			Columns: entrestaritem.Columns,
+			Table:   restaritem.Table,
+			Columns: restaritem.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeString,
-				Column: entrestaritem.FieldID,
+				Column: restaritem.FieldID,
 			},
 		},
 	}
@@ -171,75 +156,61 @@ func (ru *RestaritemUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldOnecGUID,
+			Column: restaritem.FieldOnecGUID,
 		})
 	}
 	if value, ok := ru.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldName,
+			Column: restaritem.FieldName,
 		})
 	}
 	if value, ok := ru.mutation.Sku(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldSku,
+			Column: restaritem.FieldSku,
 		})
 	}
 	if value, ok := ru.mutation.ItemGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldItemGUID,
+			Column: restaritem.FieldItemGUID,
 		})
 	}
 	if value, ok := ru.mutation.CharGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldCharGUID,
+			Column: restaritem.FieldCharGUID,
 		})
 	}
 	if value, ok := ru.mutation.Description(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldDescription,
+			Column: restaritem.FieldDescription,
 		})
 	}
 	if value, ok := ru.mutation.Inspector(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldInspector,
+			Column: restaritem.FieldInspector,
 		})
 	}
 	if value, ok := ru.mutation.Inspection(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
-			Column: entrestaritem.FieldInspection,
-		})
-	}
-	if value, ok := ru.mutation.Photos(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: entrestaritem.FieldPhotos,
-		})
-	}
-	if value, ok := ru.mutation.Works(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: entrestaritem.FieldWorks,
+			Column: restaritem.FieldInspection,
 		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, ru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{entrestaritem.Label}
+			err = &NotFoundError{restaritem.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}
@@ -301,18 +272,6 @@ func (ruo *RestaritemUpdateOne) SetInspector(s string) *RestaritemUpdateOne {
 // SetInspection sets the "inspection" field.
 func (ruo *RestaritemUpdateOne) SetInspection(s []string) *RestaritemUpdateOne {
 	ruo.mutation.SetInspection(s)
-	return ruo
-}
-
-// SetPhotos sets the "photos" field.
-func (ruo *RestaritemUpdateOne) SetPhotos(ph []photo.Photo) *RestaritemUpdateOne {
-	ruo.mutation.SetPhotos(ph)
-	return ruo
-}
-
-// SetWorks sets the "works" field.
-func (ruo *RestaritemUpdateOne) SetWorks(r []restaritem.Work) *RestaritemUpdateOne {
-	ruo.mutation.SetWorks(r)
 	return ruo
 }
 
@@ -385,11 +344,11 @@ func (ruo *RestaritemUpdateOne) ExecX(ctx context.Context) {
 func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table:   entrestaritem.Table,
-			Columns: entrestaritem.Columns,
+			Table:   restaritem.Table,
+			Columns: restaritem.Columns,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeString,
-				Column: entrestaritem.FieldID,
+				Column: restaritem.FieldID,
 			},
 		},
 	}
@@ -400,12 +359,12 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 	_spec.Node.ID.Value = id
 	if fields := ruo.fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
-		_spec.Node.Columns = append(_spec.Node.Columns, entrestaritem.FieldID)
+		_spec.Node.Columns = append(_spec.Node.Columns, restaritem.FieldID)
 		for _, f := range fields {
-			if !entrestaritem.ValidColumn(f) {
+			if !restaritem.ValidColumn(f) {
 				return nil, &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 			}
-			if f != entrestaritem.FieldID {
+			if f != restaritem.FieldID {
 				_spec.Node.Columns = append(_spec.Node.Columns, f)
 			}
 		}
@@ -421,70 +380,56 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldOnecGUID,
+			Column: restaritem.FieldOnecGUID,
 		})
 	}
 	if value, ok := ruo.mutation.Name(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldName,
+			Column: restaritem.FieldName,
 		})
 	}
 	if value, ok := ruo.mutation.Sku(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldSku,
+			Column: restaritem.FieldSku,
 		})
 	}
 	if value, ok := ruo.mutation.ItemGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldItemGUID,
+			Column: restaritem.FieldItemGUID,
 		})
 	}
 	if value, ok := ruo.mutation.CharGUID(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldCharGUID,
+			Column: restaritem.FieldCharGUID,
 		})
 	}
 	if value, ok := ruo.mutation.Description(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldDescription,
+			Column: restaritem.FieldDescription,
 		})
 	}
 	if value, ok := ruo.mutation.Inspector(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldInspector,
+			Column: restaritem.FieldInspector,
 		})
 	}
 	if value, ok := ruo.mutation.Inspection(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
-			Column: entrestaritem.FieldInspection,
-		})
-	}
-	if value, ok := ruo.mutation.Photos(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: entrestaritem.FieldPhotos,
-		})
-	}
-	if value, ok := ruo.mutation.Works(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: entrestaritem.FieldWorks,
+			Column: restaritem.FieldInspection,
 		})
 	}
 	_node = &Restaritem{config: ruo.config}
@@ -492,7 +437,7 @@ func (ruo *RestaritemUpdateOne) sqlSave(ctx context.Context) (_node *Restaritem,
 	_spec.ScanValues = _node.scanValues
 	if err = sqlgraph.UpdateNode(ctx, ruo.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
-			err = &NotFoundError{entrestaritem.Label}
+			err = &NotFoundError{restaritem.Label}
 		} else if sqlgraph.IsConstraintError(err) {
 			err = &ConstraintError{err.Error(), err}
 		}

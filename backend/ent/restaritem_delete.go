@@ -3,15 +3,14 @@
 package ent
 
 import (
-	"backend/pkg/ent/predicate"
+	"backend/ent/predicate"
+	"backend/ent/restaritem"
 	"context"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-
-	entrestaritem "backend/pkg/ent/restaritem"
 )
 
 // RestaritemDelete is the builder for deleting a Restaritem entity.
@@ -71,10 +70,10 @@ func (rd *RestaritemDelete) ExecX(ctx context.Context) int {
 func (rd *RestaritemDelete) sqlExec(ctx context.Context) (int, error) {
 	_spec := &sqlgraph.DeleteSpec{
 		Node: &sqlgraph.NodeSpec{
-			Table: entrestaritem.Table,
+			Table: restaritem.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeString,
-				Column: entrestaritem.FieldID,
+				Column: restaritem.FieldID,
 			},
 		},
 	}
@@ -100,7 +99,7 @@ func (rdo *RestaritemDeleteOne) Exec(ctx context.Context) error {
 	case err != nil:
 		return err
 	case n == 0:
-		return &NotFoundError{entrestaritem.Label}
+		return &NotFoundError{restaritem.Label}
 	default:
 		return nil
 	}

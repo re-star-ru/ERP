@@ -9,7 +9,6 @@ import (
 	"github.com/go-chi/render"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 // будет json ручка
@@ -18,9 +17,9 @@ import (
 // список всех товаров на сайте так же
 
 type IHTTPRestaritemUsecase interface {
-	Create(ctx context.Context, restaritem restaritem.RestarItem) (restaritem.RestarItem, error)
-	GetAll(ctx context.Context) ([]restaritem.RestarItem, error) // pagination?
-	GetByID(ctx context.Context, id int) (restaritem.RestarItem, error)
+	Create(ctx context.Context, restaritem restaritem.RestarItem) (*restaritem.RestarItem, error)
+	GetAll(ctx context.Context) ([]*restaritem.RestarItem, error) // pagination?
+	GetByID(ctx context.Context, id string) (*restaritem.RestarItem, error)
 }
 
 func NewHTTPRestaritemDelivery(uc IHTTPRestaritemUsecase) *HTTPRestaritemDelivery {
@@ -73,14 +72,7 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	id, err := strconv.Atoi(sid)
-	if err != nil {
-		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse id")
-
-		return
-	}
-
-	ritem, err := h.uc.GetByID(r.Context(), id)
+	ritem, err := h.uc.GetByID(r.Context(), sid)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get restaritem")
 

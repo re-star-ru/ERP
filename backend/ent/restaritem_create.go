@@ -3,16 +3,13 @@
 package ent
 
 import (
-	"backend/pkg/photo"
-	"backend/pkg/restaritem"
+	"backend/ent/restaritem"
 	"context"
 	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-
-	entrestaritem "backend/pkg/ent/restaritem"
 )
 
 // RestaritemCreate is the builder for creating a Restaritem entity.
@@ -67,18 +64,6 @@ func (rc *RestaritemCreate) SetInspector(s string) *RestaritemCreate {
 // SetInspection sets the "inspection" field.
 func (rc *RestaritemCreate) SetInspection(s []string) *RestaritemCreate {
 	rc.mutation.SetInspection(s)
-	return rc
-}
-
-// SetPhotos sets the "photos" field.
-func (rc *RestaritemCreate) SetPhotos(ph []photo.Photo) *RestaritemCreate {
-	rc.mutation.SetPhotos(ph)
-	return rc
-}
-
-// SetWorks sets the "works" field.
-func (rc *RestaritemCreate) SetWorks(r []restaritem.Work) *RestaritemCreate {
-	rc.mutation.SetWorks(r)
 	return rc
 }
 
@@ -182,12 +167,6 @@ func (rc *RestaritemCreate) check() error {
 	if _, ok := rc.mutation.Inspection(); !ok {
 		return &ValidationError{Name: "inspection", err: errors.New(`ent: missing required field "Restaritem.inspection"`)}
 	}
-	if _, ok := rc.mutation.Photos(); !ok {
-		return &ValidationError{Name: "photos", err: errors.New(`ent: missing required field "Restaritem.photos"`)}
-	}
-	if _, ok := rc.mutation.Works(); !ok {
-		return &ValidationError{Name: "works", err: errors.New(`ent: missing required field "Restaritem.works"`)}
-	}
 	return nil
 }
 
@@ -213,10 +192,10 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 	var (
 		_node = &Restaritem{config: rc.config}
 		_spec = &sqlgraph.CreateSpec{
-			Table: entrestaritem.Table,
+			Table: restaritem.Table,
 			ID: &sqlgraph.FieldSpec{
 				Type:   field.TypeString,
-				Column: entrestaritem.FieldID,
+				Column: restaritem.FieldID,
 			},
 		}
 	)
@@ -228,7 +207,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldOnecGUID,
+			Column: restaritem.FieldOnecGUID,
 		})
 		_node.OnecGUID = value
 	}
@@ -236,7 +215,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldName,
+			Column: restaritem.FieldName,
 		})
 		_node.Name = value
 	}
@@ -244,7 +223,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldSku,
+			Column: restaritem.FieldSku,
 		})
 		_node.Sku = value
 	}
@@ -252,7 +231,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldItemGUID,
+			Column: restaritem.FieldItemGUID,
 		})
 		_node.ItemGUID = value
 	}
@@ -260,7 +239,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldCharGUID,
+			Column: restaritem.FieldCharGUID,
 		})
 		_node.CharGUID = value
 	}
@@ -268,7 +247,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldDescription,
+			Column: restaritem.FieldDescription,
 		})
 		_node.Description = value
 	}
@@ -276,7 +255,7 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: entrestaritem.FieldInspector,
+			Column: restaritem.FieldInspector,
 		})
 		_node.Inspector = value
 	}
@@ -284,25 +263,9 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
 			Value:  value,
-			Column: entrestaritem.FieldInspection,
+			Column: restaritem.FieldInspection,
 		})
 		_node.Inspection = value
-	}
-	if value, ok := rc.mutation.Photos(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: entrestaritem.FieldPhotos,
-		})
-		_node.Photos = value
-	}
-	if value, ok := rc.mutation.Works(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: entrestaritem.FieldWorks,
-		})
-		_node.Works = value
 	}
 	return _node, _spec
 }

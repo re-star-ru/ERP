@@ -6,5 +6,5 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// Restaritem is the predicate function for entrestaritem builders.
+// Restaritem is the predicate function for restaritem builders.
 type Restaritem func(*sql.Selector)

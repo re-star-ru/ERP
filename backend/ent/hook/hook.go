@@ -3,7 +3,7 @@
 package hook
 
 import (
-	"backend/pkg/ent"
+	"backend/ent"
 	"context"
 	"fmt"
 )

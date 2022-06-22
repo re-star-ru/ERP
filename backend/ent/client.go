@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"backend/pkg/ent/migrate"
+	"backend/ent/migrate"
 
-	entrestaritem "backend/pkg/ent/restaritem"
+	"backend/ent/restaritem"
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
@@ -133,7 +133,7 @@ func NewRestaritemClient(c config) *RestaritemClient {
 }
 
 // Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `entrestaritem.Hooks(f(g(h())))`.
+// A call to `Use(f, g, h)` equals to `restaritem.Hooks(f(g(h())))`.
 func (c *RestaritemClient) Use(hooks ...Hook) {
 	c.hooks.Restaritem = append(c.hooks.Restaritem, hooks...)
 }
@@ -180,7 +180,7 @@ func (c *RestaritemClient) DeleteOne(r *Restaritem) *RestaritemDeleteOne {
 
 // DeleteOneID returns a delete builder for the given id.
 func (c *RestaritemClient) DeleteOneID(id string) *RestaritemDeleteOne {
-	builder := c.Delete().Where(entrestaritem.ID(id))
+	builder := c.Delete().Where(restaritem.ID(id))
 	builder.mutation.id = &id
 	builder.mutation.op = OpDeleteOne
 	return &RestaritemDeleteOne{builder}
@@ -195,7 +195,7 @@ func (c *RestaritemClient) Query() *RestaritemQuery {
 
 // Get returns a Restaritem entity by its id.
 func (c *RestaritemClient) Get(ctx context.Context, id string) (*Restaritem, error) {
-	return c.Query().Where(entrestaritem.ID(id)).Only(ctx)
+	return c.Query().Where(restaritem.ID(id)).Only(ctx)
 }
 
 // GetX is like Get, but panics if an error occurs.

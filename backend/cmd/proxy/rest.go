@@ -2,7 +2,7 @@ package main
 
 import (
 	"backend/configs"
-	"backend/pkg/ent"
+	"backend/ent"
 	"backend/pkg/oneclient"
 	"backend/pkg/qr"
 	restaritemDelivery "backend/pkg/restaritem/delivery"

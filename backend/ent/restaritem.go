@@ -3,15 +3,12 @@
 package ent
 
 import (
-	"backend/pkg/photo"
-	"backend/pkg/restaritem"
+	"backend/ent/restaritem"
 	"encoding/json"
 	"fmt"
 	"strings"
 
 	"entgo.io/ent/dialect/sql"
-
-	entrestaritem "backend/pkg/ent/restaritem"
 )
 
 // Restaritem is the model entity for the Restaritem schema.
@@ -35,10 +32,6 @@ type Restaritem struct {
 	Inspector string `json:"inspector,omitempty"`
 	// Inspection holds the value of the "inspection" field.
 	Inspection []string `json:"inspection,omitempty"`
-	// Photos holds the value of the "photos" field.
-	Photos []photo.Photo `json:"photos,omitempty"`
-	// Works holds the value of the "works" field.
-	Works []restaritem.Work `json:"works,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -46,9 +39,9 @@ func (*Restaritem) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case entrestaritem.FieldInspection, entrestaritem.FieldPhotos, entrestaritem.FieldWorks:
+		case restaritem.FieldInspection:
 			values[i] = new([]byte)
-		case entrestaritem.FieldID, entrestaritem.FieldOnecGUID, entrestaritem.FieldName, entrestaritem.FieldSku, entrestaritem.FieldItemGUID, entrestaritem.FieldCharGUID, entrestaritem.FieldDescription, entrestaritem.FieldInspector:
+		case restaritem.FieldID, restaritem.FieldOnecGUID, restaritem.FieldName, restaritem.FieldSku, restaritem.FieldItemGUID, restaritem.FieldCharGUID, restaritem.FieldDescription, restaritem.FieldInspector:
 			values[i] = new(sql.NullString)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Restaritem", columns[i])
@@ -65,76 +58,60 @@ func (r *Restaritem) assignValues(columns []string, values []interface{}) error 
 	}
 	for i := range columns {
 		switch columns[i] {
-		case entrestaritem.FieldID:
+		case restaritem.FieldID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value.Valid {
 				r.ID = value.String
 			}
-		case entrestaritem.FieldOnecGUID:
+		case restaritem.FieldOnecGUID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field onecGUID", values[i])
 			} else if value.Valid {
 				r.OnecGUID = value.String
 			}
-		case entrestaritem.FieldName:
+		case restaritem.FieldName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field name", values[i])
 			} else if value.Valid {
 				r.Name = value.String
 			}
-		case entrestaritem.FieldSku:
+		case restaritem.FieldSku:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field sku", values[i])
 			} else if value.Valid {
 				r.Sku = value.String
 			}
-		case entrestaritem.FieldItemGUID:
+		case restaritem.FieldItemGUID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field itemGUID", values[i])
 			} else if value.Valid {
 				r.ItemGUID = value.String
 			}
-		case entrestaritem.FieldCharGUID:
+		case restaritem.FieldCharGUID:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field charGUID", values[i])
 			} else if value.Valid {
 				r.CharGUID = value.String
 			}
-		case entrestaritem.FieldDescription:
+		case restaritem.FieldDescription:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field description", values[i])
 			} else if value.Valid {
 				r.Description = value.String
 			}
-		case entrestaritem.FieldInspector:
+		case restaritem.FieldInspector:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field inspector", values[i])
 			} else if value.Valid {
 				r.Inspector = value.String
 			}
-		case entrestaritem.FieldInspection:
+		case restaritem.FieldInspection:
 			if value, ok := values[i].(*[]byte); !ok {
 				return fmt.Errorf("unexpected type %T for field inspection", values[i])
 			} else if value != nil && len(*value) > 0 {
 				if err := json.Unmarshal(*value, &r.Inspection); err != nil {
 					return fmt.Errorf("unmarshal field inspection: %w", err)
-				}
-			}
-		case entrestaritem.FieldPhotos:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field photos", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &r.Photos); err != nil {
-					return fmt.Errorf("unmarshal field photos: %w", err)
-				}
-			}
-		case entrestaritem.FieldWorks:
-			if value, ok := values[i].(*[]byte); !ok {
-				return fmt.Errorf("unexpected type %T for field works", values[i])
-			} else if value != nil && len(*value) > 0 {
-				if err := json.Unmarshal(*value, &r.Works); err != nil {
-					return fmt.Errorf("unmarshal field works: %w", err)
 				}
 			}
 		}
@@ -181,10 +158,6 @@ func (r *Restaritem) String() string {
 	builder.WriteString(r.Inspector)
 	builder.WriteString(", inspection=")
 	builder.WriteString(fmt.Sprintf("%v", r.Inspection))
-	builder.WriteString(", photos=")
-	builder.WriteString(fmt.Sprintf("%v", r.Photos))
-	builder.WriteString(", works=")
-	builder.WriteString(fmt.Sprintf("%v", r.Works))
 	builder.WriteByte(')')
 	return builder.String()
 }

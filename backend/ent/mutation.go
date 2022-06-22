@@ -3,10 +3,8 @@
 package ent
 
 import (
-	"backend/pkg/ent/predicate"
-	entrestaritem "backend/pkg/ent/restaritem"
-	"backend/pkg/photo"
-	"backend/pkg/restaritem"
+	"backend/ent/predicate"
+	"backend/ent/restaritem"
 	"context"
 	"errors"
 	"fmt"
@@ -41,8 +39,6 @@ type RestaritemMutation struct {
 	description   *string
 	inspector     *string
 	inspection    *[]string
-	photos        *[]photo.Photo
-	works         *[]restaritem.Work
 	clearedFields map[string]struct{}
 	done          bool
 	oldValue      func(context.Context) (*Restaritem, error)
@@ -441,78 +437,6 @@ func (m *RestaritemMutation) ResetInspection() {
 	m.inspection = nil
 }
 
-// SetPhotos sets the "photos" field.
-func (m *RestaritemMutation) SetPhotos(ph []photo.Photo) {
-	m.photos = &ph
-}
-
-// Photos returns the value of the "photos" field in the mutation.
-func (m *RestaritemMutation) Photos() (r []photo.Photo, exists bool) {
-	v := m.photos
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPhotos returns the old "photos" field's value of the Restaritem entity.
-// If the Restaritem object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RestaritemMutation) OldPhotos(ctx context.Context) (v []photo.Photo, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPhotos is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPhotos requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPhotos: %w", err)
-	}
-	return oldValue.Photos, nil
-}
-
-// ResetPhotos resets all changes to the "photos" field.
-func (m *RestaritemMutation) ResetPhotos() {
-	m.photos = nil
-}
-
-// SetWorks sets the "works" field.
-func (m *RestaritemMutation) SetWorks(r []restaritem.Work) {
-	m.works = &r
-}
-
-// Works returns the value of the "works" field in the mutation.
-func (m *RestaritemMutation) Works() (r []restaritem.Work, exists bool) {
-	v := m.works
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldWorks returns the old "works" field's value of the Restaritem entity.
-// If the Restaritem object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *RestaritemMutation) OldWorks(ctx context.Context) (v []restaritem.Work, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldWorks is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldWorks requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldWorks: %w", err)
-	}
-	return oldValue.Works, nil
-}
-
-// ResetWorks resets all changes to the "works" field.
-func (m *RestaritemMutation) ResetWorks() {
-	m.works = nil
-}
-
 // Where appends a list predicates to the RestaritemMutation builder.
 func (m *RestaritemMutation) Where(ps ...predicate.Restaritem) {
 	m.predicates = append(m.predicates, ps...)
@@ -532,36 +456,30 @@ func (m *RestaritemMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *RestaritemMutation) Fields() []string {
-	fields := make([]string, 0, 10)
+	fields := make([]string, 0, 8)
 	if m.onecGUID != nil {
-		fields = append(fields, entrestaritem.FieldOnecGUID)
+		fields = append(fields, restaritem.FieldOnecGUID)
 	}
 	if m.name != nil {
-		fields = append(fields, entrestaritem.FieldName)
+		fields = append(fields, restaritem.FieldName)
 	}
 	if m.sku != nil {
-		fields = append(fields, entrestaritem.FieldSku)
+		fields = append(fields, restaritem.FieldSku)
 	}
 	if m.itemGUID != nil {
-		fields = append(fields, entrestaritem.FieldItemGUID)
+		fields = append(fields, restaritem.FieldItemGUID)
 	}
 	if m.charGUID != nil {
-		fields = append(fields, entrestaritem.FieldCharGUID)
+		fields = append(fields, restaritem.FieldCharGUID)
 	}
 	if m.description != nil {
-		fields = append(fields, entrestaritem.FieldDescription)
+		fields = append(fields, restaritem.FieldDescription)
 	}
 	if m.inspector != nil {
-		fields = append(fields, entrestaritem.FieldInspector)
+		fields = append(fields, restaritem.FieldInspector)
 	}
 	if m.inspection != nil {
-		fields = append(fields, entrestaritem.FieldInspection)
-	}
-	if m.photos != nil {
-		fields = append(fields, entrestaritem.FieldPhotos)
-	}
-	if m.works != nil {
-		fields = append(fields, entrestaritem.FieldWorks)
+		fields = append(fields, restaritem.FieldInspection)
 	}
 	return fields
 }
@@ -571,26 +489,22 @@ func (m *RestaritemMutation) Fields() []string {
 // schema.
 func (m *RestaritemMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case entrestaritem.FieldOnecGUID:
+	case restaritem.FieldOnecGUID:
 		return m.OnecGUID()
-	case entrestaritem.FieldName:
+	case restaritem.FieldName:
 		return m.Name()
-	case entrestaritem.FieldSku:
+	case restaritem.FieldSku:
 		return m.Sku()
-	case entrestaritem.FieldItemGUID:
+	case restaritem.FieldItemGUID:
 		return m.ItemGUID()
-	case entrestaritem.FieldCharGUID:
+	case restaritem.FieldCharGUID:
 		return m.CharGUID()
-	case entrestaritem.FieldDescription:
+	case restaritem.FieldDescription:
 		return m.Description()
-	case entrestaritem.FieldInspector:
+	case restaritem.FieldInspector:
 		return m.Inspector()
-	case entrestaritem.FieldInspection:
+	case restaritem.FieldInspection:
 		return m.Inspection()
-	case entrestaritem.FieldPhotos:
-		return m.Photos()
-	case entrestaritem.FieldWorks:
-		return m.Works()
 	}
 	return nil, false
 }
@@ -600,26 +514,22 @@ func (m *RestaritemMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *RestaritemMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case entrestaritem.FieldOnecGUID:
+	case restaritem.FieldOnecGUID:
 		return m.OldOnecGUID(ctx)
-	case entrestaritem.FieldName:
+	case restaritem.FieldName:
 		return m.OldName(ctx)
-	case entrestaritem.FieldSku:
+	case restaritem.FieldSku:
 		return m.OldSku(ctx)
-	case entrestaritem.FieldItemGUID:
+	case restaritem.FieldItemGUID:
 		return m.OldItemGUID(ctx)
-	case entrestaritem.FieldCharGUID:
+	case restaritem.FieldCharGUID:
 		return m.OldCharGUID(ctx)
-	case entrestaritem.FieldDescription:
+	case restaritem.FieldDescription:
 		return m.OldDescription(ctx)
-	case entrestaritem.FieldInspector:
+	case restaritem.FieldInspector:
 		return m.OldInspector(ctx)
-	case entrestaritem.FieldInspection:
+	case restaritem.FieldInspection:
 		return m.OldInspection(ctx)
-	case entrestaritem.FieldPhotos:
-		return m.OldPhotos(ctx)
-	case entrestaritem.FieldWorks:
-		return m.OldWorks(ctx)
 	}
 	return nil, fmt.Errorf("unknown Restaritem field %s", name)
 }
@@ -629,75 +539,61 @@ func (m *RestaritemMutation) OldField(ctx context.Context, name string) (ent.Val
 // type.
 func (m *RestaritemMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case entrestaritem.FieldOnecGUID:
+	case restaritem.FieldOnecGUID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetOnecGUID(v)
 		return nil
-	case entrestaritem.FieldName:
+	case restaritem.FieldName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
 		return nil
-	case entrestaritem.FieldSku:
+	case restaritem.FieldSku:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetSku(v)
 		return nil
-	case entrestaritem.FieldItemGUID:
+	case restaritem.FieldItemGUID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetItemGUID(v)
 		return nil
-	case entrestaritem.FieldCharGUID:
+	case restaritem.FieldCharGUID:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCharGUID(v)
 		return nil
-	case entrestaritem.FieldDescription:
+	case restaritem.FieldDescription:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDescription(v)
 		return nil
-	case entrestaritem.FieldInspector:
+	case restaritem.FieldInspector:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetInspector(v)
 		return nil
-	case entrestaritem.FieldInspection:
+	case restaritem.FieldInspection:
 		v, ok := value.([]string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetInspection(v)
-		return nil
-	case entrestaritem.FieldPhotos:
-		v, ok := value.([]photo.Photo)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPhotos(v)
-		return nil
-	case entrestaritem.FieldWorks:
-		v, ok := value.([]restaritem.Work)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetWorks(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Restaritem field %s", name)
@@ -748,35 +644,29 @@ func (m *RestaritemMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *RestaritemMutation) ResetField(name string) error {
 	switch name {
-	case entrestaritem.FieldOnecGUID:
+	case restaritem.FieldOnecGUID:
 		m.ResetOnecGUID()
 		return nil
-	case entrestaritem.FieldName:
+	case restaritem.FieldName:
 		m.ResetName()
 		return nil
-	case entrestaritem.FieldSku:
+	case restaritem.FieldSku:
 		m.ResetSku()
 		return nil
-	case entrestaritem.FieldItemGUID:
+	case restaritem.FieldItemGUID:
 		m.ResetItemGUID()
 		return nil
-	case entrestaritem.FieldCharGUID:
+	case restaritem.FieldCharGUID:
 		m.ResetCharGUID()
 		return nil
-	case entrestaritem.FieldDescription:
+	case restaritem.FieldDescription:
 		m.ResetDescription()
 		return nil
-	case entrestaritem.FieldInspector:
+	case restaritem.FieldInspector:
 		m.ResetInspector()
 		return nil
-	case entrestaritem.FieldInspection:
+	case restaritem.FieldInspection:
 		m.ResetInspection()
-		return nil
-	case entrestaritem.FieldPhotos:
-		m.ResetPhotos()
-		return nil
-	case entrestaritem.FieldWorks:
-		m.ResetWorks()
 		return nil
 	}
 	return fmt.Errorf("unknown Restaritem field %s", name)
