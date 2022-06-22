@@ -61,12 +61,12 @@ func NewMinioStore(c *minio.Client) (stor *MinioStore, err error) {
 	if err != nil {
 		exists, errBucketExists := stor.minio.BucketExists(context.Background(), stor.bucket)
 		if errBucketExists == nil && exists {
-			log.Info().Msgf("minio already own %s", stor.bucket)
+			log.Debug().Msgf("minio already own %s", stor.bucket)
 		} else {
 			return nil, err
 		}
 	} else {
-		log.Info().Msgf("minio bucket suscessfully created %s", stor.bucket)
+		log.Debug().Msgf("minio bucket suscessfully created %s", stor.bucket)
 	}
 
 	if err = stor.minio.SetBucketPolicy(context.Background(), stor.bucket, stor.bucketPolicy); err != nil {

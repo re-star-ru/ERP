@@ -58,7 +58,6 @@ linters:
     - staticcheck
     - structcheck
     - stylecheck
-    - tagliatelle
     - tenv
     - testpackage
     - thelper

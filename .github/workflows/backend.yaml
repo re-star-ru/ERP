@@ -59,6 +59,7 @@ jobs:
           ONEC_TOKEN: ${{ secrets.ONEC_TOKEN }}
           MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+          PG_ADDR: ${{ secrets.PG_ADDR }}
 
         run: |
           envsubst \${IMAGE_NAME},\${TAG},\${ONEC_TOKEN},\${MINIO_ACCESS_KEY},\${MINIO_SECRET_KEY},\${API_KEY} < service.nomad > job.nomad

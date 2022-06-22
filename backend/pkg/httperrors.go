@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"backend/pkg/restaritem"
 	"errors"
 	"fmt"
 	"net/http"
@@ -19,6 +20,14 @@ func SendErrorJSON(w http.ResponseWriter, r *http.Request, httpStatusCode int, e
 	log.Warn().CallerSkipFrame(1).Err(err).Msg(errDetailsMsg(r, httpStatusCode, details))
 	render.Status(r, httpStatusCode)
 	render.JSON(w, r, JSON{"error": err.Error(), "message": details})
+}
+
+func StatuscodeByError(err error) int {
+	if errors.Is(err, restaritem.ErrValidation) {
+		return http.StatusBadRequest
+	}
+
+	return http.StatusInternalServerError
 }
 
 func errDetailsMsg(r *http.Request, httpStatusCode int, details string) string {

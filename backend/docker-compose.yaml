@@ -2,11 +2,15 @@
 services:
   db:
     image: postgres:alpine
+    restart: always
     environment:
       - POSTGRES_USER=oprox
       - POSTGRES_PASSWORD=oprox
       - POSTGRES_DB=oprox
     ports:
-      - "5432:5432"
+      - "5555:5432"
     volumes:
-      - './db/pg:/docker-entrypoint-initdb.d'
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:

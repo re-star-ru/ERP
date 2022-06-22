@@ -1,9 +1,16 @@
 package main
 
 import (
+	"backend/configs"
+	"backend/ent"
+	"backend/ent/migrate"
 	"backend/pkg/oneclient"
 	"backend/pkg/qr"
+	restaritemDelivery "backend/pkg/restaritem/delivery"
+	restaritemRepo "backend/pkg/restaritem/repo"
+	restaritemUsecase "backend/pkg/restaritem/usecase"
 	"backend/pkg/warehouse/cell"
+	"context"
 	"errors"
 	"os"
 
@@ -24,34 +31,18 @@ import (
 
 	"net/http"
 	_ "net/http/pprof"
+
+	_ "github.com/lib/pq"
 )
 
-type cfg struct {
-	endpoint, accessKey, secretAccessKey string
-	onecHost, onecToken                  string
-	production                           bool
-}
-
-func newMinio(c cfg) *minio.Client {
-	minioClient, err := minio.New(c.endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(c.accessKey, c.secretAccessKey, ""),
-		Secure: true,
-	})
-	if err != nil {
-		log.Fatal().Err(err).Msg("Minio init error")
-	}
-
-	return minioClient
-}
-
 //nolint:funlen
-func Rest(rest cfg) *chi.Mux {
-	log.Info().
-		Str("MINIO", rest.endpoint).
-		Str("ONEC", rest.onecHost).
+func Rest(config configs.Config) *chi.Mux {
+	log.Debug().
+		Str("MINIO", config.Endpoint).
+		Str("ONEC", config.OnecHost).
 		Msg("resources endpoints")
 
-	minioClient := newMinio(rest)
+	minioClient := newMinio(config)
 
 	stor, err := store.NewMinioStore(minioClient) // global app bucket
 	if err != nil {
@@ -63,8 +54,8 @@ func Rest(rest cfg) *chi.Mux {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
-	if !rest.production {
-		log.Info().Msg("development...")
+	if !config.Production {
+		log.Debug().Msg("development...")
 		router.Use(cors.AllowAll().Handler)
 	}
 
@@ -77,7 +68,7 @@ func Rest(rest cfg) *chi.Mux {
 	})
 	// -
 
-	onecClient := oneclient.NewOneClient(rest.onecHost, rest.onecToken)
+	onecClient := oneclient.NewOneClient(config.OnecHost, config.OnecToken)
 
 	itemRepo := repo.NewRepoOnec(onecClient)
 	itemUsecase := usecase.NewItemUsecase(itemRepo)
@@ -90,6 +81,19 @@ func Rest(rest cfg) *chi.Mux {
 		// site api
 		router.Get("/search/{query}", itemHTTP.SearchBySKU)
 		router.Get("/catalog", itemHTTP.CatalogHandler)
+	}
+
+	{
+		// restar item - инфа по товарам в ремонте или приемке
+		client := initEnt(config.PG)
+
+		rirepo := restaritemRepo.NewRestaritemRepo(client)
+		riUcase := restaritemUsecase.NewRestaritemUsecase(rirepo)
+		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase)
+
+		router.Post("/restaritem", riDelivery.Create)
+		router.Get("/restaritem", riDelivery.GetAll)
+		router.Get("/restaritem/{id}", riDelivery.RestaritemView)
 	}
 
 	{
@@ -146,4 +150,30 @@ func SimpleAuthMiddleware(next http.Handler) http.Handler {
 		log.Debug().Msg("auth ok")
 		next.ServeHTTP(w, r)
 	})
+}
+
+func newMinio(config configs.Config) *minio.Client {
+	minioClient, err := minio.New(config.Endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(config.AccessKey, config.SecretAccessKey, ""),
+		Secure: true,
+	})
+	if err != nil {
+		log.Fatal().Err(err).Msg("Minio init error")
+	}
+
+	return minioClient
+}
+
+func initEnt(path string) *ent.Client {
+	client, err := ent.Open("postgres", path)
+	if err != nil {
+		log.Fatal().Err(err).Msg("ent init error")
+	}
+
+	if err = client.Schema.Create(
+		context.Background(), migrate.WithGlobalUniqueID(true)); err != nil {
+		log.Fatal().Err(err).Msg("failed to create schema")
+	}
+
+	return client
 }

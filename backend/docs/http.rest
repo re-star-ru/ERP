@@ -33,3 +33,26 @@ Content-Type: application/json
   "text": ["артикул", "характеристика", "наименование"]
 }
 
+### restaritem create
+POST {{host}}/restaritem
+Content-Type: application/json
+
+{
+  "name": "Продукт",
+  "onecGUID": "asdf-asdf-asdf-asdf",
+  "price": 100,
+  "quantity": 10,
+  "category": "Категория",
+  "description": "Описание",
+  "image": "https://re-star.ru/oprox/warehouse/cell/N2_15-G-06"
+}
+
+
+### restaritem view all
+GET {{host}}/restaritem
+
+### restaritem view one
+GET {{host}}/restaritem/1
+
+### restaritem view one json
+GET {{host}}/restaritem/2?json
