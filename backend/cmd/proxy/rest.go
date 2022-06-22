@@ -175,5 +175,7 @@ func initEnt(path string) *ent.Client {
 		log.Fatal().Err(err).Msg("failed to create schema")
 	}
 
+	log.Debug().Msg("ENT. init ok: " + path)
+
 	return client
 }
