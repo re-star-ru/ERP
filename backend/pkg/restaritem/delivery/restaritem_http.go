@@ -2,12 +2,15 @@ package delivery
 
 import (
 	"backend/pkg"
+	"backend/pkg/photo"
 	"backend/pkg/restaritem"
 	"context"
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"github.com/rs/zerolog/log"
 	"html/template"
+	"io"
 	"net/http"
 	"strconv"
 )
@@ -17,7 +20,7 @@ import (
 // адрес для выкладывания товара на сайт
 // список всех товаров на сайте так же
 
-type IHTTPRestaritemUsecase interface {
+type IRestaritemUsecase interface {
 	Create(ctx context.Context, restaritem restaritem.RestarItem) (*restaritem.RestarItem, error)
 	GetAll(ctx context.Context) ([]*restaritem.RestarItem, error) // pagination?
 	GetByID(ctx context.Context, id int) (*restaritem.RestarItem, error)
@@ -25,14 +28,20 @@ type IHTTPRestaritemUsecase interface {
 	AddPhoto(ctx context.Context, id int, photo []byte) error
 }
 
-func NewHTTPRestaritemDelivery(uc IHTTPRestaritemUsecase) *HTTPRestaritemDelivery {
+type IPhotoUsecase interface {
+	NewPhoto(ctx context.Context, file io.Reader, fileSize int64, name string) (photo.Photo, error)
+}
+
+func NewHTTPRestaritemDelivery(uc IRestaritemUsecase, phuc IPhotoUsecase) *HTTPRestaritemDelivery {
 	return &HTTPRestaritemDelivery{
-		uc: uc,
+		uc:   uc,
+		phuc: phuc,
 	}
 }
 
 type HTTPRestaritemDelivery struct {
-	uc IHTTPRestaritemUsecase
+	uc   IRestaritemUsecase
+	phuc IPhotoUsecase
 }
 
 // 1: создать новый итем, возвращает id итема, который потом надо перенаправить в qr код
@@ -68,7 +77,7 @@ func (h *HTTPRestaritemDelivery) GetAll(w http.ResponseWriter, r *http.Request) 
 
 // 4: страница с данными об итеме, включая дефекты, работы, фото
 func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.Request) {
-	id, err := parseId(r)
+	id, err := parseID(r)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "cant parse id")
 
@@ -102,7 +111,7 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 	}
 }
 
-func parseId(r *http.Request) (int, error) {
+func parseID(r *http.Request) (int, error) {
 	sid := chi.URLParam(r, "id")
 	if sid == "" {
 		return 0, pkg.ErrWrongInput
@@ -117,7 +126,7 @@ func parseId(r *http.Request) (int, error) {
 }
 
 func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request) {
-	id, err := parseId(r)
+	id, err := parseID(r)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse id")
 
@@ -130,6 +139,25 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 
 		return
 	}
+
+	//if err = r.ParseMultipartForm(); err != nil {
+	//	pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse form")
+	//
+	//	return
+	//}
+
+	// load image
+	f, ff, err := r.FormFile("photo")
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get file")
+
+		return
+	}
+	defer f.Close()
+
+	h.phuc.NewPhoto(r.Context(), f, ff.Size, ff.Filename)
+
+	log.Print("ritem: ", f, ff.Header, ff.Size, ff.Filename)
 
 	// load image
 	// render 5 sizes of image

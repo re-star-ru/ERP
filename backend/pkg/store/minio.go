@@ -84,6 +84,14 @@ func (m *MinioStore) Store(fpath, contentType string, r io.Reader) (string, erro
 	return path.Join(info.Bucket, info.Key), err
 }
 
+func (m *MinioStore) StoreSize(fpath, contentType string, r io.Reader, size int64) (string, error) {
+	info, err := m.minio.PutObject(context.Background(), m.bucket, fpath, r, size,
+		minio.PutObjectOptions{ContentType: contentType},
+	)
+
+	return path.Join(info.Bucket, info.Key), err
+}
+
 func (m *MinioStore) Path() string {
 	return fmt.Sprintf("%s/%s", m.endpoint, m.bucket)
 }

@@ -43,9 +43,7 @@ Content-Type: application/json
   "price": 100,
   "quantity": 10,
   "category": "Категория",
-  "description": "Описание",
-  "photos": "",
-  "image": "https://re-star.ru/oprox/warehouse/cell/N2_15-G-06"
+  "description": "Описание"
 }
 
 
@@ -54,6 +52,19 @@ GET {{host}}/restaritem
 
 ### restaritem view one
 GET {{host}}/restaritem/1
+
+### restaritem add photo 2
+POST {{host}}/restaritem/1/addPhoto
+
+### restaritem add photo 1
+POST {{host}}/restaritem/1/addPhoto
+Content-Type: multipart/form-data;boundary=--boundary
+
+----boundary
+Content-Disposition: form-data; name="photo"; filename="photo.jpg"
+
+< ./photo.jpg
+----boundary--
 
 ### restaritem view one json
 GET {{host}}/restaritem/2?json

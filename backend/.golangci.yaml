@@ -76,5 +76,6 @@ linters:
 linters-settings:
   varnamelen:
     ignore-decls:
+      - wg sync.WaitGroup
       - w http.ResponseWriter
       - r *http.Request

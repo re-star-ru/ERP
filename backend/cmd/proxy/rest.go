@@ -5,6 +5,7 @@ import (
 	"backend/ent"
 	"backend/ent/migrate"
 	"backend/pkg/oneclient"
+	"backend/pkg/photo"
 	"backend/pkg/qr"
 	restaritemDelivery "backend/pkg/restaritem/delivery"
 	restaritemRepo "backend/pkg/restaritem/repo"
@@ -83,12 +84,15 @@ func Rest(config configs.Config) *chi.Mux {
 	}
 
 	{
+		// photo usecase
+		photoUsecase := photo.NewPhotoUsecase(stor)
+
 		// restar item - инфа по товарам в ремонте или приемке
 		client := initEnt(config.PG)
 
 		rirepo := restaritemRepo.NewRestaritemRepo(client)
 		riUcase := restaritemUsecase.NewRestaritemUsecase(rirepo)
-		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase)
+		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase, photoUsecase)
 
 		router.Post("/restaritem", riDelivery.Create)
 		router.Get("/restaritem", riDelivery.GetAll)
