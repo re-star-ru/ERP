@@ -27,7 +27,9 @@
 
 
 
-        <button class="btn btn-primary">кнопка записи голосового сообщения</button>
+        <button class="start-record btn btn-primary">кнопка записи голосового сообщения</button>
+        <button class="stop-record btn btn-primary">стоп запись</button>
+
         <label for="soundFile">What does your voice sound like?:</label>
         <input type="file" id="soundFile" capture="user" accept="audio/*">
 
@@ -37,7 +39,9 @@
 </div>
 
 <script>
-const record = document.querySelector('button');
+const record = document.querySelector('.start-record');
+const stopRecord = document.querySelector('.stop-record');
+
 const info = document.querySelector('.info');
 
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -46,7 +50,42 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then(function(stream) {
-            const mediaRecorder = new MediaRecorder(record.captureStream())
+            const mediaRecorder = new MediaRecorder(stream);
+
+            let chuncks = [];
+            mediaRecorder.ondataavailable = function(e) {
+                chuncks.push(e.data);
+            };
+
+            mediaRecorder.onstop = function(e) {
+                const blob = new Blob(chuncks, { 'type': 'audio/wav' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'audio.wav';
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(function() {
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+            };
+
+            record.onclick = function() {
+                mediaRecorder.start()
+                info.innerHTML = '\nRecording state... ' + mediaRecorder.state
+                info.innerHTML += '\nrecorder started'
+
+
+                navigator.mediaDevices.getUserMedia({audio: true})
+            }
+
+            stopRecord.onclick = function() {
+                mediaRecorder.stop()
+                info.innerHTML = '\nRecording state... ' + mediaRecorder.state
+                info.innerHTML += '\nrecorder stopped'
+            }
 
         })
         .catch(function(err) {
