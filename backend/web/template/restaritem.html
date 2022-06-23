@@ -32,7 +32,34 @@
         <input type="file" id="soundFile" capture="user" accept="audio/*">
 
     </div>
+
+    <div class="info"></div>
 </div>
+
+<script>
+const record = document.querySelector('button');
+const info = document.querySelector('.info');
+
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    info.innerHTML = 'getUserMedia supported.';
+
+    navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then(function(stream) {
+            const mediaRecorder = new MediaRecorder(record.captureStream())
+
+        })
+        .catch(function(err) {
+            info.innerHTML = 'Error: ' + err
+        })
+
+
+} else {
+    info.innerHTML = 'getUserMedia not supported on your browser!'
+}
+
+
+</script>
 
 </body>
 </html>
