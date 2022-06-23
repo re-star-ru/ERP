@@ -66,5 +66,27 @@ Content-Disposition: form-data; name="photo"; filename="photo.jpg"
 < ./photo.jpg
 ----boundary--
 
+### restaritem add photo 2 heic
+POST {{host}}/restaritem/1/addPhoto
+Content-Type: multipart/form-data;boundary=--boundary
+
+----boundary
+Content-Disposition: form-data; name="photo"; filename="a.heic"
+Content-Type: image/heic
+
+< /home/restar/photos/a.heic
+----boundary--
+
+### restaritem add photo 2 large
+POST {{host}}/restaritem/1/addPhoto
+Content-Type: multipart/form-data;boundary=--boundary
+
+----boundary
+Content-Disposition: form-data; name="photo"; filename="a.jpg"
+Content-Type: image/jpeg
+
+< /home/restar/photos/a.jpg
+----boundary--
+
 ### restaritem view one json
 GET {{host}}/restaritem/2?json

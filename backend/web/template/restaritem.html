@@ -18,29 +18,19 @@
 <body>
 
 <div hx-trigger="load">
-    <div class="container">
-        <h1 class="text-xl">{{.}} Restar item view</h1>
+    <div class="container p-2">
+        <h1 class="text-xl">Товар в ремонте №{{.ID}}</h1>
 
-        <form hx-encoding='multipart/form-data' hx-post="{{.ID}}/addPhoto"
-              _='on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100'>
-
-            <div class="row mb-2">
-                <button class="btn btn-primary p-2 col col-md-6 col-lg-4">
-                    Добавить фото +
-                </button>
-                <input type='file' name='file'>
-                <progress id='progress' value='0' max='100'></progress>
-
-                {{range .Photos}}
-                <img class="p-2 col col-md-6 col-lg-4" src="https://loremflickr.com/800/600">
-                {{ . }}
-                {{else}} пусто {{end}}
-
-                <img class="p-2 col col-md-6 col-lg-4" src="https://loremflickr.com/800/600">
-            </div>
+        <form hx-encoding='multipart/form-data' hx-post="{{.ID}}/addPhoto">
+            {{template "photosView" .}}
         </form>
 
+
+
         <button class="btn btn-primary">кнопка записи голосового сообщения</button>
+        <label for="soundFile">What does your voice sound like?:</label>
+        <input type="file" id="soundFile" capture="user" accept="audio/*">
+
     </div>
 </div>
 

@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"backend/pkg/photo"
 	"backend/pkg/restaritem"
 	"context"
 )
@@ -9,6 +10,7 @@ type IRestaritemRepo interface {
 	Create(ctx context.Context, item restaritem.RestarItem) (*restaritem.RestarItem, error)
 	List(context.Context) ([]*restaritem.RestarItem, error)
 	Get(ctx context.Context, id int) (*restaritem.RestarItem, error)
+	AddPhoto(ctx context.Context, id int, photo photo.Photo) error
 }
 
 func NewRestaritemUsecase(repo IRestaritemRepo) *RestarItemUsecase {
@@ -21,10 +23,12 @@ type RestarItemUsecase struct {
 	repo IRestaritemRepo
 }
 
-func (r RestarItemUsecase) AddPhoto(ctx context.Context, id int, photo []byte) error {
+func (r RestarItemUsecase) AddPhoto(ctx context.Context, id int, photo photo.Photo) (*restaritem.RestarItem, error) {
+	if err := r.repo.AddPhoto(ctx, id, photo); err != nil {
+		return nil, err
+	}
 
-	//TODO implement me
-	panic("implement me")
+	return r.repo.Get(ctx, id)
 }
 
 func (r RestarItemUsecase) Create(ctx context.Context, restaritem restaritem.RestarItem) (*restaritem.RestarItem, error) {

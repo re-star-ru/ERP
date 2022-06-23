@@ -50,14 +50,23 @@ type Storer interface {
 func NewPhotoUsecase(store Storer) *Usecase {
 	phuc := &Usecase{store: store}
 
+	var (
+		bpreset []byte
+		err     error
+	)
 	for i, v := range presets {
-		bpreset, err := json.Marshal(v)
+
+		bpreset, err = json.Marshal(append(v, convertJpeg))
 		if err != nil {
 			log.Fatal().Err(err).Msg("can't marshal preset")
 		}
+		phuc.presets[i] = append(phuc.presets[i], url.Values{"operations": {string(bpreset[:])}}.Encode())
 
-		values := url.Values{"operations": {string(bpreset[:])}}
-		phuc.presets[i] = values.Encode()
+		bpreset, err = json.Marshal(append(v, convertWebp))
+		if err != nil {
+			log.Fatal().Err(err).Msg("can't marshal preset")
+		}
+		phuc.presets[i] = append(phuc.presets[i], url.Values{"operations": {string(bpreset[:])}}.Encode())
 	}
 
 	return phuc
@@ -65,7 +74,7 @@ func NewPhotoUsecase(store Storer) *Usecase {
 
 type Usecase struct {
 	store   Storer
-	presets [4]string
+	presets [4][]string
 }
 
 func (uc *Usecase) NewPhoto(ctx context.Context, dir string, photo io.ReadCloser) (Photo, error) {
@@ -95,9 +104,14 @@ func (uc *Usecase) NewPhoto(ctx context.Context, dir string, photo io.ReadCloser
 	nPhoto.Sizes[original] = path
 
 	for i := 1; i < 5; i++ {
-		wg.Add(1)
-		storePath := dir + "/" + nPhoto.ID + "/" + strconv.Itoa(i) + ".webp"
-		go uc.processFile(ctx, &wg, &buf, &nPhoto.Sizes[i], uc.presets[i-1], storePath)
+		wg.Add(2)
+
+		storePath := dir + "/" + nPhoto.ID + "/" + strconv.Itoa(i)
+		jpgPath := storePath + ".jpg"
+		webpPath := storePath + ".webp"
+
+		go uc.processFile(ctx, &wg, &buf, &nPhoto.Sizes[i], uc.presets[i-1][0], jpgPath)
+		go uc.processFile(ctx, &wg, &buf, &nPhoto.Sizes[i], uc.presets[i-1][1], webpPath)
 	}
 
 	wg.Wait()
@@ -172,11 +186,19 @@ var watermark = Operation{
 		"image":   "https://s3.re-star.ru/oprox/watermark.png",
 		"top":     "0",
 		"left":    "0",
-		"opacity": "0.5",
+		"opacity": "0.15",
 	},
 }
 
 var convertWebp = Operation{
+	Operation: "convert",
+	Params: map[string]interface{}{
+		"type":        "webp",
+		"aspectratio": "4:3",
+	},
+}
+
+var convertJpeg = Operation{
 	Operation: "convert",
 	Params: map[string]interface{}{
 		"type": "webp",
@@ -188,7 +210,8 @@ var presetThumbnail = []Operation{
 		Operation:     "resize",
 		IgnoreFailure: false,
 		Params: map[string]interface{}{
-			"width": "1200",
+			"width":       "200",
+			"aspectRatio": "4:3",
 		},
 	},
 	convertWebp,
@@ -200,21 +223,24 @@ var presetSmall = []Operation{
 		Operation:     "resize",
 		IgnoreFailure: false,
 		Params: map[string]interface{}{
-			"width": "1200",
+			"width":       "400",
+			"aspectRatio": "4:3",
 		},
 	},
 	convertWebp,
 }
 
 var presetMedium = []Operation{
-	watermark,
 	{
 		Operation:     "resize",
 		IgnoreFailure: false,
 		Params: map[string]interface{}{
-			"width": "800",
+			"width":       "800",
+			"aspectratio": "4:3",
+			"nocrop":      false,
 		},
 	},
+	watermark,
 	convertWebp,
 }
 
@@ -224,7 +250,8 @@ var presetLarge = []Operation{
 		Operation:     "resize",
 		IgnoreFailure: false,
 		Params: map[string]interface{}{
-			"width": "1200",
+			"width":       "1200",
+			"aspectRatio": "4:3",
 		},
 	},
 	convertWebp,

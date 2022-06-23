@@ -25,7 +25,7 @@ type IRestaritemUsecase interface {
 	GetAll(ctx context.Context) ([]*restaritem.RestarItem, error) // pagination?
 	GetByID(ctx context.Context, id int) (*restaritem.RestarItem, error)
 
-	AddPhoto(ctx context.Context, id int, photo []byte) error
+	AddPhoto(ctx context.Context, id int, photo photo.Photo) (*restaritem.RestarItem, error)
 }
 
 type IPhotoUsecase interface {
@@ -97,7 +97,12 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	tmpl, err := template.ParseFiles("./web/template/restaritem.html")
+	files := []string{
+		"./web/template/restaritem.html",
+		"./web/template/photos_view.html",
+	}
+
+	tmpl, err := template.ParseFiles(files...)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant parse template")
 
@@ -133,7 +138,7 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	ritem, err := h.uc.GetByID(r.Context(), id)
+	_, err = h.uc.GetByID(r.Context(), id)
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get restaritem")
 
@@ -147,12 +152,14 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 	//}
 
 	// load image
-	f, _, err := r.FormFile("photo")
+	f, ff, err := r.FormFile("photo")
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get file")
 
 		return
 	}
+
+	log.Printf("input photo Content-Type: %+v", ff.Header.Get("Content-Type"))
 
 	nPhoto, err := h.phuc.NewPhoto(r.Context(), "restaritem", f)
 	if err != nil {
@@ -161,7 +168,14 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	log.Printf("ritem: %+v", nPhoto)
+	nritem, err := h.uc.AddPhoto(r.Context(), id, nPhoto)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant add photo")
+
+		return
+	}
+
+	log.Printf("ritem: %+v", nritem)
 
 	// load image
 	// render 5 sizes of image
@@ -170,5 +184,20 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 	// update ritem with this Image{} struct
 	// return new ritem
 
-	render.JSON(w, r, ritem)
+	files := []string{
+		"./web/template/photos_view.html",
+	}
+
+	tmpl, err := template.ParseFiles(files...)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant parse template")
+
+		return
+	}
+
+	if err = tmpl.Execute(w, nritem); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant execute template")
+
+		return
+	}
 }
