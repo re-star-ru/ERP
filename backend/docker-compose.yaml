@@ -12,5 +12,11 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
 
+  imaginary:
+    image: ghcr.io/wordpress/openverse-imaginary:latest
+    restart: always
+    ports:
+      - "5556:9000"
+
 volumes:
   data:

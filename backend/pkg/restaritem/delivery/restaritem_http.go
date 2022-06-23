@@ -29,7 +29,7 @@ type IRestaritemUsecase interface {
 }
 
 type IPhotoUsecase interface {
-	NewPhoto(ctx context.Context, file io.Reader, fileSize int64, name string) (photo.Photo, error)
+	NewPhoto(ctx context.Context, dir string, photo io.ReadCloser) (photo.Photo, error)
 }
 
 func NewHTTPRestaritemDelivery(uc IRestaritemUsecase, phuc IPhotoUsecase) *HTTPRestaritemDelivery {
@@ -147,17 +147,21 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 	//}
 
 	// load image
-	f, ff, err := r.FormFile("photo")
+	f, _, err := r.FormFile("photo")
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get file")
 
 		return
 	}
-	defer f.Close()
 
-	h.phuc.NewPhoto(r.Context(), f, ff.Size, ff.Filename)
+	nPhoto, err := h.phuc.NewPhoto(r.Context(), "restaritem", f)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant create photo")
 
-	log.Print("ritem: ", f, ff.Header, ff.Size, ff.Filename)
+		return
+	}
+
+	log.Printf("ritem: %+v", nPhoto)
 
 	// load image
 	// render 5 sizes of image
