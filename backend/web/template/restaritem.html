@@ -1,20 +1,65 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <script src="https://unpkg.com/htmx.org@1.7.0"
+            integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+    <title>Restaritem</title>
 </head>
 <body>
-    Restar item view
 
-    кнопка добавления и удаления картинок
+<div hx-trigger="load">
+    <div class="container p-2">
+        <h1 class="text-xl">Товар в ремонте №{{.ID}}</h1>
 
-    <button>k</button>
+        <form hx-encoding='multipart/form-data' hx-post="{{.ID}}/addPhoto">
+            {{template "photosView" .}}
+        </form>
 
-    кнопка записи голосового сообщения
-    <button>k</button>
+
+
+        <button class="btn btn-primary">кнопка записи голосового сообщения</button>
+        <label for="soundFile">What does your voice sound like?:</label>
+        <input type="file" id="soundFile" capture="user" accept="audio/*">
+
+    </div>
+
+    <div class="info"></div>
+</div>
+
+<script>
+const record = document.querySelector('button');
+const info = document.querySelector('.info');
+
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    info.innerHTML = 'getUserMedia supported.';
+
+    navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then(function(stream) {
+            const mediaRecorder = new MediaRecorder(record.captureStream())
+
+        })
+        .catch(function(err) {
+            info.innerHTML = 'Error: ' + err
+        })
+
+
+} else {
+    info.innerHTML = 'getUserMedia not supported on your browser!'
+}
+
+
+</script>
+
 </body>
 </html>

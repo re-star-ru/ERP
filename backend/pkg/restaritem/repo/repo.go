@@ -3,6 +3,7 @@ package repo
 import (
 	"backend/ent"
 	entrestaritem "backend/ent/restaritem"
+	"backend/pkg/photo"
 	"backend/pkg/restaritem"
 	"context"
 	"fmt"
@@ -34,6 +35,37 @@ func (r RestaritemRepo) Create(ctx context.Context, item restaritem.RestarItem) 
 	}
 
 	return rit, nil
+}
+
+func (r *RestaritemRepo) AddPhoto(ctx context.Context, id int, photo photo.Photo) error {
+	tx, err := r.client.Tx(ctx)
+	if err != nil {
+		return fmt.Errorf("create tx error: %w", err)
+	}
+
+	u, err := tx.Restaritem.Query().Where(entrestaritem.IDEQ(id)).Only(ctx)
+	if err != nil {
+		return fmt.Errorf("get item error: %w", err)
+	}
+
+	if err = tx.Restaritem.
+		Update().
+		SetPhotos(append(u.Photos, photo)).
+		Where(entrestaritem.IDEQ(id)).
+		Exec(ctx); err != nil {
+		return rollback(tx, fmt.Errorf("update item error: %w", err))
+	}
+
+	return tx.Commit()
+}
+
+// rollback calls to tx.Rollback and wraps the given error
+// with the rollback error if occurred.
+func rollback(tx *ent.Tx, err error) error {
+	if rerr := tx.Rollback(); rerr != nil {
+		err = fmt.Errorf("%w: %v", err, rerr)
+	}
+	return err
 }
 
 func (r *RestaritemRepo) List(ctx context.Context) ([]*restaritem.RestarItem, error) {

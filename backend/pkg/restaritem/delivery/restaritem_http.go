@@ -2,13 +2,16 @@ package delivery
 
 import (
 	"backend/pkg"
+	"backend/pkg/photo"
 	"backend/pkg/restaritem"
 	"context"
 	"encoding/json"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
+	"github.com/rs/zerolog/log"
+	"html/template"
+	"io"
 	"net/http"
-	"os"
 	"strconv"
 )
 
@@ -17,20 +20,28 @@ import (
 // адрес для выкладывания товара на сайт
 // список всех товаров на сайте так же
 
-type IHTTPRestaritemUsecase interface {
+type IRestaritemUsecase interface {
 	Create(ctx context.Context, restaritem restaritem.RestarItem) (*restaritem.RestarItem, error)
 	GetAll(ctx context.Context) ([]*restaritem.RestarItem, error) // pagination?
 	GetByID(ctx context.Context, id int) (*restaritem.RestarItem, error)
+
+	AddPhoto(ctx context.Context, id int, photo photo.Photo) (*restaritem.RestarItem, error)
 }
 
-func NewHTTPRestaritemDelivery(uc IHTTPRestaritemUsecase) *HTTPRestaritemDelivery {
+type IPhotoUsecase interface {
+	NewPhoto(ctx context.Context, dir string, photo io.ReadCloser) (photo.Photo, error)
+}
+
+func NewHTTPRestaritemDelivery(uc IRestaritemUsecase, phuc IPhotoUsecase) *HTTPRestaritemDelivery {
 	return &HTTPRestaritemDelivery{
-		uc: uc,
+		uc:   uc,
+		phuc: phuc,
 	}
 }
 
 type HTTPRestaritemDelivery struct {
-	uc IHTTPRestaritemUsecase
+	uc   IRestaritemUsecase
+	phuc IPhotoUsecase
 }
 
 // 1: создать новый итем, возвращает id итема, который потом надо перенаправить в qr код
@@ -66,16 +77,9 @@ func (h *HTTPRestaritemDelivery) GetAll(w http.ResponseWriter, r *http.Request) 
 
 // 4: страница с данными об итеме, включая дефекты, работы, фото
 func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.Request) {
-	sid := chi.URLParam(r, "id")
-	if sid == "" {
-		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "id is empty")
-
-		return
-	}
-
-	id, err := strconv.Atoi(sid)
+	id, err := parseID(r)
 	if err != nil {
-		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "id is not int")
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "cant parse id")
 
 		return
 	}
@@ -93,12 +97,107 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 		return
 	}
 
-	html, err := os.ReadFile("./web/template/restaritem.html")
+	files := []string{
+		"./web/template/restaritem.html",
+		"./web/template/photos_view.html",
+	}
+
+	tmpl, err := template.ParseFiles(files...)
 	if err != nil {
-		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "")
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant parse template")
 
 		return
 	}
 
-	render.HTML(w, r, string(html))
+	if err = tmpl.Execute(w, ritem); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant execute template")
+
+		return
+	}
+}
+
+func parseID(r *http.Request) (int, error) {
+	sid := chi.URLParam(r, "id")
+	if sid == "" {
+		return 0, pkg.ErrWrongInput
+	}
+
+	id, err := strconv.Atoi(sid)
+	if err != nil {
+		return 0, pkg.ErrWrongInput
+	}
+
+	return id, nil
+}
+
+func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request) {
+	id, err := parseID(r)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse id")
+
+		return
+	}
+
+	_, err = h.uc.GetByID(r.Context(), id)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get restaritem")
+
+		return
+	}
+
+	//if err = r.ParseMultipartForm(); err != nil {
+	//	pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse form")
+	//
+	//	return
+	//}
+
+	// load image
+	f, ff, err := r.FormFile("photo")
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get file")
+
+		return
+	}
+
+	log.Printf("input photo Content-Type: %+v", ff.Header.Get("Content-Type"))
+
+	nPhoto, err := h.phuc.NewPhoto(r.Context(), "restaritem", f)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant create photo")
+
+		return
+	}
+
+	nritem, err := h.uc.AddPhoto(r.Context(), id, nPhoto)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant add photo")
+
+		return
+	}
+
+	log.Printf("ritem: %+v", nritem)
+
+	// load image
+	// render 5 sizes of image
+	// save images to s3,
+	// return Image{} struct
+	// update ritem with this Image{} struct
+	// return new ritem
+
+	files := []string{
+		"./web/template/photos_view.html",
+	}
+
+	tmpl, err := template.ParseFiles(files...)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant parse template")
+
+		return
+	}
+
+	if err = tmpl.Execute(w, nritem); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant execute template")
+
+		return
+	}
 }

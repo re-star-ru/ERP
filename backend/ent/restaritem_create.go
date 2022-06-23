@@ -4,6 +4,8 @@ package ent
 
 import (
 	"backend/ent/restaritem"
+	"backend/pkg/photo"
+	"backend/pkg/work"
 	"context"
 	"errors"
 	"fmt"
@@ -112,6 +114,18 @@ func (rc *RestaritemCreate) SetNillableInspector(s *string) *RestaritemCreate {
 // SetInspection sets the "inspection" field.
 func (rc *RestaritemCreate) SetInspection(s []string) *RestaritemCreate {
 	rc.mutation.SetInspection(s)
+	return rc
+}
+
+// SetPhotos sets the "photos" field.
+func (rc *RestaritemCreate) SetPhotos(ph []photo.Photo) *RestaritemCreate {
+	rc.mutation.SetPhotos(ph)
+	return rc
+}
+
+// SetWorks sets the "works" field.
+func (rc *RestaritemCreate) SetWorks(w []work.Work) *RestaritemCreate {
+	rc.mutation.SetWorks(w)
 	return rc
 }
 
@@ -278,6 +292,22 @@ func (rc *RestaritemCreate) createSpec() (*Restaritem, *sqlgraph.CreateSpec) {
 			Column: restaritem.FieldInspection,
 		})
 		_node.Inspection = value
+	}
+	if value, ok := rc.mutation.Photos(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: restaritem.FieldPhotos,
+		})
+		_node.Photos = value
+	}
+	if value, ok := rc.mutation.Works(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeJSON,
+			Value:  value,
+			Column: restaritem.FieldWorks,
+		})
+		_node.Works = value
 	}
 	return _node, _spec
 }

@@ -4,6 +4,8 @@ package ent
 
 import (
 	"backend/ent/restaritem"
+	"backend/pkg/photo"
+	"backend/pkg/work"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -32,6 +34,10 @@ type Restaritem struct {
 	Inspector string `json:"inspector,omitempty"`
 	// Inspection holds the value of the "inspection" field.
 	Inspection []string `json:"inspection,omitempty"`
+	// Photos holds the value of the "photos" field.
+	Photos []photo.Photo `json:"photos,omitempty"`
+	// Works holds the value of the "works" field.
+	Works []work.Work `json:"works,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -39,7 +45,7 @@ func (*Restaritem) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case restaritem.FieldInspection:
+		case restaritem.FieldInspection, restaritem.FieldPhotos, restaritem.FieldWorks:
 			values[i] = new([]byte)
 		case restaritem.FieldID:
 			values[i] = new(sql.NullInt64)
@@ -116,6 +122,22 @@ func (r *Restaritem) assignValues(columns []string, values []interface{}) error 
 					return fmt.Errorf("unmarshal field inspection: %w", err)
 				}
 			}
+		case restaritem.FieldPhotos:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field photos", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &r.Photos); err != nil {
+					return fmt.Errorf("unmarshal field photos: %w", err)
+				}
+			}
+		case restaritem.FieldWorks:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field works", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &r.Works); err != nil {
+					return fmt.Errorf("unmarshal field works: %w", err)
+				}
+			}
 		}
 	}
 	return nil
@@ -160,6 +182,10 @@ func (r *Restaritem) String() string {
 	builder.WriteString(r.Inspector)
 	builder.WriteString(", inspection=")
 	builder.WriteString(fmt.Sprintf("%v", r.Inspection))
+	builder.WriteString(", photos=")
+	builder.WriteString(fmt.Sprintf("%v", r.Photos))
+	builder.WriteString(", works=")
+	builder.WriteString(fmt.Sprintf("%v", r.Works))
 	builder.WriteByte(')')
 	return builder.String()
 }

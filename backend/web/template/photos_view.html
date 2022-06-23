@@ -1,0 +1,23 @@
+{{define "photosView"}}
+
+<div class="p-2 col col-md-6 col-lg-4">
+    <button type="button" class="btn btn-primary">
+        Добавить фото +
+    </button>
+
+    <input class="form-control" type='file' name='photo' id="addPhoto">
+</div>
+
+<div class="row mb-2">
+    {{range .Photos}}
+
+    <img class="p-2 col col-md-6 col-lg-4"
+         src="https://s3.re-star.ru/{{ (index .Sizes 3) }}">
+
+    {{else}} пусто {{end}}
+</div>
+
+{{end}}
+
+{{template "photosView" .}}
+

@@ -23,6 +23,10 @@ const (
 	FieldInspector = "inspector"
 	// FieldInspection holds the string denoting the inspection field in the database.
 	FieldInspection = "inspection"
+	// FieldPhotos holds the string denoting the photos field in the database.
+	FieldPhotos = "photos"
+	// FieldWorks holds the string denoting the works field in the database.
+	FieldWorks = "works"
 	// Table holds the table name of the restaritem in the database.
 	Table = "restaritems"
 )
@@ -38,6 +42,8 @@ var Columns = []string{
 	FieldDescription,
 	FieldInspector,
 	FieldInspection,
+	FieldPhotos,
+	FieldWorks,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).

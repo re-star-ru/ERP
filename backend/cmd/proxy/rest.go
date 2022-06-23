@@ -5,6 +5,7 @@ import (
 	"backend/ent"
 	"backend/ent/migrate"
 	"backend/pkg/oneclient"
+	"backend/pkg/photo"
 	"backend/pkg/qr"
 	restaritemDelivery "backend/pkg/restaritem/delivery"
 	restaritemRepo "backend/pkg/restaritem/repo"
@@ -12,14 +13,13 @@ import (
 	"backend/pkg/warehouse/cell"
 	"context"
 	"errors"
-	"os"
-
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/zerolog/log"
+	"os"
 
 	"backend/pkg"
 	"backend/pkg/img"
@@ -84,16 +84,20 @@ func Rest(config configs.Config) *chi.Mux {
 	}
 
 	{
+		// photo usecase
+		photoUsecase := photo.NewPhotoUsecase(stor)
+
 		// restar item - инфа по товарам в ремонте или приемке
 		client := initEnt(config.PG)
 
 		rirepo := restaritemRepo.NewRestaritemRepo(client)
 		riUcase := restaritemUsecase.NewRestaritemUsecase(rirepo)
-		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase)
+		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase, photoUsecase)
 
 		router.Post("/restaritem", riDelivery.Create)
 		router.Get("/restaritem", riDelivery.GetAll)
 		router.Get("/restaritem/{id}", riDelivery.RestaritemView)
+		router.Post("/restaritem/{id}/addPhoto", riDelivery.AddPhoto)
 	}
 
 	{
