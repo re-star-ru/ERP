@@ -4,12 +4,19 @@ import (
 	"backend/configs"
 	"backend/ent"
 	"backend/ent/migrate"
+	"backend/pkg"
+	"backend/pkg/img"
+	"backend/pkg/item/delivery"
+	"backend/pkg/item/repo"
+	"backend/pkg/item/usecase"
 	"backend/pkg/oneclient"
 	"backend/pkg/photo"
+	"backend/pkg/pricelist"
 	"backend/pkg/qr"
 	restaritemDelivery "backend/pkg/restaritem/delivery"
 	restaritemRepo "backend/pkg/restaritem/repo"
 	restaritemUsecase "backend/pkg/restaritem/usecase"
+	"backend/pkg/store"
 	"backend/pkg/warehouse/cell"
 	"context"
 	"errors"
@@ -20,14 +27,6 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/rs/zerolog/log"
 	"os"
-
-	"backend/pkg"
-	"backend/pkg/img"
-	"backend/pkg/item/delivery"
-	"backend/pkg/item/repo"
-	"backend/pkg/item/usecase"
-	"backend/pkg/pricelist"
-	"backend/pkg/store"
 
 	"net/http"
 	_ "net/http/pprof"
@@ -96,8 +95,11 @@ func Rest(config configs.Config) *chi.Mux {
 
 		router.Post("/restaritem", riDelivery.Create)
 		router.Get("/restaritem", riDelivery.GetAll)
+
 		router.Get("/restaritem/{id}", riDelivery.RestaritemView)
 		router.Post("/restaritem/{id}/addPhoto", riDelivery.AddPhoto)
+		router.Get("/restaritem/{id}/inspections", riDelivery.ListInspections)
+		router.Post("/restaritem/{id}/inspection/{inspectiondID}/{rating}", riDelivery.ListInspections)
 	}
 
 	{

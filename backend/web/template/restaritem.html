@@ -21,17 +21,20 @@
     <div class="container p-2">
         <h1 class="text-xl">Товар в ремонте №{{.ID}}</h1>
 
+        <form hx-get="{{.ID}}/inspections" hx-trigger="load">
+            пусто
+        </form>
+
         <form hx-encoding='multipart/form-data' hx-post="{{.ID}}/addPhoto">
             {{template "photosView" .}}
         </form>
-
-
 
         <button class="start-record btn btn-primary">кнопка записи голосового сообщения</button>
         <button class="stop-record btn btn-primary">стоп запись</button>
 
         <label for="soundFile">What does your voice sound like?:</label>
         <input type="file" id="soundFile" capture="user" accept="audio/*">
+
 
     </div>
 
@@ -51,6 +54,8 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         .getUserMedia({ audio: true })
         .then(function(stream) {
             const mediaRecorder = new MediaRecorder(stream);
+            info.innerHTML += '<br> ' +
+                'MediaRecorder mime type:' + mediaRecorder.mimeType;
 
             let chuncks = [];
             mediaRecorder.ondataavailable = function(e) {
@@ -58,12 +63,12 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             };
 
             mediaRecorder.onstop = function(e) {
-                const blob = new Blob(chuncks, { 'type': 'audio/wav' });
+                const blob = new Blob(chuncks, { 'type': 'audio/webm' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = url;
-                a.download = 'audio.wav';
+                a.download = 'audio.webm';
                 document.body.appendChild(a);
                 a.click();
                 setTimeout(function() {

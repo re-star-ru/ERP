@@ -1,0 +1,34 @@
+{{define "inspectionView"}}
+
+<div class="p-2 col col-md-6 col-lg-4">
+  <button class="btn btn-primary">Дефектовка +</button>
+</div>
+
+<h3>Комплектующие стартера</h3>
+
+{{ $id := index . "id" }}
+
+{{range $key, $value := index . "inspections"}}
+<div class="mb-2">
+    <div class="d-flex p-1 flex-wrap justify-content-between border rounded">
+        <div>
+            <h5>{{.}}</h5>
+        </div>
+
+        <div>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-outline-primary"
+                         hx-post="{{$id}}/inspection/{{$key}}/1">1</button>
+
+                <button type="button" class="btn btn-outline-primary">2</button>
+                <button type="button" class="btn btn-outline-primary">3</button>
+                <button type="button" class="btn btn-outline-primary">4</button>
+                <button type="button" class="btn btn-outline-primary">5</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{end}}
+{{template "inspectionView" .}}
