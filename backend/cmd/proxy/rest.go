@@ -99,7 +99,7 @@ func Rest(config configs.Config) *chi.Mux {
 		router.Get("/restaritem/{id}", riDelivery.RestaritemView)
 		router.Post("/restaritem/{id}/addPhoto", riDelivery.AddPhoto)
 		router.Get("/restaritem/{id}/inspections", riDelivery.ListInspections)
-		router.Post("/restaritem/{id}/inspection/{inspectiondID}/{rating}", riDelivery.ListInspections)
+		router.Post("/restaritem/{id}/inspection/{inspectiondID}/{rating}", riDelivery.SetInspectionByID)
 	}
 
 	{

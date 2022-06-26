@@ -12,18 +12,16 @@
 <div class="mb-2">
     <div class="d-flex p-1 flex-wrap justify-content-between border rounded">
         <div>
-            <h5>{{.}}</h5>
+            <h5>{{.Name}}</h5>
         </div>
 
         <div>
             <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-outline-primary"
-                         hx-post="{{$id}}/inspection/{{$key}}/1">1</button>
-
-                <button type="button" class="btn btn-outline-primary">2</button>
-                <button type="button" class="btn btn-outline-primary">3</button>
-                <button type="button" class="btn btn-outline-primary">4</button>
-                <button type="button" class="btn btn-outline-primary">5</button>
+                {{ range .Buttons $id }}
+                    <button type="button" class="{{ .Active }} btn btn-outline-primary"
+                        hx-post="{{ .Post }}"
+                        hx-target="#inspections">{{ .Number }}</button>
+                {{ end }}
             </div>
         </div>
     </div>
@@ -31,4 +29,5 @@
 {{end}}
 
 {{end}}
+
 {{template "inspectionView" .}}
