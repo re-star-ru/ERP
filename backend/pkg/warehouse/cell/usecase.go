@@ -6,11 +6,13 @@ type Cell struct {
 }
 
 type Item struct {
-	Index              int    `json:"index"`
-	CharacteristicGUID string `json:"characteristicGUID"`
-	Name               string `json:"name"`
-	Characteristic     string `json:"characteristic"`
-	Amount             int    `json:"amount"`
+	Index              int      `json:"index"`
+	SKU                string   `json:"sku"`
+	CharacteristicGUID string   `json:"characteristicGUID"`
+	Name               string   `json:"name"`
+	Characteristic     string   `json:"characteristic"`
+	Amount             int      `json:"amount"`
+	Images             []string `json:"images"`
 }
 
 type ICellRepo interface {

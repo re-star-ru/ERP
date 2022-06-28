@@ -24,13 +24,19 @@
 
             <div class="col">
                 <div class="card">
-                    <img src="https://placekitten.com/g/800/600" alt="" class="card-img-top">
+                    {{ range .Images }}
+                    <img src="https://s3.re-star.ru/{{.}}" alt="">
+                    {{ else }}
+                        <img src="https://placekitten.com/g/800/600" alt="" class="card-img-top">
+                    {{ end }}
+
                     <div class="card-body">
                         <h5 class="card-title">{{.Name}}</h5>
+                        <h6>Арт. {{.SKU}}</h6>
                         <p class="card-text">
                             Характеристика {{.Characteristic}}
                         </p>
-                        <p class="card-text">Количество {{.Amount}}</p>
+                        <p class="card-text">Количество {{.Amount}} шт.</p>
                     </div>
                 </div>
             </div>
