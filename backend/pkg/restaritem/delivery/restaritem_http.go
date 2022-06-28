@@ -336,12 +336,13 @@ func (s StarterInspection) Buttons(restaritemID int) []Button {
 	return target
 }
 
+type inspectionDefault struct {
+	More50 bool
+	Less50 bool
+	Dead   bool
+}
+
 var starterInspections = map[string]StarterInspection{
-	"1": {
-		"1",
-		"Бендикс",
-		-1, // не определено по умолчанию
-	},
 	"2": {
 		"2",
 		"Вилка стартера",
@@ -352,11 +353,6 @@ var starterInspections = map[string]StarterInspection{
 		"Втулка стартера",
 		-1,
 	},
-	"4": {
-		"4",
-		"Втягивающее реле",
-		-1,
-	},
 	"5": {
 		"5",
 		"Дополнительное реле",
@@ -365,11 +361,6 @@ var starterInspections = map[string]StarterInspection{
 	"6": {
 		"6",
 		"Крышка стартера",
-		-1,
-	},
-	"7": {
-		"7",
-		"Муфта стартера",
 		-1,
 	},
 	"8": {
