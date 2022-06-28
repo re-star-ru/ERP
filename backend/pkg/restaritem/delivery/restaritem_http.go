@@ -6,6 +6,7 @@ import (
 	"backend/pkg/restaritem"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/rs/zerolog/log"
@@ -77,7 +78,7 @@ func (h *HTTPRestaritemDelivery) GetAll(w http.ResponseWriter, r *http.Request) 
 
 // 4: страница с данными об итеме, включая дефекты, работы, фото
 func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.Request) {
-	id, err := parseID(r)
+	id, err := parseInt(r, "id")
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "cant parse id")
 
@@ -100,6 +101,7 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 	files := []string{
 		"./web/template/restaritem.html",
 		"./web/template/photos_view.html",
+		"./web/template/inspection_view.html",
 	}
 
 	tmpl, err := template.ParseFiles(files...)
@@ -116,8 +118,8 @@ func (h *HTTPRestaritemDelivery) RestaritemView(w http.ResponseWriter, r *http.R
 	}
 }
 
-func parseID(r *http.Request) (int, error) {
-	sid := chi.URLParam(r, "id")
+func parseInt(r *http.Request, key string) (int, error) {
+	sid := chi.URLParam(r, key)
 	if sid == "" {
 		return 0, pkg.ErrWrongInput
 	}
@@ -131,7 +133,7 @@ func parseID(r *http.Request) (int, error) {
 }
 
 func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request) {
-	id, err := parseID(r)
+	id, err := parseInt(r, "id")
 	if err != nil {
 		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse id")
 
@@ -200,4 +202,221 @@ func (h *HTTPRestaritemDelivery) AddPhoto(w http.ResponseWriter, r *http.Request
 
 		return
 	}
+}
+
+func (h *HTTPRestaritemDelivery) SetInspectionByID(w http.ResponseWriter, r *http.Request) {
+	id, err := parseInt(r, "id")
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse id")
+
+		return
+	}
+
+	inspID := chi.URLParam(r, "inspectiondID")
+	if inspID == "" {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "cant parse inspectiondID")
+
+		return
+	}
+
+	rating, err := parseInt(r, "rating")
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse rating")
+
+		return
+	}
+
+	_, err = h.uc.GetByID(r.Context(), id)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get restaritem")
+
+		return
+	}
+
+	files := []string{
+		"./web/template/inspection_view.html",
+	}
+
+	tmpl, err := template.ParseFiles(files...)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant parse template")
+
+		return
+	}
+
+	a, ok := starterInspections[inspID]
+	if !ok {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, pkg.ErrWrongInput, "cant find inspection")
+
+		return
+	}
+
+	a.Quality = rating
+	starterInspections[inspID] = a
+	log.Printf("starterInspections: %+v", starterInspections)
+	log.Printf("set rat: %+v", rating)
+	log.Print(rating, inspID, id)
+
+	if err = tmpl.Execute(w, pkg.JSON{"id": id, "inspections": starterInspections}); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant execute template")
+
+		return
+	}
+}
+
+func (h *HTTPRestaritemDelivery) ListInspections(w http.ResponseWriter, r *http.Request) {
+	id, err := parseInt(r, "id")
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant parse id")
+
+		return
+	}
+
+	_, err = h.uc.GetByID(r.Context(), id)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusBadRequest, err, "cant get restaritem")
+
+		return
+	}
+
+	files := []string{
+		"./web/template/inspection_view.html",
+	}
+
+	tmpl, err := template.ParseFiles(files...)
+	if err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant parse template")
+
+		return
+	}
+
+	//tmpl = tmpl.Funcs(template.FuncMap{
+	//	"getInspection": func(id string) string {
+	//		return starterInspections[id].Name
+	//	},
+	//})
+
+	if err = tmpl.Execute(w, pkg.JSON{"id": id, "inspections": starterInspections}); err != nil {
+		pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, "cant execute template")
+
+		return
+	}
+}
+
+type StarterInspection struct {
+	ID      string
+	Name    string
+	Quality int
+}
+
+type Button struct {
+	Number int
+	Active string
+	Post   string
+}
+
+func (s StarterInspection) Buttons(restaritemID int) []Button {
+	var target []Button
+
+	for num := 1; num < 6; num++ {
+		btn := Button{
+			Number: num,
+		}
+
+		if num == s.Quality {
+			btn.Active = "active"
+		}
+
+		// id is restaritemID,
+		btn.Post = fmt.Sprintf("%d/inspection/%s/%d", restaritemID, s.ID, num)
+
+		target = append(target, btn)
+	}
+
+	return target
+}
+
+var starterInspections = map[string]StarterInspection{
+	"1": {
+		"1",
+		"Бендикс",
+		-1, // не определено по умолчанию
+	},
+	"2": {
+		"2",
+		"Вилка стартера",
+		-1,
+	},
+	"3": {
+		"3",
+		"Втулка стартера",
+		-1,
+	},
+	"4": {
+		"4",
+		"Втягивающее реле",
+		-1,
+	},
+	"5": {
+		"5",
+		"Дополнительное реле",
+		-1,
+	},
+	"6": {
+		"6",
+		"Крышка стартера",
+		-1,
+	},
+	"7": {
+		"7",
+		"Муфта стартера",
+		-1,
+	},
+	"8": {
+		"8",
+		"Планетарный механизм",
+		-1,
+	},
+	"9": {
+		"9",
+		"Подшипник стартера",
+		-1,
+	},
+	"11": {
+		"11",
+		"Статор стартера",
+		-1,
+	},
+	"12": {
+		"12",
+		"Щётки стартера",
+		-1,
+	},
+	"13": {
+		"13",
+		"Щеточный узел стартера",
+		-1,
+	},
+	"14": {
+		"14",
+		"Якорь",
+		-1,
+	},
+}
+
+var generatorInspections = []string{
+	"Вакуумный насос",
+	"Диодный мост",
+	"Диоды",
+	"Коллектор",
+	"Крышка генератора",
+	"Подшипник генератора",
+	"Проставка под подшипник",
+	"Реле регулятор",
+	"Ротор",
+	"Сальник",
+	"Статор генератора",
+	"Шкив",
+	"Щётки генератора",
+	"Щёточный узел генератора",
 }
