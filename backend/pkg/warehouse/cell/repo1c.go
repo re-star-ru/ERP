@@ -35,5 +35,7 @@ func (repo *RepoOnec) GetCellByID(cellID string) (*Cell, error) {
 		return nil, fmt.Errorf("cant decode cell %w", err)
 	}
 
+	cell.ID = cellID
+
 	return cell, nil
 }

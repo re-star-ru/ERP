@@ -1,6 +1,7 @@
 package cell
 
 type Cell struct {
+	ID    string
 	Items []Item `json:"body"`
 }
 
