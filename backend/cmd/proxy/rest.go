@@ -119,6 +119,13 @@ func Rest(config configs.Config) *chi.Mux {
 		cellDel := cell.NewCellDelivery(cellUC)
 
 		router.Get("/warehouse/cell/{cellID}", cellDel.Get)
+
+		// возвращает таблицу остатков по заданному артикулу по складам и ячейкам
+		router.Get("/warehouse/sku/{sku}", func(w http.ResponseWriter, r *http.Request) {
+			if err = onecClient.Proxy(w, http.MethodGet, r.URL.Path); err != nil {
+				pkg.SendErrorJSON(w, r, http.StatusInternalServerError, err, err.Error())
+			}
+		})
 	}
 
 	{
