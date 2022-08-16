@@ -2,11 +2,11 @@ package delivery
 
 import (
 	"backend/pkg"
+	"backend/pkg/inspection"
 	"backend/pkg/photo"
 	"backend/pkg/restaritem"
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/rs/zerolog/log"
@@ -251,7 +251,7 @@ func (h *HTTPRestaritemDelivery) SetInspectionByID(w http.ResponseWriter, r *htt
 		return
 	}
 
-	a.Quality = rating
+	//a.Quality = rating
 	starterInspections[inspID] = a
 	log.Printf("starterInspections: %+v", starterInspections)
 	log.Printf("set rat: %+v", rating)
@@ -303,95 +303,76 @@ func (h *HTTPRestaritemDelivery) ListInspections(w http.ResponseWriter, r *http.
 	}
 }
 
-type StarterInspection struct {
-	ID      string
-	Name    string
-	Quality int
-}
-
-type Button struct {
-	Number int
-	Active string
-	Post   string
-}
-
-func (s StarterInspection) Buttons(restaritemID int) []Button {
-	var target []Button
-
-	for num := 1; num < 6; num++ {
-		btn := Button{
-			Number: num,
-		}
-
-		if num == s.Quality {
-			btn.Active = "active"
-		}
-
-		// id is restaritemID,
-		btn.Post = fmt.Sprintf("%d/inspection/%s/%d", restaritemID, s.ID, num)
-
-		target = append(target, btn)
-	}
-
-	return target
-}
-
-type inspectionDefault struct {
-	More50 bool
-	Less50 bool
-	Dead   bool
-}
-
-var starterInspections = map[string]StarterInspection{
+var starterInspections = map[string]inspection.RestaritemInspection{
 	"2": {
 		"2",
 		"Вилка стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"3": {
 		"3",
 		"Втулка стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"5": {
 		"5",
 		"Дополнительное реле",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"6": {
 		"6",
 		"Крышка стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"8": {
 		"8",
 		"Планетарный механизм",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"9": {
 		"9",
 		"Подшипник стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"11": {
 		"11",
 		"Статор стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"12": {
 		"12",
 		"Щётки стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"13": {
 		"13",
 		"Щеточный узел стартера",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 	"14": {
 		"14",
 		"Якорь",
-		-1,
+		inspection.Inspection{
+			Type: inspection.DefaultType,
+		},
 	},
 }
 

@@ -76,14 +76,14 @@ func Rest(config configs.Config) *chi.Mux {
 	pricer := pricelist.NewPricerUsecase(stor, itemRepo)
 	priceSrv := pricelist.NewPricelistHttp(pricer)
 
+	// web site api
 	{
-		// site api
 		router.Get("/search/{query}", itemHTTP.SearchBySKU)
 		router.Get("/catalog", itemHTTP.CatalogHandler)
 	}
 
+	// photo
 	{
-		// photo usecase
 		photoUsecase := photo.NewPhotoUsecase(stor)
 
 		// restar item - инфа по товарам в ремонте или приемке
@@ -102,6 +102,7 @@ func Rest(config configs.Config) *chi.Mux {
 		router.Post("/restaritem/{id}/inspection/{inspectiondID}/{rating}", riDelivery.SetInspectionByID)
 	}
 
+	// qr code
 	{
 		// qr code сервис, получает параметры -
 		// текстовую строку для печати qr кода
@@ -128,8 +129,8 @@ func Rest(config configs.Config) *chi.Mux {
 		})
 	}
 
+	// pricelist api
 	{
-		// pricelist api
 		router.Route("/pricelists", func(r chi.Router) {
 			r.Get("/", priceSrv.PricelistHandler)
 			r.Post("/refresh", priceSrv.ManualRefreshHandler)

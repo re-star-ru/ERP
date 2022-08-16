@@ -10,4 +10,4 @@ backend:
 backend-dev:
 	cd backend && HOST=8100 go run ./cmd/proxy
 
-.PHONY: frontend backend
+.PHONY: frontend backend backend-dev

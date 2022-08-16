@@ -1,0 +1,92 @@
+### список продуктов
+GET {{host}}/1c/products/
+
+### поиск продуктов
+GET {{host}}/search/cs125
+
+### поиск так же только через параметр
+GET {{host}}/catalog?q=cs125
+
+### обновление прайс листа
+POST {{host}}/pricelists/refresh
+
+### получить список продуктов
+GET {{host}}/onec/products
+
+### получить товары в ячейке ошибка
+GET {{host}}/warehouse/cell/cs
+
+### получить товары в ячейке ок
+GET {{host}}/warehouse/cell/N2_15-G-06
+
+### сгенерировать qr код
+POST {{host}}/qr
+
+### сгенерировать qr код
+POST {{host}}/qr
+Content-Type: application/json
+
+{
+  "width": 58,
+  "height": 30,
+  "code": "https://re-star.ru/oprox/warehouse/cell/N2_15-G-06",
+  "text": ["артикул", "характеристика", "наименование"]
+}
+
+### restaritem create
+POST {{host}}/restaritem
+Content-Type: application/json
+
+{
+  "name": "Продукт",
+  "onecGUID": "asdf-asdf-asdf-asdf",
+  "price": 100,
+  "quantity": 10,
+  "category": "Категория",
+  "description": "Описание"
+}
+
+
+### restaritem view all
+GET {{host}}/restaritem
+
+### restaritem view one
+GET {{host}}/restaritem/1
+
+### restaritem add photo 2
+POST {{host}}/restaritem/1/addPhoto
+
+### restaritem add photo 1
+POST {{host}}/restaritem/1/addPhoto
+Content-Type: multipart/form-data;boundary=--boundary
+
+----boundary
+Content-Disposition: form-data; name="photo"; filename="photo.jpg"
+
+< ./photo.jpg
+----boundary--
+
+### restaritem add photo 2 heic
+POST {{host}}/restaritem/1/addPhoto
+Content-Type: multipart/form-data;boundary=--boundary
+
+----boundary
+Content-Disposition: form-data; name="photo"; filename="a.heic"
+Content-Type: image/heic
+
+< /home/restar/photos/a.heic
+----boundary--
+
+### restaritem add photo 2 large
+POST {{host}}/restaritem/1/addPhoto
+Content-Type: multipart/form-data;boundary=--boundary
+
+----boundary
+Content-Disposition: form-data; name="photo"; filename="a.jpg"
+Content-Type: image/jpeg
+
+< /home/restar/photos/a.jpg
+----boundary--
+
+### restaritem view one json
+GET {{host}}/restaritem/2?json

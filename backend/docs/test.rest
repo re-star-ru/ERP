@@ -1,0 +1,74 @@
+### purple
+http://localhost:7700/tasks
+Content-Type: application/json
+
+
+### configs
+http://localhost:7700/indexes/sku/settings
+Content-Type: application/json
+
+### configs set
+POST http://localhost:7700/indexes/sku/settings
+Content-Type: application/json
+
+{
+    "typoTolerance": {
+        "enabled": false
+    }
+}
+
+# -raw '{ "disableOnAttributes": [], "enabled": false }'
+
+### purple
+POST http://localhost:7700/indexes/items/search
+Content-Type: application/json
+
+{
+    "filter": [
+        "firstIncome {{$timestamp -20 y}} TO {{$timestamp -7 y}}",
+        "lastExpance {{$timestamp -20 y}} TO {{$timestamp -7 y}}"
+    ]
+}
+
+
+### purple wtf
+POST http://localhost:7700/indexes/items/search
+Content-Type: application/json
+
+{
+    "filter": [
+        [
+            "lastExpance {{$timestamp -20 y}} TO {{$timestamp -3 y}}", 
+            "lastExpance = 0"
+        ],
+        "firstIncome {{$timestamp -20 y}} TO {{$timestamp -3 y}}",
+        "amount = 0"
+    ]
+}
+
+### sku wtf
+POST http://localhost:7700/indexes/sku/search
+Content-Type: application/json
+
+{
+    "filter": [
+        [
+            "lastExpance {{$timestamp -20 y}} TO {{$timestamp -3 y}}", 
+            "lastExpance = 0"
+        ],
+        "firstIncome {{$timestamp -20 y}} TO {{$timestamp -3 y}}",
+        "amount = 0"
+    ]
+}
+
+
+
+### wtf
+
+
+lastExpance = 2019
+lastExpance2 = 2021
+
+last > 2015 and last < 2020
+
+2019

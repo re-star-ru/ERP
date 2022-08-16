@@ -1,6 +1,20 @@
 # Backend doc
 
-## github actions
+```mermaid
+graph TD
+  go[golang backend] --> s3[minio]
+  go --> search[meilisearch]
+  go --> db[(postgres ? mongodb)]
+  
+  frontend[flutter app]-- grpc -->go
+  web[web shop]-- rest -->go
+ 
+  go --> telemetry[jaeger] --> graphana
+  go --> logs[stdout logs] --> loki --> graphana
+```
+можно без метрик обойтись в принципе, логи и телеметрия
+
+## GitHub actions
 
 add to commit message ```[skip ci]``` to skip commit deploy
 
@@ -30,7 +44,7 @@ is proxy for once services and some buisness logic
 
 ## Search entry
 
-```js
+```json5
 {
     "charGUID": "guid string", // primary key
     "GUID": "guid of item",
