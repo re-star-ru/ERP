@@ -4,10 +4,10 @@
 graph TD
   go[golang backend] --> s3[minio]
   go --> search[meilisearch]
-  go --> db[postgres ? mongodb]
+  go --> db[(postgres ? mongodb)]
   
-  frontend[flutter app] --> go
-  web[web shop] --> go
+  frontend[flutter app]-- grpc -->go
+  web[web shop]-- rest -->go
 ```
 
 ## GitHub actions
@@ -40,7 +40,7 @@ is proxy for once services and some buisness logic
 
 ## Search entry
 
-```js
+```json5
 {
     "charGUID": "guid string", // primary key
     "GUID": "guid of item",
