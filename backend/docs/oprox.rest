@@ -8,7 +8,7 @@ GET {{host}}/search/cs125
 GET {{host}}/catalog?q=cs125
 
 ### обновление прайс листа
-POST {{host}}/1c/updatePricelist?limit=20
+POST {{host}}/pricelists/refresh
 
 ### получить список продуктов
 GET {{host}}/onec/products

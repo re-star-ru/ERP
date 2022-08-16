@@ -9,3 +9,7 @@ Authorization: {{basic}}
 ### warehouse cell ok
 GET {{oncebasepath}}/warehouse/cell/N2_15-G-06
 Authorization: {{basic}}
+
+### batch request all products with price
+GET {{oncebasepath}}/products/batch
+Authorization: {{basic}}

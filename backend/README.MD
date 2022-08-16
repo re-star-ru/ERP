@@ -8,7 +8,11 @@ graph TD
   
   frontend[flutter app]-- grpc -->go
   web[web shop]-- rest -->go
+ 
+  go --> telemetry[jaeger] --> graphana
+  go --> logs[stdout logs] --> loki --> graphana
 ```
+можно без метрик обойтись в принципе, логи и телеметрия
 
 ## GitHub actions
 

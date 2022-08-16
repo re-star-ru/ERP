@@ -1,7 +1,8 @@
 include ../.dev.env
 export
 
-prep:
+export COMPOSE_PROJECT_NAME=oprox
+compose:
 	docker compose up
 
 gen:
@@ -29,4 +30,4 @@ clear:
 filter-purple:
 	 xh POST -j localhost:7700/indexes/items/search filter="lastExpance < 1557131207"
 
-.PHONY: backend rdocker dev
+.PHONY: backend rdocker dev compose

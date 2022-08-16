@@ -14,8 +14,6 @@ services:
       - ONEC_TOKEN
       - TIME_ZONE
 
-
-
   mongo:
     image: mongo:4
     network_mode: host
