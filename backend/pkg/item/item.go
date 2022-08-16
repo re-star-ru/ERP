@@ -10,6 +10,11 @@ type Item struct {
 
 	Images []Image `json:"images"`
 
+	Brandcars string `json:"brandcars"` // Марка
+	Modelcars string `json:"modelcars"` // Модель
+	Engine    string `json:"engine"`    // двигатель
+	Year      int    `json:"year"`      // год
+
 	Amount        int `json:"amount"`
 	Price         int `json:"price"`         // цена без учета скидок наценок
 	DiscountPrice int `json:"discountPrice"` // цена со скидками наценками

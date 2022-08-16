@@ -43,10 +43,10 @@ type Offer struct {
 	Brandcars string `xml:"brandcars"` // Марка
 	Modelcars string `xml:"modelcars"` // Модель
 	Engine    string `xml:"engine"`    // двигатель
+	Year      int    `xml:"year"`      // год
 
 	Photos string `xml:"photos"`
 
-	Year   int `xml:"year"` // год
 	Amount int `xml:"amount"`
 	Price  int `xml:"price"`
 }
@@ -84,6 +84,11 @@ func DromRender(items []item.Item) (io.Reader, string, error) {
 			Manufacturer:  items[idx].Char,
 			OemNumber:     items[idx].Name,
 			AnalogNumbers: items[idx].SKU,
+
+			Brandcars: items[idx].Brandcars,
+			Modelcars: items[idx].Modelcars,
+			Engine:    items[idx].Engine,
+			Year:      items[idx].Year,
 
 			Condition: condition(items[idx].Char),
 			Photos:    photosString(items[idx].Images),
