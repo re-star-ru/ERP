@@ -43,7 +43,7 @@ type Offer struct {
 	Brandcars string `xml:"brandcars"` // Марка
 	Modelcars string `xml:"modelcars"` // Модель
 	Engine    string `xml:"engine"`    // двигатель
-	Year      int    `xml:"year"`      // год
+	Year      string `xml:"year"`      // год
 
 	Photos string `xml:"photos"`
 
