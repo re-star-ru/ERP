@@ -1,6 +1,16 @@
 # Backend doc
 
-## github actions
+```mermaid
+graph TD
+  go[golang backend] --> s3[minio]
+  go --> search[meilisearch]
+  go --> db[postgres ? mongodb]
+  
+  frontend[flutter app] --> go
+  web[web shop] --> go
+```
+
+## GitHub actions
 
 add to commit message ```[skip ci]``` to skip commit deploy
 
