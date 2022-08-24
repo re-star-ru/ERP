@@ -87,19 +87,19 @@ func Rest(config configs.Config) *chi.Mux {
 		photoUsecase := photo.NewPhotoUsecase(stor)
 
 		// restar item - инфа по товарам в ремонте или приемке
-		client := initEnt(config.PG)
+		//client := initEnt(config.PG)
 
-		rirepo := restaritemRepo.NewRestaritemRepo(client)
+		rirepo := restaritemRepo.NewRestaritemRepo(nil)
 		riUcase := restaritemUsecase.NewRestaritemUsecase(rirepo)
 		riDelivery := restaritemDelivery.NewHTTPRestaritemDelivery(riUcase, photoUsecase)
 
-		router.Post("/restaritem", riDelivery.Create)
-		router.Get("/restaritem", riDelivery.GetAll)
-
-		router.Get("/restaritem/{id}", riDelivery.RestaritemView)
+		//router.Post("/restaritem", riDelivery.Create)
+		//router.Get("/restaritem", riDelivery.GetAll)
+		//
+		//router.Get("/restaritem/{id}", riDelivery.RestaritemView)
 		router.Post("/restaritem/{id}/addPhoto", riDelivery.AddPhoto)
-		router.Get("/restaritem/{id}/inspections", riDelivery.ListInspections)
-		router.Post("/restaritem/{id}/inspection/{inspectiondID}/{rating}", riDelivery.SetInspectionByID)
+		//router.Get("/restaritem/{id}/inspections", riDelivery.ListInspections)
+		//router.Post("/restaritem/{id}/inspection/{inspectiondID}/{rating}", riDelivery.SetInspectionByID)
 	}
 
 	// qr code
