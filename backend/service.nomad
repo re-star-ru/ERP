@@ -9,22 +9,22 @@ job "oprox" {
       }
     }
 
-    service {
-      name = "oprox"
-      port = "oprox_port"
-
-      # The "check" stanza instructs Nomad to create a Consul health check for
-      # this service. A sample check is provided here for your convenience;
-      # uncomment it to enable it. The "check" stanza is documented in the
-      # "service" stanza documentation.
-
-      # check {
-      #   name     = "alive"
-      #   type     = "tcp"
-      #   interval = "10s"
-      #   timeout  = "2s"
-      # }
-    }
+#    service {
+#      name = "oprox"
+#      port = "oprox_port"
+#
+#      # The "check" stanza instructs Nomad to create a Consul health check for
+#      # this service. A sample check is provided here for your convenience;
+#      # uncomment it to enable it. The "check" stanza is documented in the
+#      # "service" stanza documentation.
+#
+#      # check {
+#      #   name     = "alive"
+#      #   type     = "tcp"
+#      #   interval = "10s"
+#      #   timeout  = "2s"
+#      # }
+#    }
 
     task "oprox" {
       driver = "docker"
