@@ -14,9 +14,9 @@ require (
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.1.0
 	github.com/kr/text v0.2.0 // indirect
-	github.com/labstack/echo/v4 v4.6.1
-	github.com/labstack/gommon v0.3.0 // indirect
-	github.com/mattn/go-colorable v0.1.8 // indirect
+	github.com/labstack/echo/v4 v4.9.0
+	github.com/labstack/gommon v0.3.1 // indirect
+	github.com/mattn/go-colorable v0.1.11 // indirect
 	github.com/minio/minio-go/v6 v6.0.57
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.7.1
@@ -27,7 +27,7 @@ require (
 	go.etcd.io/bbolt v1.3.3 // indirect
 	go.mongodb.org/mongo-driver v1.7.3
 	golang.org/x/crypto v0.0.0-20211215165025-cf75a172585e
-	golang.org/x/net v0.0.0-20210913180222-943fd674d43e // indirect
+	golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f // indirect
 	golang.org/x/sys v0.0.0-20211205182925-97ca703d548d // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
