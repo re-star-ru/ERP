@@ -165,11 +165,11 @@ github.com/klauspost/compress/zstd/internal/xxhash
 github.com/klauspost/cpuid
 # github.com/kr/text v0.2.0
 ## explicit
-# github.com/labstack/echo/v4 v4.6.1
-## explicit; go 1.15
+# github.com/labstack/echo/v4 v4.9.0
+## explicit; go 1.17
 github.com/labstack/echo/v4
 github.com/labstack/echo/v4/middleware
-# github.com/labstack/gommon v0.3.0
+# github.com/labstack/gommon v0.3.1
 ## explicit; go 1.12
 github.com/labstack/gommon/bytes
 github.com/labstack/gommon/color
@@ -186,7 +186,7 @@ github.com/lib/pq/scram
 # github.com/magiconair/properties v1.8.1
 ## explicit
 github.com/magiconair/properties
-# github.com/mattn/go-colorable v0.1.8
+# github.com/mattn/go-colorable v0.1.11
 ## explicit; go 1.13
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.14
@@ -380,7 +380,7 @@ golang.org/x/image/tiff/lzw
 # golang.org/x/mod v0.5.1
 ## explicit; go 1.17
 golang.org/x/mod/semver
-# golang.org/x/net v0.0.0-20210913180222-943fd674d43e
+# golang.org/x/net v0.0.0-20211015210444-4f30a5c0130f
 ## explicit; go 1.17
 golang.org/x/net/http/httpguts
 golang.org/x/net/http2
